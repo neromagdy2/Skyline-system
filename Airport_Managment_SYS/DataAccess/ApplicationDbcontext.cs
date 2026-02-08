@@ -1,0 +1,40 @@
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity;
+
+namespace Airport_Managment_SYS.DataAccess
+{
+    public class ApplicationDbcontext : IdentityDbContext
+    {
+        public ApplicationDbcontext(DbContextOptions<ApplicationDbcontext> options)
+        : base(options) { }
+
+        DbSet<Payment> Payments { get; set; }
+        DbSet<Trip> Trips { get; set; }
+        DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        DbSet<Airplane> Airplanes { get; set; }
+        DbSet<Airport> airports { get; set; }   
+        DbSet<Country > Countrys { get; set; }
+        DbSet<GovernerateState> GoverneratesStates { get; set; }
+        DbSet<Reservation> Reservations { get; set; }
+        DbSet<SeatClass> SeatClasses { get; set; }
+        DbSet<Seat > Seats { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            base.OnModelCreating(modelBuilder);
+
+            // Configure Origin Airport
+            modelBuilder.Entity<Reservation>().HasKey(r => new { r.TripId , r.ApplicationUserId });
+
+        }
+
+
+    }
+}
