@@ -516,13 +516,13 @@ namespace Airport_Managment_SYS.Migrations
                     b.HasOne("Airport_Managment_SYS.Models.Airport", "Airport_From")
                         .WithMany()
                         .HasForeignKey("Airport_FromId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Airport_Managment_SYS.Models.Airport", "Airport_To")
                         .WithMany()
                         .HasForeignKey("Airport_ToId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Airport_From");

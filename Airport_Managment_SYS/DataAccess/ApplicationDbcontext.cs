@@ -32,7 +32,17 @@ namespace Airport_Managment_SYS.DataAccess
 
             // Configure Origin Airport
             modelBuilder.Entity<Reservation>().HasKey(r => new { r.TripId , r.ApplicationUserId });
+            modelBuilder.Entity<Trip>()
+        .HasOne(t => t.Airport_From)
+        .WithMany()
+        .HasForeignKey(t => t.Airport_FromId)
+        .OnDelete(DeleteBehavior.Restrict);
 
+    modelBuilder.Entity<Trip>()
+        .HasOne(t => t.Airport_To)
+        .WithMany()
+        .HasForeignKey(t => t.Airport_ToId)
+        .OnDelete(DeleteBehavior.Restrict);
         }
 
 
