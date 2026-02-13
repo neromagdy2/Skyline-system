@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Airport_Managment_SYS.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class fixerrortriptale : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -307,13 +307,13 @@ namespace Airport_Managment_SYS.Migrations
                         column: x => x.Airport_FromId,
                         principalTable: "airports",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Trips_airports_Airport_ToId",
                         column: x => x.Airport_ToId,
                         principalTable: "airports",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
