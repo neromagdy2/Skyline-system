@@ -12,8 +12,8 @@ namespace Airport_Managment_SYS.DataAccess
         DbSet<Payment> Payments { get; set; }
         DbSet<Trip> Trips { get; set; }
         DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        DbSet<Airplane> Airplanes { get; set; }
         DbSet<Airport> airports { get; set; }   
+        DbSet<Airplane> Airplanes { get; set; }
         DbSet<Country > Countrys { get; set; }
         DbSet<GovernerateState> GoverneratesStates { get; set; }
         DbSet<Reservation> Reservations { get; set; }
