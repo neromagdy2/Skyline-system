@@ -30,7 +30,7 @@ namespace Ecommerce
             });
 
             //services.AddTransient<IEmailSender, EmailSender>();
-            //services.AddScoped<IRepository<>, Repository<>>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         }
     }
