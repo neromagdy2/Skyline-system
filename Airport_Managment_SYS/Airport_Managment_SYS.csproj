@@ -22,11 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Areas\Customer\Controllers\" />
     <Folder Include="Areas\Customer\ViewModels\" />
     <Folder Include="Areas\Customer\Views\" />
-    <Folder Include="Areas\Identity\ViewModels\" />
-    <Folder Include="Areas\Identity\Views\" />
   </ItemGroup>
 
   <ItemGroup>
