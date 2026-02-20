@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Airport_Managment_SYS.Models.Payment>
+
+@{
+    Layout = "_customer_layout";
+    ViewData["Title"] = "My Payments";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Payment History</h2>
+        <a asp-action="Create" class="btn btn-outline-primary">Make New Payment</a>
+    </div>
+
+    <table class="table table-hover border">
+        <thead class="table-light">
+            <tr>
+                <th>Transaction ID</th>
+                <th>Amount</th>
+                <th>User</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>#@item.Id</td>
+                    <td>$@item.Total</td>
+                    <td>@item.ApplicationUser?.UserName</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info text-white">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
