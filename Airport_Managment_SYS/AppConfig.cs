@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using MoviesApp.Utilities;
 
 namespace Ecommerce
 {
@@ -28,7 +29,17 @@ namespace Ecommerce
                 options.LoginPath = $"/Identity/Account/Login";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
+            services.AddTransient<IEmailSender, EmailSender>();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+
+
+
+            //services.AddScoped<IRepository<Actor>, Repository<Actor>>();
             //services.AddTransient<IEmailSender, EmailSender>();
             //services.AddScoped<IRepository<>, Repository<>>();
 

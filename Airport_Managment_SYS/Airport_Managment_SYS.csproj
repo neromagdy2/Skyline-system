@@ -7,8 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <Folder Include="NewFolder\" />
     <Folder Include="Views\Home\" />
+=======
+    <Compile Remove="Controllers\**" />
+    <Compile Remove="NewFolder\**" />
+    <Compile Remove="Views\Home\**" />
+    <Content Remove="Controllers\**" />
+    <Content Remove="NewFolder\**" />
+    <Content Remove="Views\Home\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="Views\Home\**" />
+    <None Remove="Controllers\**" />
+    <None Remove="NewFolder\**" />
+    <None Remove="Views\Home\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\ViewModels\" />
+    <Folder Include="Areas\Customer\Controllers\" />
+    <Folder Include="Areas\Customer\ViewModels\" />
+    <Folder Include="Areas\Customer\Views\" />
+>>>>>>> master
   </ItemGroup>
 
   <ItemGroup>
