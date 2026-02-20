@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ApplicationUser>
+
+<h1>USERS</h1>
+<div>
+	<a asp-action="Create">Create</a>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Phone Number</th>
+				<th>Actions</th>
+				<th>lock/unlock</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var user in Model)
+			{
+				<tr>
+					<td>@user.UserName</td>
+					<td>@user.Email</td>
+					<td>@user.PhoneNumber</td>
+					<td>
+						<a asp-action="Edit" asp-route-id="@user.Id">Edit</a> |
+						<a asp-action="Delete" asp-route-id="@user.Id">Delete</a>
+					</td> 
+					<td>
+						@if (user.LockoutEnd > DateTime.UtcNow && user.LockoutEnd != null)
+						{
+							<a asp-action="Unlock" asp-route-id="@user.Id">Unlock</a>
+						}
+						else
+						{
+							<a asp-action="Lock" asp-route-id="@user.Id">Lock</a>
+						}
+
+					</td>
+						
+				</tr>
+			}
+
+		</tbody>
+</div>
+
