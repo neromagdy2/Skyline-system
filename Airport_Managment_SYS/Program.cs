@@ -37,7 +37,7 @@ namespace Airport_Managment_SYS
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{area=Admin}/{controller=Home}/{action=Index}/{id?}")
+                pattern: "{area=Identity}/{controller=Authentication}/{action=Login}/{id?}")
                 .WithStaticAssets();
 
             app.Run();
