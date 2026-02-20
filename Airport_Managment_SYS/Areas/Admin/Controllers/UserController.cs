@@ -73,7 +73,9 @@ namespace Airport_Managment_SYS.Controllers
 
         public async Task<IActionResult> Delete(string id)
         {
-            await _userManager.DeleteAsync(new ApplicationUser { Id = id });
+            var user = await _userManager.FindByIdAsync(id);
+
+            await _userManager.DeleteAsync(user);
             return RedirectToAction(nameof(Index));
         }
     }
