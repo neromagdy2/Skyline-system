@@ -1,0 +1,76 @@
+﻿@model CreateTripVM
+
+<div class="container">
+    <div class="row mb-3 align-items-center my-3">
+        <div class="col-md-6">
+            <h2 class="display-6">Create New Trip</h2>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <form method="post">
+                @* Price Field *@
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label">Ticket Price</label>
+                    <input type="number" step="0.01" class="form-control" asp-for="Price">
+                    <span class="text-danger" asp-validation-for="Price"></span>
+                </div>
+
+                @* DateTime Field *@
+                <div class="mb-3">
+                    <label asp-for="DateTime" class="form-label">Departure Date & Time</label>
+                    <input type="datetime-local" class="form-control" asp-for="DateTime">
+                    <span class="text-danger" asp-validation-for="DateTime"></span>
+                </div>
+
+                <div class="row">
+                    @* Departure Airport *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Airport_FromId" class="form-label">From Airport</label>
+                        <select asp-for="Airport_FromId" class="form-select">
+                            <option value="">-- Select Departure --</option>
+                            @* Logic to populate these would usually be in ViewBag or the VM *@
+                        </select>
+                        <span class="text-danger" asp-validation-for="Airport_FromId"></span>
+                    </div>
+
+                    @* Arrival Airport *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Airport_ToId" class="form-label">To Airport</label>
+                        <select asp-for="Airport_ToId" class="form-select">
+                            <option value="">-- Select Destination --</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="Airport_ToId"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @* Airplane *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AirplaneId" class="form-label">Airplane</label>
+                        <select asp-for="AirplaneId" class="form-select">
+                            <option value="">-- Select Airplane --</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="AirplaneId"></span>
+                    </div>
+
+                    @* Seat *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="SeatId" class="form-label">Seat Assignment</label>
+                        <select asp-for="SeatId" class="form-select">
+                            <option value="">-- Select Seat --</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="SeatId"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Trip</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_NotificationPartial" />
+}

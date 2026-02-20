@@ -45,7 +45,9 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
        
                 UserName = registerVM.UserName,
                 Email = registerVM.Email,
-                PhoneNumber = registerVM.PhoneNumber
+                PhoneNumber = registerVM.PhoneNumber,
+                Nationality= registerVM.Nationality,
+                 
             };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
             if (!result.Succeeded)
@@ -238,7 +240,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         {
 
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home", new { area = "Admin" });
+            return RedirectToAction("Login", "Authentication", new { area = "Identity" });
         }
     }
 }

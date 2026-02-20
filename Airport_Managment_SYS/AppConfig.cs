@@ -41,7 +41,7 @@ namespace Ecommerce
 
             //services.AddScoped<IRepository<Actor>, Repository<Actor>>();
             //services.AddTransient<IEmailSender, EmailSender>();
-            //services.AddScoped<IRepository<>, Repository<>>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         }
     }
