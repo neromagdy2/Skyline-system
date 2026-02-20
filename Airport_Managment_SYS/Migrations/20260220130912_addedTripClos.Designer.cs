@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Airport_Managment_SYS.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
-    [Migration("20260219143749_AddColoumnsToTrips")]
-    partial class AddColoumnsToTrips
+    [Migration("20260220130912_addedTripClos")]
+    partial class addedTripClos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -529,7 +529,7 @@ namespace Airport_Managment_SYS.Migrations
                     b.HasOne("Airport_Managment_SYS.Models.Airplane", "Airplane")
                         .WithMany()
                         .HasForeignKey("AirplaneId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Airport_Managment_SYS.Models.Airport", "Airport_From")
@@ -547,7 +547,7 @@ namespace Airport_Managment_SYS.Migrations
                     b.HasOne("Airport_Managment_SYS.Models.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Airplane");

@@ -526,7 +526,7 @@ namespace Airport_Managment_SYS.Migrations
                     b.HasOne("Airport_Managment_SYS.Models.Airplane", "Airplane")
                         .WithMany()
                         .HasForeignKey("AirplaneId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Airport_Managment_SYS.Models.Airport", "Airport_From")
@@ -544,7 +544,7 @@ namespace Airport_Managment_SYS.Migrations
                     b.HasOne("Airport_Managment_SYS.Models.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Airplane");

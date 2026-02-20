@@ -1,0 +1,86 @@
+﻿@model Airport_Managment_SYS.Areas.Admin.ViewModels.EditTripVM
+
+<div class="container">
+    <div class="row mb-3 align-items-center my-3">
+        <div class="col-md-6">
+            @* Access Id through the Trip property *@
+            <h2 class="display-6">Update Trip #@Model.Trip?.Id</h2>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-12">
+            <form method="post">
+                @* Hidden field for the Trip ID so the POST action knows which record to update *@
+                <input type="hidden" asp-for="Trip.Id" />
+
+                <div class="row">
+                    @* Price *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Trip.Price" class="form-label">Price</label>
+                        <input type="number" step="0.01" class="form-control" asp-for="Trip.Price">
+                        <span class="text-danger" asp-validation-for="Trip.Price"></span>
+                    </div>
+
+                    @* Date *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Trip.DateTime" class="form-label">Departure Date & Time</label>
+                        <input type="datetime-local" class="form-control" asp-for="Trip.DateTime"
+                               value="@Model.Trip?.DateTime.ToString("yyyy-MM-ddTHH:mm")">
+                        <span class="text-danger" asp-validation-for="Trip.DateTime"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @* From Airport Dropdown *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Trip.Airport_FromId" class="form-label">From Airport</label>
+                        <select asp-for="Trip.Airport_FromId" class="form-select"
+                                asp-items="@(new SelectList(Model.Airports, "Id", "Name"))">
+                            <option value="">-- Select Departure Airport --</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="Trip.Airport_FromId"></span>
+                    </div>
+
+                    @* To Airport Dropdown *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Trip.Airport_ToId" class="form-label">To Airport</label>
+                        <select asp-for="Trip.Airport_ToId" class="form-select"
+                                asp-items="@(new SelectList(Model.Airports, "Id", "Name"))">
+                            <option value="">-- Select Destination Airport --</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="Trip.Airport_ToId"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @* Airplane Dropdown *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Trip.AirplaneId" class="form-label">Airplane</label>
+                        <select asp-for="Trip.AirplaneId" class="form-select"
+                                asp-items="@(new SelectList(Model.Airplanes, "Id", "Name"))">
+                            <option value="">-- Select Airplane --</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="Trip.AirplaneId"></span>
+                    </div>
+
+                    @* Seat ID - Keep as input or change to select if you have a Seats list *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Trip.SeatId" class="form-label">Seat ID</label>
+                        <input type="number" class="form-control" asp-for="Trip.SeatId">
+                        <span class="text-danger" asp-validation-for="Trip.SeatId"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

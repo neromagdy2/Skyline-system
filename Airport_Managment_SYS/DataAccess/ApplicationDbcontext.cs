@@ -32,18 +32,34 @@ namespace Airport_Managment_SYS.DataAccess
 
             // Configure Origin Airport
             modelBuilder.Entity<Reservation>().HasKey(r => new { r.TripId , r.ApplicationUserId });
-            modelBuilder.Entity<Trip>()
-        .HasOne(t => t.Airport_From)
-        .WithMany()
-        .HasForeignKey(t => t.Airport_FromId)
-        .OnDelete(DeleteBehavior.Restrict);
 
-    modelBuilder.Entity<Trip>()
-        .HasOne(t => t.Airport_To)
-        .WithMany()
-        .HasForeignKey(t => t.Airport_ToId)
-        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Airport_From)
+                .WithMany()
+                .HasForeignKey(t => t.Airport_FromId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Airport_To)
+                .WithMany()
+                .HasForeignKey(t => t.Airport_ToId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Disable cascade on SeatId
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Seat)
+                .WithMany()
+                .HasForeignKey(t => t.SeatId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // If the error persists, do the same for AirplaneId or Airports
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Airplane)
+                .WithMany()
+                .HasForeignKey(t => t.AirplaneId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
+
 
 
     }

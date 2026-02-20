@@ -5,7 +5,7 @@
 namespace Airport_Managment_SYS.Migrations
 {
     /// <inheritdoc />
-    public partial class AddColoumnsToTrips : Migration
+    public partial class addedTripClos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,16 +39,14 @@ namespace Airport_Managment_SYS.Migrations
                 table: "Trips",
                 column: "AirplaneId",
                 principalTable: "Airplanes",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Trips_Seats_SeatId",
                 table: "Trips",
                 column: "SeatId",
                 principalTable: "Seats",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
