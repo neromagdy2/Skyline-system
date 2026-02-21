@@ -1,0 +1,128 @@
+@model Airport_Managment.ViewModels.ReservationDashboardViewModel
+
+@{
+    ViewData["Title"] = "Reservations Dashboard";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="mb-1">Reservations Dashboard</h2>
+        <p class="text-muted mb-0">Live overview of user reservations, statuses, and revenue.</p>
+    </div>
+
+    <form method="get" class="d-flex gap-2 align-items-center">
+        <label for="userId" class="form-label mb-0 text-muted">User ID</label>
+        <input id="userId" name="userId" type="number" min="1" class="form-control" value="@Model.SelectedUserId" placeholder="Filter by user" />
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+    </form>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.LoadErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.LoadErrorMessage
+    </div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="card stat-card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Total Reservations</h6>
+                <h3 class="mb-0">@Model.TotalReservations</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="card stat-card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Pending</h6>
+                <h3 class="mb-0 text-warning">@Model.PendingReservations</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="card stat-card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Confirmed</h6>
+                <h3 class="mb-0 text-success">@Model.ConfirmedReservations</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="card stat-card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-muted mb-2">Revenue</h6>
+                <h3 class="mb-0">@Model.TotalRevenue.ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Reservation Details</h5>
+    </div>
+    <div class="card-body p-0">
+        @if (!Model.Reservations.Any())
+        {
+            <div class="p-4 text-center text-muted">No reservations found.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>User</th>
+                            <th>Trip</th>
+                            <th>Seats</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th class="text-end">Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var reservation in Model.Reservations)
+                        {
+                            <tr>
+                                <td>@reservation.Id</td>
+                                <td>
+                                    <div>@reservation.UserName</div>
+                                    <small class="text-muted">ID: @reservation.UserId</small>
+                                </td>
+                                <td>
+                                    <div>@reservation.TripRoute</div>
+                                    <small class="text-muted">Trip ID: @reservation.TripId</small>
+                                </td>
+                                <td>@reservation.SeatsCount</td>
+                                <td>@reservation.ReservationDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>
+                                    <span class="badge @GetStatusBadgeClass(reservation.Status)">
+                                        @reservation.Status
+                                    </span>
+                                </td>
+                                <td class="text-end fw-semibold">@reservation.TotalPrice.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    private static string GetStatusBadgeClass(Airport_Managment.Models.ReservationStatus status)
+    {
+        return status switch
+        {
+            Airport_Managment.Models.ReservationStatus.Pending => "text-bg-warning",
+            Airport_Managment.Models.ReservationStatus.Confirmed => "text-bg-success",
+            Airport_Managment.Models.ReservationStatus.Cancelled => "text-bg-danger",
+            _ => "text-bg-secondary"
+        };
+    }
+}
