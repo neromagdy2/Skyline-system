@@ -4,25 +4,56 @@
 }
 
 <div class="container-fluid mt-4">
-    <h1 class="h3 mb-4 text-gray-800">Dashboard Statistics</h1>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Dashboard Overview</h1>
+    </div>
 
-    <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Flights</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfTrips</div>
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
+
+        <div class="col mb-4">
+            <div class="card border-left-primary shadow h-100">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-auto">Total Flights</div>
+                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfTrips</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Revenue</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">$@ViewBag.TotalPaymentMoney</div>
+        <div class="col mb-4">
+            <div class="card border-left-success shadow h-100">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-auto">Total Revenue</div>
+                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">$@ViewBag.TotalPaymentMoney.ToString("N0")</div>
                 </div>
             </div>
         </div>
+
+        <div class="col mb-4">
+            <div class="card border-left-info shadow h-100">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-auto">Active Users</div>
+                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfUsers</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mb-4">
+            <div class="card border-left-warning shadow h-100">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-auto">Airports</div>
+                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfAirports</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mb-4">
+            <div class="card border-left-danger shadow h-100">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-auto">Airplanes</div>
+                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfPlanes</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

@@ -4,6 +4,7 @@ using Airport_Managment_SYS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Airport_Managment_SYS.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
-    partial class ApplicationDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20260224173951_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,9 +207,6 @@ namespace Airport_Managment_SYS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AirplaneId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Airport_FromId")
                         .HasColumnType("int");
 
@@ -216,24 +216,14 @@ namespace Airport_Managment_SYS.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
-                    b.Property<int>("SeatId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AirplaneId");
 
                     b.HasIndex("Airport_FromId");
 
                     b.HasIndex("Airport_ToId");
-
-                    b.HasIndex("SeatId");
 
                     b.ToTable("Trips");
                 });
@@ -529,12 +519,6 @@ namespace Airport_Managment_SYS.Migrations
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Trip", b =>
                 {
-                    b.HasOne("Airport_Managment_SYS.Models.Airplane", "Airplane")
-                        .WithMany()
-                        .HasForeignKey("AirplaneId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Airport_Managment_SYS.Models.Airport", "Airport_From")
                         .WithMany()
                         .HasForeignKey("Airport_FromId")
@@ -547,19 +531,9 @@ namespace Airport_Managment_SYS.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Airport_Managment_SYS.Models.Seat", "Seat")
-                        .WithMany()
-                        .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Airplane");
-
                     b.Navigation("Airport_From");
 
                     b.Navigation("Airport_To");
-
-                    b.Navigation("Seat");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
