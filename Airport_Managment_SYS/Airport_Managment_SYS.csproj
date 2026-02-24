@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-    <Folder Include="NewFolder\" />
-    <Folder Include="Views\Home\" />
-=======
     <Compile Remove="Controllers\**" />
     <Compile Remove="NewFolder\**" />
     <Compile Remove="Views\Home\**" />
@@ -26,11 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Areas\Customer\Controllers\" />
     <Folder Include="Areas\Customer\ViewModels\" />
     <Folder Include="Areas\Customer\Views\" />
->>>>>>> master
   </ItemGroup>
 
   <ItemGroup>
