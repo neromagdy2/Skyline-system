@@ -21,12 +21,14 @@ namespace Airport_Managment_SYS.DataAccess
         public DbSet<Seat > Seats { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-       {
-           base.OnConfiguring(optionsBuilder);
-       }
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+         
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             base.OnModelCreating(modelBuilder);
