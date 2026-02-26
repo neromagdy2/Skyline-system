@@ -4,6 +4,7 @@ using Airport_Managment_SYS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Airport_Managment_SYS.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
-    partial class ApplicationDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20260226134842_mockDataSeeding")]
+    partial class mockDataSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,9 +78,6 @@ namespace Airport_Managment_SYS.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("MobileCode")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -473,7 +473,7 @@ namespace Airport_Managment_SYS.Migrations
             modelBuilder.Entity("Airport_Managment_SYS.Models.GovernerateState", b =>
                 {
                     b.HasOne("Airport_Managment_SYS.Models.Country", "Country")
-                        .WithMany("Governerates")
+                        .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -619,11 +619,6 @@ namespace Airport_Managment_SYS.Migrations
             modelBuilder.Entity("Airport_Managment_SYS.Models.Airplane", b =>
                 {
                     b.Navigation("Seats");
-                });
-
-            modelBuilder.Entity("Airport_Managment_SYS.Models.Country", b =>
-                {
-                    b.Navigation("Governerates");
                 });
 #pragma warning restore 612, 618
         }

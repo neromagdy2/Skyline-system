@@ -1,0 +1,22 @@
+﻿@model ApplicationUser
+<h1>EDIT</h1>
+<a asp-action="Index">Back to List</a>
+<form asp-action="Edit" method="post">
+	<table>
+		<tr>
+			<td>Name</td>
+			<td> <input type="text" id="name" name="name" value="@Model.UserName"</td>
+		</tr>
+		<tr>
+			<td>Email</td>
+			<td><input type="text" id="email" name="email" value="@Model.Email"</td>
+		</tr>
+		<tr>
+			<td>Phone Number</td>
+			<td><input type="text" id="phoneNumber" name="phoneNumber" value="@Model.PhoneNumber"</td>
+		</tr>
+		<tr>
+			<td><input type="submit" value="Save"></td>
+		</tr>
+	</table>
+</form>
