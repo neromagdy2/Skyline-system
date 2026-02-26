@@ -1,4 +1,4 @@
-using Ecommerce;
+
 
 namespace Airport_Managment_SYS
 {
@@ -19,7 +19,33 @@ namespace Airport_Managment_SYS
 
             builder.Services.Config(connectionString);
 
+
+
             var app = builder.Build();
+
+            // Run DB initializer (migrations + seeding) at startup
+            using (var scope = app.Services.CreateScope())
+            {
+                try
+                {
+                    var initializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                    // Run synchronously on startup; this will apply migrations and seed data
+                    initializer.InitializeAsync().GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    // If initialization fails, log and continue to allow diagnostics
+                    var logger = scope.ServiceProvider.GetService<ILogger<Program>>();
+                    logger?.LogError(ex, "Database initializer failed");
+                }
+            }
+
+            // Initialize the database
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                dbInitializer.InitializeAsync().Wait();
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

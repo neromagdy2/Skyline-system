@@ -1,10 +1,11 @@
 ﻿using Airport_Managment_SYS.DataAccess;
+using Airport_Managment_SYS.Models;
+using Airport_Managment_SYS.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using MoviesApp.Utilities;
 
-namespace Ecommerce
+namespace Airport_Managment_SYS
 {
     public static class AppConfiguration
     {
@@ -39,9 +40,9 @@ namespace Ecommerce
 
 
 
-            //services.AddScoped<IRepository<Actor>, Repository<Actor>>();
-            //services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
         }
     }
