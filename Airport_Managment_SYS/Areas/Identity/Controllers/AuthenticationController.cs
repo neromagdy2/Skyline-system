@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,9 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Airport_Managment_SYS.ViewModels;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Airport_Managment_SYS.Utilities;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
 { 
@@ -75,6 +79,17 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(registerVM);
+            }
+
+            // Default newly registered users to "User" (Customer) role
+            var roleResult = await _userManager.AddToRoleAsync(user, StaticVariables.USER);
+            if (!roleResult.Succeeded)
+            {
+                foreach (var error in roleResult.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
@@ -263,6 +278,11 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
 
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Authentication", new { area = "Identity" });
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

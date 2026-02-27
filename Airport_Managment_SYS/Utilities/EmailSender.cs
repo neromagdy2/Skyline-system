@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace MoviesApp.Utilities
+namespace Airport_Managment_SYS.Utilities
 {
     public class EmailSender : IEmailSender
     {

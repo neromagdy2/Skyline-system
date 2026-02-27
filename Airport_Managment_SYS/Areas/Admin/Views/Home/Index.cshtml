@@ -1,5 +1,86 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    Layout = "~/Views/Shared/_admin_layout.cshtml";
+    ViewData["Title"] = "Dashboard Overview";
+    var totalRevenue = (double)(ViewBag.TotalPaymentMoney ?? 0);
 }
+
+<div class="mb-4">
+    <h2 class="mb-1 fw-bold text-dark">Dashboard Overview</h2>
+</div>
+
+<div class="row g-3 mb-3">
+    @* Total Flights Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(0, 197, 142, 0.15);">
+                        <span class="fas fa-chart-pie fs-5" style="color: #00c58e;"></span>
+                    </div>
+                </div>
+                <h6 class="text-600 mb-1">Total Flights</h6>
+                <h4 class="mb-0 fw-bold text-dark">@(ViewBag.NoOfTrips ?? 0)</h4>
+            </div>
+        </div>
+    </div>
+
+    @* Total Revenue Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(0, 197, 142, 0.15);">
+                        <span class="fas fa-dollar-sign fs-5" style="color: #00c58e;"></span>
+                    </div>
+                </div>
+                <h6 class="text-600 mb-1">Total Revenue</h6>
+                <h4 class="mb-0 fw-bold text-dark">$@(string.Format("{0:N0}", totalRevenue))</h4>
+            </div>
+        </div>
+    </div>
+
+    @* Active Users Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(0, 212, 170, 0.2);">
+                        <span class="fas fa-users fs-5" style="color: #00d4aa;"></span>
+                    </div>
+                </div>
+                <h6 class="text-600 mb-1">Active Users</h6>
+                <h4 class="mb-0 fw-bold text-dark">@(ViewBag.NoOfUsers ?? 0)</h4>
+            </div>
+        </div>
+    </div>
+
+    @* Airports Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(245, 158, 11, 0.2);">
+                        <span class="fas fa-building fs-5" style="color: #f59e0b;"></span>
+                    </div>
+                </div>
+                <h6 class="text-600 mb-1">Airports</h6>
+                <h4 class="mb-0 fw-bold text-dark">@(ViewBag.NoOfAirports ?? 0)</h4>
+            </div>
+        </div>
+    </div>
+
+    @* Airplanes Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(44, 123, 229, 0.15);">
+                        <span class="fas fa-plane fs-5" style="color: #2c7be5;"></span>
+                    </div>
+                </div>
+                <h6 class="text-600 mb-1">Airplanes</h6>
+                <h4 class="mb-0 fw-bold text-dark">@(ViewBag.NoOfPlanes ?? 0)</h4>
+            </div>
+        </div>
+    </div>
+</div>

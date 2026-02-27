@@ -76,6 +76,9 @@ namespace Airport_Managment_SYS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("MobileCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -139,6 +142,9 @@ namespace Airport_Managment_SYS.Migrations
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<float>("Total")
                         .HasColumnType("real");
@@ -233,6 +239,9 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<float>("Price")
                         .HasColumnType("real");
@@ -486,7 +495,7 @@ namespace Airport_Managment_SYS.Migrations
             modelBuilder.Entity("Airport_Managment_SYS.Models.GovernerateState", b =>
                 {
                     b.HasOne("Airport_Managment_SYS.Models.Country", "Country")
-                        .WithMany()
+                        .WithMany("Governerates")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -643,6 +652,11 @@ namespace Airport_Managment_SYS.Migrations
             modelBuilder.Entity("Airport_Managment_SYS.Models.Airplane", b =>
                 {
                     b.Navigation("Seats");
+                });
+
+            modelBuilder.Entity("Airport_Managment_SYS.Models.Country", b =>
+                {
+                    b.Navigation("Governerates");
                 });
 #pragma warning restore 612, 618
         }
