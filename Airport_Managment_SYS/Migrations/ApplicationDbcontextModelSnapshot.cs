@@ -107,27 +107,6 @@ namespace Airport_Managment_SYS.Migrations
                     b.ToTable("GoverneratesStates", (string)null);
                 });
 
-            modelBuilder.Entity("Airport_Managment_SYS.Models.Nationalities", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Nationalities", (string)null);
-                });
-
             modelBuilder.Entity("Airport_Managment_SYS.Models.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -464,10 +443,9 @@ namespace Airport_Managment_SYS.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<int>("NationalitiesId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("NationalitiesId");
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -627,17 +605,6 @@ namespace Airport_Managment_SYS.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Airport_Managment_SYS.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("Airport_Managment_SYS.Models.Nationalities", "National")
-                        .WithMany()
-                        .HasForeignKey("NationalitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("National");
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Airplane", b =>
