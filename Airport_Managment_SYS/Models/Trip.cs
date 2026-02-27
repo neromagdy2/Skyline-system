@@ -10,6 +10,8 @@
         public int Airport_ToId { get; set; }
         public int Airport_FromId { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public Airplane Airplane{ get; set; }
         public Seat Seat { get; set; }
         public Airport Airport_To { get; set; }

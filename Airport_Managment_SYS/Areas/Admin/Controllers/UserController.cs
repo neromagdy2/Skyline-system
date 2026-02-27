@@ -51,14 +51,18 @@ namespace Airport_Managment_SYS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection collection)
         {
-            await _userManager.CreateAsync(new ApplicationUser { UserName = collection["UserName"], Email = collection["Email"] }, collection["Password"]);
+            await _userManager.CreateAsync(new ApplicationUser { UserName = collection["name"], Email = collection["email"], PhoneNumber =collection["phonenumber"], PasswordHash = collection["password"] });
             return RedirectToAction(nameof(Index));
         }
 
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            return View(id);
+            if (id ==null) return NotFound();
+            var user = await _userManager.FindByIdAsync(id);
+                if (user == null) return NotFound();
+               
+            return View(user);
         }
 
 
@@ -66,7 +70,12 @@ namespace Airport_Managment_SYS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, IFormCollection collection)
         {
-            await _userManager.UpdateAsync(new ApplicationUser { Id = id, UserName = collection["UserName"], Email = collection["Email"] });
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+            user.UserName = collection["name"];
+            user.Email = collection["email"];
+            user.PhoneNumber = collection["phonenumber"];
+            await _userManager.UpdateAsync(user);
             return RedirectToAction(nameof(Index));
         }
 

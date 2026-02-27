@@ -1,0 +1,23 @@
+﻿@model Airport_Managment_SYS.Models.Payment
+@{
+    Layout = "_admin_layout";
+}
+
+<div class="card shadow-none">
+    <div class="card-body p-5 text-center">
+        <div class="avatar avatar-4xl mb-3">
+            <div class="avatar-name rounded-circle bg-soft-danger text-danger"><span>!</span></div>
+        </div>
+        <h4 class="mb-2">Are you sure?</h4>
+        <p class="text-muted">You are about to delete payment <strong>#@Model.Id</strong> for user <strong>@Model.ApplicationUser?.UserName</strong>.</p>
+
+        <form asp-action="Delete" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <div class="mt-4">
+                <button class="btn btn-danger px-4" type="submit">Confirm Delete</button>
+                <a class="btn btn-outline-secondary px-4" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

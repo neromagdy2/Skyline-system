@@ -1,0 +1,36 @@
+@model Airport_Managment_SYS.Models.Reservation
+
+@{
+ Layout = "~/Views/Shared/_admin_layout.cshtml";
+}
+
+<h2>Edit Reservation</h2>
+
+<form asp-area="Admin" asp-controller="Reservation" asp-action="Edit" method="post">
+ @Html.AntiForgeryToken()
+ <input type="hidden" name="originalTripId" value="@Model.TripId" />
+ <input type="hidden" name="originalUserId" value="@Model.ApplicationUserId" />
+
+ @if (!ViewData.ModelState.IsValid)
+ {
+ <div class="alert alert-danger">
+ @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+ {
+ <div>@err.ErrorMessage</div>
+ }
+ </div>
+ }
+
+ <div class="form-group">
+ <label for="newTripId">Trip</label>
+ <select id="newTripId" name="newTripId" class="form-control">
+ @foreach (var t in (IEnumerable<Airport_Managment_SYS.Models.Trip>)ViewBag.Trips)
+ {
+ @Html.Raw(string.Format("<option value=\"{0}\"{1}>{2} - {3}</option>", t.Id, t.Id == Model.TripId ? " selected" : "", t.DateTime.ToString("g"), t.Price.ToString("C")))
+ }
+ </select>
+ </div>
+
+ <button type="submit" class="btn btn-primary">Save</button>
+ <a asp-area="Admin" asp-controller="Reservation" asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

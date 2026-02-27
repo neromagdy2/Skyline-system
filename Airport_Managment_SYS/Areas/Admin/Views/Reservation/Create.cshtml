@@ -1,0 +1,32 @@
+@model dynamic
+
+@{
+ Layout = "~/Views/Shared/_admin_layout.cshtml";
+}
+
+<h2>Create Reservation</h2>
+
+<form asp-area="Admin" asp-controller="Reservation" asp-action="Create" method="post">
+ @Html.AntiForgeryToken()
+ <div class="form-group">
+ <label for="userId">User</label>
+ <select id="userId" name="userId" class="form-control">
+ @foreach (var u in (IEnumerable<Airport_Managment_SYS.Models.ApplicationUser>)ViewBag.Users)
+ {
+ <option value="@u.Id">@u.UserName (@u.Email)</option>
+ }
+ </select>
+ </div>
+ <div class="form-group">
+ <label for="tripId">Trip</label>
+ <select id="tripId" name="tripId" class="form-control">
+ @foreach (var t in (IEnumerable<Airport_Managment_SYS.Models.Trip>)ViewBag.Trips)
+ {
+ <option value="@t.Id">@t.DateTime.ToString("g") - @t.Price.ToString("C")</option>
+ }
+ </select>
+ </div>
+
+ <button type="submit" class="btn btn-primary">Create</button>
+ <a asp-area="Admin" asp-controller="Reservation" asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
