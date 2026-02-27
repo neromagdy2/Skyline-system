@@ -1,4 +1,4 @@
-﻿namespace MoviesApp.ViewModels
+﻿namespace Airport_Managment_SYS.ViewModels
 {
     public class LoginVM
     {
