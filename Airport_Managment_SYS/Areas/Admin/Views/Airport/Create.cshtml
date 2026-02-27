@@ -1,0 +1,65 @@
+﻿@model Airport_Managment_SYS.Areas.Admin.ViewModels.CreateAirportVM
+
+@{
+    ViewData["Title"] = "Create Airport";
+}
+
+
+<div class="container mt-5">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0 text-white">Create Airport</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Create" method="post">
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="GovernerateStateId" class="form-label">
+                        Governorate
+                    </label>
+
+                    <select asp-for="GovernerateStateId"
+                            class="form-select"
+                            asp-items="@(new SelectList(Model.GovernerateStates, "Id", "Name"))">
+                        <option value="">-- Select Governorate --</option>
+                    </select>
+
+                    <span asp-validation-for="GovernerateStateId" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        Back
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+                        Save Airport
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+       <partial name="_NotificationPartial" />
+}

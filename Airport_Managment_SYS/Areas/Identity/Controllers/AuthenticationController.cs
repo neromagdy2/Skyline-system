@@ -1,21 +1,25 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using MoviesApp.ViewModels;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using Airport_Managment_SYS.ViewModels;
+using System.Threading.Tasks;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
 { 
     [Area("Identity")]
     public class AuthenticationController : Controller
     {
-     
+       private readonly IRepository<Nationalities> _NationalitiesRepository;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
+        public AuthenticationController(IRepository<Nationalities> nationalitiesRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
         {
+            _NationalitiesRepository= nationalitiesRepository;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -27,9 +31,25 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         {
             return View();
         }
-        public IActionResult Register()
+        [HttpGet]
+        public async Task<IActionResult> Register()
         {
-            return View();
+
+            //var model = new RegisterVM();
+
+            //model.Nationalities = _context.Nationalities
+            //    .OrderBy(n => n.Name)
+            //    .Select(n => new SelectListItem
+            //    {
+            //        Value = n.Id.ToString(),
+            //        Text = n.Name
+            //    })
+            //    .ToList();
+            var nationalities= await _NationalitiesRepository.GetAsync();
+            return View(new RegisterVM()
+            {
+                Nationalities =nationalities
+            });
         }
         [HttpPost]
         public async Task<IActionResult> Register(RegisterVM registerVM)
@@ -37,7 +57,9 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
 
             if (!ModelState.IsValid)
             {
+                registerVM.Nationalities = await _NationalitiesRepository.GetAsync(trackd: false);
                 return View(registerVM);
+              
             }
             ApplicationUser user = new ApplicationUser()
             {
@@ -46,7 +68,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                 UserName = registerVM.UserName,
                 Email = registerVM.Email,
                 PhoneNumber = registerVM.PhoneNumber,
-                Nationality= registerVM.Nationality,
+                NationalitiesId= registerVM.NationalityId,
                  
             };
             var result = await _userManager.CreateAsync(user, registerVM.Password);

@@ -39,7 +39,11 @@ namespace Ecommerce
 
 
 
-            //services.AddScoped<IRepository<Actor>, Repository<Actor>>();
+            services.AddScoped<IRepository<Nationalities>, Repository<Nationalities>>();
+            services.AddScoped<IRepository<Airport>, Repository<Airport>>();
+            services.AddScoped<IRepository<GovernerateState>, Repository<GovernerateState>>();
+            services.AddScoped<IRepository<Country>, Repository<Country>>();
+            services.AddScoped<IRepository<SeatClass>, Repository<SeatClass>>();
             //services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
