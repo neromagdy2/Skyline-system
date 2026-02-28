@@ -7,6 +7,7 @@ using Airport_Managment_SYS.Utilities;
 using Airport_Managment_SYS.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace Airport_Managment_SYS.Utilities
 {
@@ -41,15 +42,45 @@ namespace Airport_Managment_SYS.Utilities
             _airportRepository = airportRepository;
         }
 
-    public async Task InitializeAsync()
-    {
+        public async Task InitializeAsync()
+        {
+            bool migrationsApplied = true;
+
             try
             {
                 if (_dbContext.Database.GetPendingMigrations().Any())
                 {
-                    _dbContext.Database.Migrate();
+                    try
+                    {
+                        _dbContext.Database.Migrate();
+                    }
+                    catch (SqlException sqlEx)
+                    {
+                        // If migration partially fails due to existing objects, log and skip seeding
+                        _logger.LogWarning(sqlEx, "Migration failed or partial: {Message}", sqlEx.Message);
+                        migrationsApplied = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Migration failed: {Message}", ex.Message);
+                        migrationsApplied = false;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to check/apply migrations: {Message}", ex.Message);
+                migrationsApplied = false;
+            }
 
+            if (!migrationsApplied)
+            {
+                _logger.LogWarning("Skipping DB seeding because migrations did not complete successfully.");
+                return;
+            }
+
+            try
+            {
                 // Create roles
                 if (!_roleManager.Roles.Any())
                 {
