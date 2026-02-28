@@ -1,10 +1,11 @@
-﻿using Airport_Managment_SYS.DataAccess;
+using Airport_Managment_SYS.DataAccess;
+using Airport_Managment_SYS.Models;
+using Airport_Managment_SYS.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using MoviesApp.Utilities;
 
-namespace Ecommerce
+namespace Airport_Managment_SYS
 {
     public static class AppConfiguration
     {
@@ -26,8 +27,8 @@ namespace Ecommerce
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = $"/Identity/Account/Login";
-                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+                options.LoginPath = "/Identity/Authentication/Login";
+                options.AccessDeniedPath = "/Identity/Authentication/AccessDenied";
             });
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -39,9 +40,15 @@ namespace Ecommerce
 
 
 
-            //services.AddScoped<IRepository<Actor>, Repository<Actor>>();
+            services.AddScoped<IRepository<Nationalities>, Repository<Nationalities>>();
+            services.AddScoped<IRepository<Airport>, Repository<Airport>>();
+            services.AddScoped<IRepository<GovernerateState>, Repository<GovernerateState>>();
+            services.AddScoped<IRepository<Country>, Repository<Country>>();
+            services.AddScoped<IRepository<SeatClass>, Repository<SeatClass>>();
             //services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
         }
     }

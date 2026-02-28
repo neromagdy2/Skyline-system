@@ -1,59 +1,86 @@
 ﻿@{
-    Layout = "_admin_layout";
-    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_admin_layout.cshtml";
+    ViewData["Title"] = "Dashboard Overview";
+    var totalRevenue = (double)(ViewBag.TotalPaymentMoney ?? 0);
 }
 
-<div class="container-fluid mt-4">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Dashboard Overview</h1>
+<div class="mb-4">
+    <h2 class="mb-1 fw-bold text-dark">Dashboard Overview</h2>
+</div>
+
+<div class="row g-3 mb-3">
+    @* Total Flights Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(0, 197, 142, 0.15);">
+                        <span class="fas fa-chart-pie fs-5" style="color: #00c58e;"></span>
+                    </div>
+                </div>
+                <h6 class="text-600 mb-1">Total Flights</h6>
+                <h4 class="mb-0 fw-bold text-dark">@(ViewBag.NoOfTrips ?? 0)</h4>
+            </div>
+        </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
-
-        <div class="col mb-4">
-            <div class="card border-left-primary shadow h-100">
-                <div class="card-body d-flex flex-column align-items-start">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-auto">Total Flights</div>
-                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfTrips</div>
+    @* Total Revenue Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(0, 197, 142, 0.15);">
+                        <span class="fas fa-dollar-sign fs-5" style="color: #00c58e;"></span>
+                    </div>
                 </div>
+                <h6 class="text-600 mb-1">Total Revenue</h6>
+                <h4 class="mb-0 fw-bold text-dark">$@(string.Format("{0:N0}", totalRevenue))</h4>
             </div>
         </div>
+    </div>
 
-        <div class="col mb-4">
-            <div class="card border-left-success shadow h-100">
-                <div class="card-body d-flex flex-column align-items-start">
-                    <div class="text-xs font-weight-bold text-success text-uppercase mb-auto">Total Revenue</div>
-                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">$@ViewBag.TotalPaymentMoney.ToString("N0")</div>
+    @* Active Users Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(0, 212, 170, 0.2);">
+                        <span class="fas fa-users fs-5" style="color: #00d4aa;"></span>
+                    </div>
                 </div>
+                <h6 class="text-600 mb-1">Active Users</h6>
+                <h4 class="mb-0 fw-bold text-dark">@(ViewBag.NoOfUsers ?? 0)</h4>
             </div>
         </div>
+    </div>
 
-        <div class="col mb-4">
-            <div class="card border-left-info shadow h-100">
-                <div class="card-body d-flex flex-column align-items-start">
-                    <div class="text-xs font-weight-bold text-info text-uppercase mb-auto">Active Users</div>
-                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfUsers</div>
+    @* Airports Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(245, 158, 11, 0.2);">
+                        <span class="fas fa-building fs-5" style="color: #f59e0b;"></span>
+                    </div>
                 </div>
+                <h6 class="text-600 mb-1">Airports</h6>
+                <h4 class="mb-0 fw-bold text-dark">@(ViewBag.NoOfAirports ?? 0)</h4>
             </div>
         </div>
+    </div>
 
-        <div class="col mb-4">
-            <div class="card border-left-warning shadow h-100">
-                <div class="card-body d-flex flex-column align-items-start">
-                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-auto">Airports</div>
-                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfAirports</div>
+    @* Airplanes Card *@
+    <div class="col-12 col-sm-6 col-xl">
+        <div class="card border-0 shadow-sm h-100 rounded-3">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <div class="rounded d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: rgba(44, 123, 229, 0.15);">
+                        <span class="fas fa-plane fs-5" style="color: #2c7be5;"></span>
+                    </div>
                 </div>
+                <h6 class="text-600 mb-1">Airplanes</h6>
+                <h4 class="mb-0 fw-bold text-dark">@(ViewBag.NoOfPlanes ?? 0)</h4>
             </div>
         </div>
-
-        <div class="col mb-4">
-            <div class="card border-left-danger shadow h-100">
-                <div class="card-body d-flex flex-column align-items-start">
-                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-auto">Airplanes</div>
-                    <div class="h4 mt-2 mb-0 font-weight-bold text-gray-800">@ViewBag.NoOfPlanes</div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>

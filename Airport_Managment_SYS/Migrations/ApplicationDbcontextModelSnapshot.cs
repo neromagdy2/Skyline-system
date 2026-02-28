@@ -40,7 +40,7 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Airplanes");
+                    b.ToTable("Airplanes", (string)null);
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Airport", b =>
@@ -65,7 +65,7 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.HasIndex("GovernerateStateId");
 
-                    b.ToTable("airports");
+                    b.ToTable("airports", (string)null);
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Country", b =>
@@ -76,13 +76,16 @@ namespace Airport_Managment_SYS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("MobileCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countrys");
+                    b.ToTable("Countrys", (string)null);
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.GovernerateState", b =>
@@ -104,7 +107,28 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("GoverneratesStates");
+                    b.ToTable("GoverneratesStates", (string)null);
+                });
+
+            modelBuilder.Entity("Airport_Managment_SYS.Models.Nationalities", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Nationalities", (string)null);
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Payment", b =>
@@ -129,7 +153,7 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Reservation", b =>
@@ -144,7 +168,7 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", (string)null);
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Seat", b =>
@@ -176,7 +200,7 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.HasIndex("seatClassId");
 
-                    b.ToTable("Seats");
+                    b.ToTable("Seats", (string)null);
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.SeatClass", b =>
@@ -193,7 +217,7 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SeatClasses");
+                    b.ToTable("SeatClasses", (string)null);
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Trip", b =>
@@ -235,7 +259,7 @@ namespace Airport_Managment_SYS.Migrations
 
                     b.HasIndex("SeatId");
 
-                    b.ToTable("Trips");
+                    b.ToTable("Trips", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -449,9 +473,10 @@ namespace Airport_Managment_SYS.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<string>("Nationality")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NationalitiesId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("NationalitiesId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -470,7 +495,7 @@ namespace Airport_Managment_SYS.Migrations
             modelBuilder.Entity("Airport_Managment_SYS.Models.GovernerateState", b =>
                 {
                     b.HasOne("Airport_Managment_SYS.Models.Country", "Country")
-                        .WithMany()
+                        .WithMany("Governerates")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -613,9 +638,25 @@ namespace Airport_Managment_SYS.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Airport_Managment_SYS.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("Airport_Managment_SYS.Models.Nationalities", "National")
+                        .WithMany()
+                        .HasForeignKey("NationalitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("National");
+                });
+
             modelBuilder.Entity("Airport_Managment_SYS.Models.Airplane", b =>
                 {
                     b.Navigation("Seats");
+                });
+
+            modelBuilder.Entity("Airport_Managment_SYS.Models.Country", b =>
+                {
+                    b.Navigation("Governerates");
                 });
 #pragma warning restore 612, 618
         }

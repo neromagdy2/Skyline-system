@@ -2,6 +2,7 @@ using Airport_Managment_SYS.Utilities;
 using Ecommerce;
 using Stripe;
 
+
 namespace Airport_Managment_SYS
 {
     public class Program
@@ -21,7 +22,33 @@ namespace Airport_Managment_SYS
 
             builder.Services.Config(connectionString);
 
+
+
             var app = builder.Build();
+
+            // Run DB initializer (migrations + seeding) at startup
+            using (var scope = app.Services.CreateScope())
+            {
+                try
+                {
+                    var initializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                    // Run synchronously on startup; this will apply migrations and seed data
+                    initializer.InitializeAsync().GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    // If initialization fails, log and continue to allow diagnostics
+                    var logger = scope.ServiceProvider.GetService<ILogger<Program>>();
+                    logger?.LogError(ex, "Database initializer failed");
+                }
+            }
+
+            // Initialize the database
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                dbInitializer.InitializeAsync().Wait();
+            }
 
             builder.Services.Configure<StripeSittings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
@@ -37,6 +64,7 @@ namespace Airport_Managment_SYS
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
             
             app.MapStaticAssets();

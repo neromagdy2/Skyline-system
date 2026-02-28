@@ -19,14 +19,17 @@ namespace Airport_Managment_SYS.DataAccess
         DbSet<Reservation> Reservations { get; set; }
         DbSet<SeatClass> SeatClasses { get; set; }
         DbSet<Seat > Seats { get; set; }
-
+        DbSet<PlaneSeats > planeSeats { get; set; }
+        DbSet <Nationalities> Nationalities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-       {
-           base.OnConfiguring(optionsBuilder);
-       }
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+         
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             base.OnModelCreating(modelBuilder);

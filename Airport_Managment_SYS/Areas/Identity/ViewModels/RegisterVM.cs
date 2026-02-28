@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.VisualBasic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace MoviesApp.ViewModels
+namespace Airport_Managment_SYS.ViewModels
 {
     public class RegisterVM
     {
@@ -13,9 +15,9 @@ namespace MoviesApp.ViewModels
         [DataType(DataType.Password),Compare(nameof(Password))]
 
         public string ConfirmPassword { get; set; }
-        public string Nationality { get; set; }
+        public int NationalityId { get; set; }
         public string PhoneNumber { get; set; }
 
-
+        public IEnumerable<Nationalities>? Nationalities { get; set; }
     }
 }

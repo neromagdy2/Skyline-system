@@ -1,0 +1,79 @@
+﻿
+@model IEnumerable<Airport_Managment_SYS.Models.SeatClass>
+
+@{
+    ViewData["Title"] = "Class seats";
+}
+
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Airports Management</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            + Add New class
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <table class="table table-striped table-hover align-middle text-center">
+                <thead class="table-dashboard">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                      
+                        <th width="180px">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        int counter = 1;
+                        foreach (var seatClass in Model)
+                        {
+                            <tr>
+                                <td>@counter</td>
+                                <td>@seatClass.Name</td>
+                                
+                                <td>
+                                    <a asp-action="Edit"
+                                       asp-route-id="@seatClass.Id"
+                                       class="btn btn-warning btn-sm me-2">
+                                        Edit
+                                    </a>
+
+                                    <form asp-action="Delete"
+                                          asp-route-id="@seatClass.Id"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Are you sure you want to delete this airport?');">
+
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                            counter++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-muted">
+                                No classes Found
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
