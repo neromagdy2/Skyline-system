@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using System.Linq;
+using Airport_Managment_SYS.Models;
+using Airport_Managment_SYS.Repositories;
 
 namespace Airport_Managment_SYS.Areas.Customer.Controllers
 {
@@ -19,15 +22,15 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             searchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
 
             var trips = await _tripRepository.GetAsync
-                (t => t.Airport_From.GovernerateStateId == searchTripsVM.DepartureCity&&
-                t.Airport_To.GovernerateStateId==searchTripsVM.ArrivalCity);
-      
+                (t => t.Airport_From.GovernerateStateId == searchTripsVM.DepartureCity &&
+                t.Airport_To.GovernerateStateId == searchTripsVM.ArrivalCity);
 
-            searchTripsVM.trips=trips;
-          
+
+            searchTripsVM.trips = trips;
+
             return View(searchTripsVM);
         }
-        
-        
+
+
     }
 }
