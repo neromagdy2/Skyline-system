@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Airport_Managment_SYS.Models;
-
-namespace Airport_Managment_SYS.Areas.Admin.ViewModels
+﻿namespace Airport_Managment_SYS.Areas.Admin.ViewModels
 {
     public class CreateTripVM
     {

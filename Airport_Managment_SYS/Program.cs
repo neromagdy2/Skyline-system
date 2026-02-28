@@ -58,6 +58,7 @@ namespace Airport_Managment_SYS
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();

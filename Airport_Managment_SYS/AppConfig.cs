@@ -1,4 +1,4 @@
-﻿using Airport_Managment_SYS.DataAccess;
+using Airport_Managment_SYS.DataAccess;
 using Airport_Managment_SYS.Models;
 using Airport_Managment_SYS.Utilities;
 using Microsoft.AspNetCore.Identity;
@@ -27,8 +27,8 @@ namespace Airport_Managment_SYS
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = $"/Identity/Account/Login";
-                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+                options.LoginPath = "/Identity/Authentication/Login";
+                options.AccessDeniedPath = "/Identity/Authentication/AccessDenied";
             });
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -40,6 +40,12 @@ namespace Airport_Managment_SYS
 
 
 
+            services.AddScoped<IRepository<Nationalities>, Repository<Nationalities>>();
+            services.AddScoped<IRepository<Airport>, Repository<Airport>>();
+            services.AddScoped<IRepository<GovernerateState>, Repository<GovernerateState>>();
+            services.AddScoped<IRepository<Country>, Repository<Country>>();
+            services.AddScoped<IRepository<SeatClass>, Repository<SeatClass>>();
+            //services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddScoped<IDbInitializer, DbInitializer>();

@@ -1,0 +1,98 @@
+﻿@using Airport_Managment_SYS.Areas.Admin.ViewModels
+@model CreateAirplaneVM
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Model</label>
+        <input asp-for="Model" class="form-control" />
+    </div>
+
+    <hr />
+
+    <h4>Seats</h4>
+
+    <div id="seatsContainer"></div>
+
+    <button type="button" id="addSeatBtn" class="btn btn-secondary">
+        Add Seat
+    </button>
+
+    <br /><br />
+
+    <button type="submit" class="btn btn-primary">
+        Create
+    </button>
+
+</form>
+
+@section Scripts {
+    <script>
+
+        let index = 0;
+
+        document.getElementById("addSeatBtn").addEventListener("click", function () {
+
+            let html = `
+            <div class="seat-row border p-3 mb-3">
+
+                <input type="hidden" name="Seats.Index" value="${index}" />
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <label>Seat Number</label>
+                        <input name="Seats[${index}].SeatNumber" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Price</label>
+                        <input name="Seats[${index}].Price" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Available</label>
+                        <select name="Seats[${index}].Available" class="form-select">
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Seat Class</label>
+                        <select name="Seats[${index}].seatClassId" class="form-select">
+                            @foreach (var item in Model.SeatClasses)
+                            {
+                                    <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="button" class="btn btn-danger mt-2 remove">
+                    Remove
+                </button>
+
+            </div>
+            `;
+
+            document.getElementById("seatsContainer")
+                    .insertAdjacentHTML("beforeend", html);
+
+            index++;
+        });
+
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("remove")) {
+                e.target.closest(".seat-row").remove();
+            }
+        });
+
+    </script>
+}

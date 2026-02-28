@@ -1,0 +1,154 @@
+﻿@using Airport_Managment_SYS.Areas.Admin.ViewModels
+@model EditAirplaneVM
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Model</label>
+        <input asp-for="Model" class="form-control" />
+    </div>
+
+    <hr />
+    <h4>Seats</h4>
+
+    <div id="seatsContainer">
+
+        @for (int i = 0; i < Model.Seats.Count; i++)
+        {
+            <div class="seat-row border p-3 mb-3">
+
+                <input type="hidden" name="Seats.Index" value="@i" />
+                <input type="hidden" name="Seats[@i].Id" value="@Model.Seats[i].Id" />
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <label>Seat Number</label>
+                        <input name="Seats[@i].SeatNumber"
+                               value="@Model.Seats[i].SeatNumber"
+                               class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Price</label>
+                        <input name="Seats[@i].Price"
+                               value="@Model.Seats[i].Price"
+                               class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Available</label>
+                        <select name="Seats[@i].Available" class="form-select">
+                            <option value="true" selected="@(Model.Seats[i].Available)">true</option>
+                            <option value="false" selected="@(!Model.Seats[i].Available)">false</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Seat Class</label>
+                        <select name="Seats[@i].seatClassId" class="form-select">
+                            @foreach (var item in Model.SeatClasses)
+                            {
+                                <option value="@item.Id"
+                                        selected="@(item.Id == Model.Seats[i].seatClassId)">
+                                    @item.Name
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="button" class="btn btn-danger mt-2 remove">
+                    Remove
+                </button>
+
+            </div>
+        }
+
+    </div>
+
+    <button type="button" id="addSeatBtn" class="btn btn-secondary">
+        Add Seat
+    </button>
+
+    <br /><br />
+
+    <button type="submit" class="btn btn-primary">
+        Save Changes
+    </button>
+
+</form>
+
+@section Scripts{
+    <script>
+
+        let index = @Model.Seats.Count;
+
+        document.getElementById("addSeatBtn").addEventListener("click", function () {
+
+            let html = `
+            <div class="seat-row border p-3 mb-3">
+
+                <input type="hidden" name="Seats.Index" value="${index}" />
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <label>Seat Number</label>
+                        <input name="Seats[${index}].SeatNumber" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Price</label>
+                        <input name="Seats[${index}].Price" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Available</label>
+                        <select name="Seats[${index}].Available" class="form-select">
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Seat Class</label>
+                        <select name="Seats[${index}].seatClassId" class="form-select">
+                            @foreach (var item in Model.SeatClasses)
+                            {
+                                    <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="button" class="btn btn-danger mt-2 remove">
+                    Remove
+                </button>
+
+            </div>
+            `;
+
+            document.getElementById("seatsContainer")
+                    .insertAdjacentHTML("beforeend", html);
+
+            index++;
+        });
+
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("remove")) {
+                e.target.closest(".seat-row").remove();
+            }
+        });
+
+    </script>
+}
