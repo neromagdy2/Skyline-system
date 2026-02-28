@@ -1,8 +1,7 @@
-﻿using Microsoft.VisualBasic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Airport_Managment_SYS.Models;
 
-namespace Airport_Managment_SYS.ViewModels
+namespace Airport_Managment_SYS.Areas.Identity.ViewModels
 {
     public class RegisterVM
     {
@@ -15,7 +14,8 @@ namespace Airport_Managment_SYS.ViewModels
         [DataType(DataType.Password),Compare(nameof(Password))]
 
         public string ConfirmPassword { get; set; }
-        public int NationalityId { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid nationality")]
+        public int? NationalitiesId { get; set; }
         public string PhoneNumber { get; set; }
 
         public IEnumerable<Nationalities>? Nationalities { get; set; }

@@ -33,6 +33,13 @@ namespace Airport_Managment_SYS.DataAccess
 
             base.OnModelCreating(modelBuilder);
 
+            // Configure ApplicationUser-Nationalities relationship
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(u => u.National)
+                .WithMany()
+                .HasForeignKey(u => u.NationalitiesId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // Configure global query filter for soft delete
             modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDeleted);
 

@@ -1,0 +1,31 @@
+@model Airport_Managment_SYS.Models.Reservation
+
+@{
+ Layout = "~/Views/Shared/_customer_layout.cshtml";
+ ViewData["Title"] = "Reservation Details";
+}
+
+<div class="container mt-5">
+ <div class="card">
+ <div class="card-body">
+ <h3 class="card-title mb-3">Reservation Details</h3>
+ <dl class="row">
+ <dt class="col-sm-3">Trip Id</dt>
+ <dd class="col-sm-9">@Model.TripId</dd>
+
+ <dt class="col-sm-3">Date & Time</dt>
+ <dd class="col-sm-9">@(Model.Trip?.DateTime.ToString("f") ?? "-")</dd>
+
+ <dt class="col-sm-3">Seat</dt>
+ <dd class="col-sm-9">@Model.Trip?.Seat?.Id.ToString() ?? "-"</dd>
+
+ <dt class="col-sm-3">Price</dt>
+ <dd class="col-sm-9">@(Model.Trip != null ? ((decimal)Model.Trip.Price).ToString("C") : "-")</dd>
+
+ <dt class="col-sm-3">Total</dt>
+ <dd class="col-sm-9">@((decimal)ViewBag.TotalPrice).ToString("C")</dd>
+ </dl>
+ <a asp-area="Customer" asp-controller="Reservations" asp-action="Index" class="btn btn-secondary">Back</a>
+ </div>
+ </div>
+</div>

@@ -1,0 +1,29 @@
+@model Airport_Managment_SYS.Models.Reservation
+
+@{
+ Layout = "~/Views/Shared/_admin_layout.cshtml";
+}
+
+<h2>Reservation Details</h2>
+
+<div class="card">
+ <div class="card-body">
+ <dl class="row">
+ <dt class="col-sm-3">Trip Id</dt>
+ <dd class="col-sm-9">@Model.TripId</dd>
+
+ <dt class="col-sm-3">Trip Date</dt>
+ <dd class="col-sm-9">@(Model.Trip?.DateTime.ToString("f") ?? "-")</dd>
+
+ <dt class="col-sm-3">Trip Price</dt>
+ <dd class="col-sm-9">@(Model.Trip?.Price.ToString("C") ?? "-")</dd>
+
+ <dt class="col-sm-3">User</dt>
+ <dd class="col-sm-9">@(Model.ApplicationUser?.UserName ?? "-") - @(Model.ApplicationUser?.Email ?? "-")</dd>
+
+ <dt class="col-sm-3">Total Price</dt>
+ <dd class="col-sm-9">@((decimal)ViewBag.TotalPrice)</dd>
+ </dl>
+ <a asp-area="Admin" asp-controller="Reservations" asp-action="Index" class="btn btn-secondary">Back</a>
+ </div>
+</div>

@@ -1,4 +1,4 @@
-﻿namespace Airport_Managment_SYS.ViewModels
+﻿namespace Airport_Managment_SYS.Areas.Admin.ViewModels
 {
     public class CreateTripVM
     {
