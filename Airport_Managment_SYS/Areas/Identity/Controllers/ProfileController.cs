@@ -29,7 +29,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
-            var user = await _context.Users
+            var user = await _userManager.Users
                 .Include(u => u.National)
                 .FirstOrDefaultAsync(u => u.Id == userId);
             
@@ -52,7 +52,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
-            var user = await _context.Users
+            var user = await _userManager.Users
                 .Include(u => u.National)
                 .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
             
