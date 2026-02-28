@@ -18,10 +18,10 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
 
         public async Task<IActionResult> Index()
         {
-
             var governerateStates = await _governerateStateRepository.GetAsync();
             return View(new SearchTripsVM() { States = governerateStates });
         }
+
         [HttpGet]
         public async Task<IActionResult> SearchTrips(SearchTripsVM searchTripsVM)
         {
@@ -32,7 +32,6 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             }
             searchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
 
-            // query by foreign keys rather than navigation properties to avoid null refs
             var trips = await _tripRepository.GetAsync(
                 t => t.Airport_FromId == searchTripsVM.DepartureCity &&
                      t.Airport_ToId == searchTripsVM.ArrivalCity,
@@ -43,10 +42,14 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                 });
 
             searchTripsVM.trips = trips;
-
             return View(searchTripsVM);
         }
 
-
+            searchTripsVM.trips=trips;
+          
+            return View(searchTripsVM);
+        }
+        
+        
     }
 }
