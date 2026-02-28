@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Linq.Expressions;
 using Airport_Managment_SYS.Areas.Admin.ViewModels;
 using Airport_Managment_SYS.Repositories;
 using Airport_Managment_SYS.Models;
@@ -62,10 +63,27 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
                 Price = TripVM.Price,
                 DateTime = TripVM.DateTime,
                 AirplaneId = TripVM.AirplaneId,
-                SeatId = TripVM.SeatId,
                 Airport_ToId = TripVM.Airport_ToId,
                 Airport_FromId = TripVM.Airport_FromId
             };
+
+            var plane = await _AirplaneRepo.GetOneAsync(
+                p => p.Id == TripVM.AirplaneId,
+                includes: [p=>p.Seats]);
+
+            if (plane == null)
+                return View(Trip);
+
+            // copy airplane seats into trip seats
+            foreach (var seat in plane.Seats)
+            {
+                Trip.TripSeats.Add(new TripSeat
+                {
+                    SeatId = seat.Id,
+                    IsBooked = false
+                });
+            }
+
             await _TripRepo.AddAsync(Trip);
             await _TripRepo.CommitAsync();
             return RedirectToAction("Index");
@@ -108,7 +126,6 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             Trip.Price = vmTrip.Price;
             Trip.DateTime = vmTrip.DateTime;
             Trip.AirplaneId = vmTrip.AirplaneId;
-            Trip.SeatId = vmTrip.SeatId;
             Trip.Airport_ToId = vmTrip.Airport_ToId;
             Trip.Airport_FromId = vmTrip.Airport_FromId;
             _TripRepo.Update(Trip);

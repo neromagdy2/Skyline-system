@@ -20,6 +20,7 @@ namespace Airport_Managment_SYS.DataAccess
         public DbSet<SeatClass> SeatClasses { get; set; }
         public DbSet<Seat > Seats { get; set; }
         public DbSet<PlaneSeats > planeSeats { get; set; }
+        public DbSet<TripSeat> TripSeats { get; set; }
         public DbSet<Nationalities> Nationalities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
