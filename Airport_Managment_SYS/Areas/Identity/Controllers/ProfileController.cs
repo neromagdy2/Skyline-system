@@ -57,6 +57,10 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
             if (user == null)
                 return Challenge();
 
+            // Get all nationalities for dropdown
+            var nationalities = await _context.Nationalities.OrderBy(n => n.Name).ToListAsync();
+            ViewBag.Nationalities = new SelectList(nationalities, "Id", "Name");
+
             return View(new EditProfileVM
             {
                 UserName = user.UserName ?? string.Empty,
@@ -76,7 +80,12 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                 return Challenge();
 
             if (!ModelState.IsValid)
+            {
+                // Get nationalities again for dropdown in case of validation error
+                var nationalities = await _context.Nationalities.OrderBy(n => n.Name).ToListAsync();
+                ViewBag.Nationalities = new SelectList(nationalities, "Id", "Name");
                 return View(model);
+            }
 
             // Update username via UserManager to keep identity normalized fields consistent
             if (!string.Equals(user.UserName, model.UserName, StringComparison.Ordinal))
