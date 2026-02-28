@@ -34,7 +34,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         public IActionResult Register()
         {
             var model = new RegisterVM();
-            model.Nationalities = _NationalitiesRepository.GetAll();
+            model.Nationalities = _NationalitiesRepository.GetAsync().Result;
             return View(model);
         }
         [HttpPost]
@@ -43,7 +43,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
 
             if (!ModelState.IsValid)
             {
-                registerVM.Nationalities = _NationalitiesRepository.GetAll();
+                registerVM.Nationalities = _NationalitiesRepository.GetAsync().Result;
                 return View(registerVM);
               
             }
