@@ -1,22 +1,25 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using MoviesApp.ViewModels;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Airport_Managment_SYS.ViewModels;
+using Airport_Managment_SYS.Areas.Identity.ViewModels;
 using Airport_Managment_SYS.Utilities;
+using System.Threading.Tasks;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
 { 
     [Area("Identity")]
     public class AuthenticationController : Controller
     {
-     
+       private readonly IRepository<Nationalities> _NationalitiesRepository;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
+        public AuthenticationController(IRepository<Nationalities> nationalitiesRepository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
         {
+            _NationalitiesRepository= nationalitiesRepository;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -28,11 +31,8 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
-            // Get all nationalities for dropdown
-            var nationalities = await _context.Nationalities.OrderBy(n => n.Name).ToListAsync();
-            ViewBag.Nationalities = new SelectList(nationalities, "Id", "Name");
             return View();
         }
         [HttpPost]
@@ -41,19 +41,16 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Get nationalities again for dropdown in case of validation error
-                var nationalities = await _context.Nationalities.OrderBy(n => n.Name).ToListAsync();
-                ViewBag.Nationalities = new SelectList(nationalities, "Id", "Name");
                 return View(registerVM);
+              
             }
             ApplicationUser user = new ApplicationUser()
             {
 
-       
                 UserName = registerVM.UserName,
                 Email = registerVM.Email,
                 PhoneNumber = registerVM.PhoneNumber,
-                Nationality= registerVM.Nationality,
+                NationalitiesId = registerVM.NationalitiesId > 0 ? registerVM.NationalitiesId : null,
                  
             };
             var result = await _userManager.CreateAsync(user, registerVM.Password);

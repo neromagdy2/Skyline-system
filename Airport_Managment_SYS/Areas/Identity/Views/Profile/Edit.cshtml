@@ -1,4 +1,10 @@
-@model MoviesApp.ViewModels.EditProfileVM
+@using Airport_Managment_SYS.Areas.Identity.ViewModels
+@model EditProfileVM
+@inject Airport_Managment_SYS.DataAccess.ApplicationDbcontext context
+
+@{
+    var nationalities = context.Nationalities.OrderBy(n => n.Name).ToList();
+}
 
 <div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
     <div class="card shadow-lg p-4" style="max-width:650px; width:100%;">
@@ -31,23 +37,9 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="NationalitiesId" class="form-label">Nationality</label>
-                <div class="position-relative">
-                    <input type="text" 
-                           id="nationalitySearch" 
-                           class="form-control" 
-                           placeholder="Search nationality..."
-                           autocomplete="off"
-                           style="margin-bottom: 5px;" />
-                    <select asp-for="NationalitiesId" 
-                            class="form-control" 
-                            id="nationalitySelect"
-                            asp-items="@(new SelectList(ViewBag.Nationalities, "Id", "Name", Model.NationalitiesId))"
-                            style="display: none;">
-                        <option value="">-- Select Nationality --</option>
-                    </select>
-                    <span asp-validation-for="NationalitiesId" class="text-danger"></span>
-                </div>
+                <label asp-for="Nationality" class="form-label"></label>
+                <input asp-for="Nationality" class="form-control" />
+                <span asp-validation-for="Nationality" class="text-danger"></span>
             </div>
 
             <div class="d-flex justify-content-end gap-2">

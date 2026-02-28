@@ -10,7 +10,7 @@ namespace Airport_Managment_SYS.Models
         public float Price { get; set; }
         public int seatClassId { get; set; }
         public int AirplaneId { get; set; }
-        public SeatClass SeatClass { get; set; }
-        public Airplane Airplane { get; set; }
+        public SeatClass ?SeatClass { get; set; }
+        public Airplane ?Airplane { get; set; }
     }
 }

@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Airport_Managment_SYS.Models.Country>
+
+@{
+    ViewData["Title"] = "Countries";
+}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 ">
+        <h2 class="fw-bold">Countries</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            + Add Country
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-dashboard">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th width="200">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        int counter = 1;
+                        foreach (var country in Model)
+                        {
+                            <tr>
+                                <td>@counter</td>
+                                <td>@country.Name</td>
+                                <td>
+                                    <a asp-action="Edit"
+                                       asp-route-id="@country.Id"
+                                       class="btn btn-warning btn-sm me-2">
+                                        Edit
+                                    </a>
+
+                                    <form asp-action="Delete"
+                                          asp-route-id="@country.Id"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Are you sure?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            counter++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-muted">
+                                No Countries Found
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>

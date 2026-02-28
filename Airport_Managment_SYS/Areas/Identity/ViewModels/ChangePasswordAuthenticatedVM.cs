@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MoviesApp.ViewModels
+namespace Airport_Managment_SYS.Areas.Identity.ViewModels
 {
     public class ChangePasswordAuthenticatedVM
     {

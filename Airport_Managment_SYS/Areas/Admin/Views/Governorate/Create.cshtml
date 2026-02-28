@@ -1,0 +1,46 @@
+﻿@model Airport_Managment_SYS.Areas.Admin.ViewModels.CreateGovernorateVM
+
+<div class="container mt-5">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="text-white">Create Governorate</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-area="Admin"
+                  asp-controller="Governorate"
+                  asp-action="Create"
+                  method="post">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CountryId" class="form-label">Country</label>
+
+                    <select asp-for="CountryId"
+                            class="form-select"
+                            asp-items="@(new SelectList(Model.Countries, "Id", "Name"))">
+                    </select>
+
+                    <span asp-validation-for="CountryId" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">Back</a>
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

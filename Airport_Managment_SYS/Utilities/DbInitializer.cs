@@ -18,6 +18,7 @@ namespace Airport_Managment_SYS.Utilities
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<GovernerateState> _governerateRepository;
+        private readonly IRepository<Nationalities> _nationalitiesRepository;
         private readonly IRepository<Airport> _airportRepository;
 
         public DbInitializer(
@@ -27,6 +28,7 @@ namespace Airport_Managment_SYS.Utilities
             UserManager<ApplicationUser> userManager,
             IRepository<Country> countryRepository,
             IRepository<GovernerateState> governerateRepository,
+            IRepository<Nationalities> nationalitiesRepository,
             IRepository<Airport> airportRepository)
         {
             _dbContext = dbContext;
@@ -35,6 +37,7 @@ namespace Airport_Managment_SYS.Utilities
             _userManager = userManager;
             _countryRepository = countryRepository;
             _governerateRepository = governerateRepository;
+            _nationalitiesRepository = nationalitiesRepository;
             _airportRepository = airportRepository;
         }
 
@@ -64,7 +67,7 @@ namespace Airport_Managment_SYS.Utilities
                         Email = "superadmin@example.com",
                         EmailConfirmed = true,
                         PhoneNumber = "+201055959599",
-                        Nationality = null!
+                        NationalitiesId = null
                     };
                     await _userManager.CreateAsync(super, "Super@123");
                     await _userManager.AddToRoleAsync(super, StaticVariables.SUPER_ADMIN);
@@ -78,10 +81,88 @@ namespace Airport_Managment_SYS.Utilities
                         Email = "admin@example.com",
                         EmailConfirmed = true,
                         PhoneNumber = "+201000000000",
-                        Nationality = null!
+                        NationalitiesId = null
                     };
                     await _userManager.CreateAsync(admin, "Admin@123");
                     await _userManager.AddToRoleAsync(admin, StaticVariables.ADMIN);
+                }
+
+                // Seed nationalities if not present
+                var existingNationalities = (await _nationalitiesRepository.GetAsync()).ToList();
+                if (!existingNationalities.Any())
+                {
+                    var nationalities = new List<Nationalities>
+                    {
+                        new Nationalities { Name = "Egypt", Code = "EG" },
+                        new Nationalities { Name = "United States", Code = "US" },
+                        new Nationalities { Name = "United Kingdom", Code = "UK" },
+                        new Nationalities { Name = "France", Code = "FR" },
+                        new Nationalities { Name = "Germany", Code = "DE" },
+                        new Nationalities { Name = "Italy", Code = "IT" },
+                        new Nationalities { Name = "Spain", Code = "ES" },
+                        new Nationalities { Name = "Canada", Code = "CA" },
+                        new Nationalities { Name = "Australia", Code = "AU" },
+                        new Nationalities { Name = "Japan", Code = "JP" },
+                        new Nationalities { Name = "China", Code = "CN" },
+                        new Nationalities { Name = "India", Code = "IN" },
+                        new Nationalities { Name = "Brazil", Code = "BR" },
+                        new Nationalities { Name = "Saudi Arabia", Code = "SA" },
+                        new Nationalities { Name = "United Arab Emirates", Code = "AE" },
+                        new Nationalities { Name = "Qatar", Code = "QA" },
+                        new Nationalities { Name = "Kuwait", Code = "KW" },
+                        new Nationalities { Name = "Jordan", Code = "JO" },
+                        new Nationalities { Name = "Lebanon", Code = "LB" },
+                        new Nationalities { Name = "Turkey", Code = "TR" },
+                        new Nationalities { Name = "South Africa", Code = "ZA" },
+                        new Nationalities { Name = "Nigeria", Code = "NG" },
+                        new Nationalities { Name = "Kenya", Code = "KE" },
+                        new Nationalities { Name = "Morocco", Code = "MA" },
+                        new Nationalities { Name = "Algeria", Code = "DZ" },
+                        new Nationalities { Name = "Tunisia", Code = "TN" },
+                        new Nationalities { Name = "Libya", Code = "LY" },
+                        new Nationalities { Name = "Sudan", Code = "SD" },
+                        new Nationalities { Name = "Iraq", Code = "IQ" },
+                        new Nationalities { Name = "Iran", Code = "IR" },
+                        new Nationalities { Name = "Pakistan", Code = "PK" },
+                        new Nationalities { Name = "Bangladesh", Code = "BD" },
+                        new Nationalities { Name = "Indonesia", Code = "ID" },
+                        new Nationalities { Name = "Malaysia", Code = "MY" },
+                        new Nationalities { Name = "Singapore", Code = "SG" },
+                        new Nationalities { Name = "Thailand", Code = "TH" },
+                        new Nationalities { Name = "Philippines", Code = "PH" },
+                        new Nationalities { Name = "Argentina", Code = "AR" },
+                        new Nationalities { Name = "Chile", Code = "CL" },
+                        new Nationalities { Name = "Colombia", Code = "CO" },
+                        new Nationalities { Name = "Peru", Code = "PE" },
+                        new Nationalities { Name = "Venezuela", Code = "VE" },
+                        new Nationalities { Name = "Greece", Code = "GR" },
+                        new Nationalities { Name = "Portugal", Code = "PT" },
+                        new Nationalities { Name = "Netherlands", Code = "NL" },
+                        new Nationalities { Name = "Belgium", Code = "BE" },
+                        new Nationalities { Name = "Switzerland", Code = "CH" },
+                        new Nationalities { Name = "Austria", Code = "AT" },
+                        new Nationalities { Name = "Sweden", Code = "SE" },
+                        new Nationalities { Name = "Norway", Code = "NO" },
+                        new Nationalities { Name = "Denmark", Code = "DK" },
+                        new Nationalities { Name = "Finland", Code = "FI" },
+                        new Nationalities { Name = "Poland", Code = "PL" },
+                        new Nationalities { Name = "Czech Republic", Code = "CZ" },
+                        new Nationalities { Name = "Hungary", Code = "HU" },
+                        new Nationalities { Name = "Romania", Code = "RO" },
+                        new Nationalities { Name = "Bulgaria", Code = "BG" },
+                        new Nationalities { Name = "Croatia", Code = "HR" },
+                        new Nationalities { Name = "Serbia", Code = "RS" },
+                        new Nationalities { Name = "Ukraine", Code = "UA" },
+                        new Nationalities { Name = "Belarus", Code = "BY" },
+                        new Nationalities { Name = "New Zealand", Code = "NZ" },
+                        new Nationalities { Name = "Israel", Code = "IL" }
+                    };
+
+                    foreach (var nationality in nationalities)
+                    {
+                        await _nationalitiesRepository.AddAsync(nationality);
+                        await _nationalitiesRepository.CommitAsync();
+                    }
                 }
 
                 // Seed countries, governorates and airports if not present

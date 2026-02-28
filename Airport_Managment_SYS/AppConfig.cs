@@ -32,6 +32,20 @@ namespace Airport_Managment_SYS
             });
             services.AddTransient<IEmailSender, EmailSender>();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+
+
+
+            services.AddScoped<IRepository<Nationalities>, Repository<Nationalities>>();
+            services.AddScoped<IRepository<Airport>, Repository<Airport>>();
+            services.AddScoped<IRepository<GovernerateState>, Repository<GovernerateState>>();
+            services.AddScoped<IRepository<Country>, Repository<Country>>();
+            services.AddScoped<IRepository<SeatClass>, Repository<SeatClass>>();
+            //services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddScoped<IDbInitializer, DbInitializer>();

@@ -1,9 +1,11 @@
-using Airport_Managment_SYS.Models;
+using Airport_Managment_SYS.ViewModels;
+using Airport_Managment_SYS.Areas.Identity.ViewModels;
+using Airport_Managment_SYS.DataAccess;
 using Airport_Managment_SYS.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MoviesApp.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
 {
@@ -13,17 +15,22 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbcontext _context;
 
-        public ProfileController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public ProfileController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbcontext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _context.ApplicationUsers
+                .Include(u => u.National)
+                .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
+            
             if (user == null)
                 return Challenge();
 
@@ -34,7 +41,8 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                 UserName = user.UserName ?? string.Empty,
                 Email = user.Email ?? string.Empty,
                 PhoneNumber = user.PhoneNumber,
-                Nationality = user.Nationality,
+                NationalitiesId = user.NationalitiesId,
+                National = user.National,
                 Roles = roles
             });
         }
@@ -42,7 +50,10 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _context.ApplicationUsers
+                .Include(u => u.National)
+                .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
+            
             if (user == null)
                 return Challenge();
 
@@ -55,7 +66,8 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                 UserName = user.UserName ?? string.Empty,
                 Email = user.Email ?? string.Empty,
                 PhoneNumber = user.PhoneNumber,
-                Nationality = user.Nationality
+                NationalitiesId = user.NationalitiesId,
+                National = user.National
             });
         }
 
@@ -88,7 +100,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
             }
 
             user.PhoneNumber = model.PhoneNumber;
-            user.Nationality = model.Nationality ?? string.Empty;
+            user.NationalitiesId = model.NationalitiesId > 0 ? model.NationalitiesId : null;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
