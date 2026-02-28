@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
-using System.Linq;
-using Airport_Managment_SYS.Models;
-using Airport_Managment_SYS.Repositories;
 
 namespace Airport_Managment_SYS.Areas.Customer.Controllers
 {
@@ -15,16 +12,35 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
         private readonly IRepository<Trip> _tripRepository;
         public HomeController(IRepository<GovernerateState> governerateStateRepository, IRepository<Trip> tripRepository)
         {
+            _governerateStateRepository = governerateStateRepository;
+            _tripRepository = tripRepository;
         }
 
+        public async Task<IActionResult> Index()
         {
+
+            var governerateStates = await _governerateStateRepository.GetAsync();
+            return View(new SearchTripsVM() { States = governerateStates });
+        }
+        [HttpGet]
+        public async Task<IActionResult> SearchTrips(SearchTripsVM searchTripsVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                searchTripsVM.States = await _governerateStateRepository.GetAsync();
+                return View("Index", searchTripsVM);
             }
             searchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
 
-            var trips = await _tripRepository.GetAsync
-                (t => t.Airport_From.GovernerateStateId == searchTripsVM.DepartureCity &&
-                t.Airport_To.GovernerateStateId == searchTripsVM.ArrivalCity);
-
+            // query by foreign keys rather than navigation properties to avoid null refs
+            var trips = await _tripRepository.GetAsync(
+                t => t.Airport_FromId == searchTripsVM.DepartureCity &&
+                     t.Airport_ToId == searchTripsVM.ArrivalCity,
+                includes: new System.Linq.Expressions.Expression<Func<Trip, object>>[]
+                {
+                    t => t.Airport_From,
+                    t => t.Airport_To
+                });
 
             searchTripsVM.trips = trips;
 

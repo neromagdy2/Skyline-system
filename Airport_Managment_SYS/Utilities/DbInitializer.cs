@@ -5,6 +5,7 @@ using Airport_Managment_SYS.DataAccess;
 using Airport_Managment_SYS.Models;
 using Airport_Managment_SYS.Utilities;
 using Airport_Managment_SYS.Repositories;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
@@ -21,6 +22,11 @@ namespace Airport_Managment_SYS.Utilities
         private readonly IRepository<GovernerateState> _governerateRepository;
         private readonly IRepository<Nationalities> _nationalitiesRepository;
         private readonly IRepository<Airport> _airportRepository;
+        private readonly IRepository<Airplane> _airplaneRepository;
+        private readonly IRepository<Seat> _seatRepository;
+        private readonly IRepository<Trip> _tripRepository;
+        private readonly IRepository<TripSeat> _tripSeatRepository;
+        private readonly IRepository<SeatClass> _seatClassRepository;
 
         public DbInitializer(
             ApplicationDbcontext dbContext,
@@ -30,7 +36,12 @@ namespace Airport_Managment_SYS.Utilities
             IRepository<Country> countryRepository,
             IRepository<GovernerateState> governerateRepository,
             IRepository<Nationalities> nationalitiesRepository,
-            IRepository<Airport> airportRepository)
+            IRepository<Airport> airportRepository,
+            IRepository<Airplane> airplaneRepository,
+            IRepository<Seat> seatRepository,
+            IRepository<Trip> tripRepository,
+            IRepository<TripSeat> tripSeatRepository,
+            IRepository<SeatClass> seatClassRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -40,6 +51,11 @@ namespace Airport_Managment_SYS.Utilities
             _governerateRepository = governerateRepository;
             _nationalitiesRepository = nationalitiesRepository;
             _airportRepository = airportRepository;
+            _airplaneRepository = airplaneRepository;
+            _seatRepository = seatRepository;
+            _tripRepository = tripRepository;
+            _tripSeatRepository = tripSeatRepository;
+            _seatClassRepository = seatClassRepository;
         }
 
         public async Task InitializeAsync()
@@ -75,8 +91,8 @@ namespace Airport_Managment_SYS.Utilities
 
             if (!migrationsApplied)
             {
-                _logger.LogWarning("Skipping DB seeding because migrations did not complete successfully.");
-                return;
+                _logger.LogWarning("Migrations did not complete successfully; continuing with seeding anyway.");
+                // we deliberately do not return so that seeding can still attempt to run
             }
 
             try
@@ -280,6 +296,109 @@ namespace Airport_Managment_SYS.Utilities
                             }
                             await _airportRepository.CommitAsync();
                         }
+                    }
+                }
+
+                // ensure at least two airports exist so trips can be created
+                var existingAirports = (await _airportRepository.GetAsync()).ToList();
+                if (existingAirports.Count < 2)
+                {
+                    _logger.LogInformation("Not enough airports found ({Count}), creating placeholders.", existingAirports.Count);
+                    var gov = (await _governerateRepository.GetAsync()).FirstOrDefault();
+                    if (gov != null)
+                    {
+                        await _airportRepository.AddAsync(new Airport { Name = "Placeholder A", GovernerateStateId = gov.Id });
+                        await _airportRepository.AddAsync(new Airport { Name = "Placeholder B", GovernerateStateId = gov.Id });
+                        await _airportRepository.CommitAsync();
+                    }
+                    existingAirports = (await _airportRepository.GetAsync()).ToList();
+                }
+
+                // always attempt to seed planes, seats, trips (checks just prevent duplicates)
+                _logger.LogInformation("Seeding planes and trips...");
+                // ensure test planes exist
+                var planeA = (await _airplaneRepository.GetAsync(p => p.Name == "TestPlaneA")).FirstOrDefault();
+                var planeB = (await _airplaneRepository.GetAsync(p => p.Name == "TestPlaneB")).FirstOrDefault();
+                if (planeA == null || planeB == null)
+                {
+                    if (planeA == null) planeA = new Airplane { Name = "TestPlaneA", Model = "Model-A" };
+                    if (planeB == null) planeB = new Airplane { Name = "TestPlaneB", Model = "Model-B" };
+                    if (planeA.Id == 0) await _airplaneRepository.AddAsync(planeA);
+                    if (planeB.Id == 0) await _airplaneRepository.AddAsync(planeB);
+                    await _airplaneRepository.CommitAsync();
+                }
+
+                // ensure at least one seat class exists
+                if (!(await _seatClassRepository.GetAsync()).Any())
+                {
+                    await _seatClassRepository.AddAsync(new SeatClass { Name = "Economy" });
+                    await _seatClassRepository.CommitAsync();
+                }
+                var econ = (await _seatClassRepository.GetAsync()).First();
+
+                // ensure plane seats exist for our test planes
+                var seatsForA = (await _seatRepository.GetAsync(s => s.AirplaneId == planeA.Id)).ToList();
+                if (!seatsForA.Any())
+                {
+                    var seats = new List<Seat>
+                    {
+                        new Seat { SeatNumber = 1, Available = true, Price = 20f, seatClassId = econ.Id, AirplaneId = planeA.Id },
+                        new Seat { SeatNumber = 2, Available = true, Price = 20f, seatClassId = econ.Id, AirplaneId = planeA.Id }
+                    };
+                    foreach (var s in seats) await _seatRepository.AddAsync(s);
+                    await _seatRepository.CommitAsync();
+                }
+                var seatsForB = (await _seatRepository.GetAsync(s => s.AirplaneId == planeB.Id)).ToList();
+                if (!seatsForB.Any())
+                {
+                    var seats = new List<Seat>
+                    {
+                        new Seat { SeatNumber = 1, Available = true, Price = 25f, seatClassId = econ.Id, AirplaneId = planeB.Id },
+                        new Seat { SeatNumber = 2, Available = true, Price = 25f, seatClassId = econ.Id, AirplaneId = planeB.Id }
+                    };
+                    foreach (var s in seats) await _seatRepository.AddAsync(s);
+                    await _seatRepository.CommitAsync();
+                }
+
+                // ensure test trips exist
+                var existingTrips = (await _tripRepository.GetAsync(t => t.Price == 199.99f || t.Price == 299.99f)).ToList();
+                if (existingTrips.Count < 2)
+                {
+                    var airports = (await _airportRepository.GetAsync()).ToList();
+                    if (airports.Count >= 2)
+                    {
+                        // recalc plane references in case they were newly created
+                        planeA = (await _airplaneRepository.GetAsync(p => p.Name == "TestPlaneA")).First();
+                        planeB = (await _airplaneRepository.GetAsync(p => p.Name == "TestPlaneB")).First();
+
+                        var trip1 = new Trip
+                        {
+                            Price = 199.99f,
+                            DateTime = new DateTime(2026, 3, 1, 9, 0, 0),
+                            AirplaneId = planeA.Id,
+                            Airport_FromId = airports[1].Id,
+                            Airport_ToId = airports[0].Id,
+                            IsDeleted = false,
+                            TripSeats = new List<TripSeat>()
+                        };
+                        var trip2 = new Trip
+                        {
+                            Price = 299.99f,
+                            DateTime = new DateTime(2026, 3, 2, 15, 30, 0),
+                            AirplaneId = planeB.Id,
+                            Airport_FromId = airports[0].Id,
+                            Airport_ToId = airports[1].Id,
+                            IsDeleted = false,
+                            TripSeats = new List<TripSeat>()
+                        };
+                        var seatsPlaneA = (await _seatRepository.GetAsync(s => s.AirplaneId == planeA.Id)).ToList();
+                        foreach (var s in seatsPlaneA) trip1.TripSeats.Add(new TripSeat { SeatId = s.Id, IsBooked = false });
+                        var seatsPlaneB = (await _seatRepository.GetAsync(s => s.AirplaneId == planeB.Id)).ToList();
+                        foreach (var s in seatsPlaneB) trip2.TripSeats.Add(new TripSeat { SeatId = s.Id, IsBooked = false });
+
+                        await _tripRepository.AddAsync(trip1);
+                        await _tripRepository.AddAsync(trip2);
+                        await _tripRepository.CommitAsync();
                     }
                 }
             }
