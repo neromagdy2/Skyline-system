@@ -13,7 +13,6 @@
         public bool IsDeleted { get; set; }
 
         public Airplane Airplane{ get; set; }
-        public Seat Seat { get; set; }
         public Airport Airport_To { get; set; }
         public Airport Airport_From { get; set; }
 

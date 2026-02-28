@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Linq;
 using Airport_Managment_SYS.Areas.Admin.ViewModels;
+using Airport_Managment_SYS.Repositories;
+using Airport_Managment_SYS.Models;
 
 
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
@@ -39,13 +42,21 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             var TripPlaceholder = new CreateTripVM
             {
                 Airports = Airports,
-                Airplanes = Airplanes
+                Airplanes = Airplanes,
+                DateTime = DateTime.Now
             };
             return View(TripPlaceholder);
         }
         [HttpPost]
         public async Task<IActionResult> Create(CreateTripVM TripVM)
         {
+            if (!ModelState.IsValid)
+            {
+                // repopulate lists for the view
+                TripVM.Airports = await _AirportRepo.GetAsync();
+                TripVM.Airplanes = await _AirplaneRepo.GetAsync();
+                return View(TripVM);
+            }
             var Trip = new Trip
             {
                 Price = TripVM.Price,
@@ -85,13 +96,21 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
 
             if (Trip == null)
                 return RedirectToAction("Index");
+            var vmTrip = TripVM.Trip;
+            if (vmTrip == null)
+            {
+                // repopulate lists and show view
+                TripVM.Airports = await _AirportRepo.GetAsync();
+                TripVM.Airplanes = await _AirplaneRepo.GetAsync();
+                return View(TripVM);
+            }
 
-            Trip.Price = TripVM.Trip.Price;
-            Trip.DateTime = TripVM.Trip.DateTime;
-            Trip.AirplaneId = TripVM.Trip.AirplaneId;
-            Trip.SeatId = TripVM.Trip.SeatId;
-            Trip.Airport_ToId = TripVM.Trip.Airport_ToId;
-            Trip.Airport_FromId = TripVM.Trip.Airport_FromId;
+            Trip.Price = vmTrip.Price;
+            Trip.DateTime = vmTrip.DateTime;
+            Trip.AirplaneId = vmTrip.AirplaneId;
+            Trip.SeatId = vmTrip.SeatId;
+            Trip.Airport_ToId = vmTrip.Airport_ToId;
+            Trip.Airport_FromId = vmTrip.Airport_FromId;
             _TripRepo.Update(Trip);
             await _TripRepo.CommitAsync();
             return RedirectToAction("Index");

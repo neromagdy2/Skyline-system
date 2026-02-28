@@ -49,12 +49,6 @@ namespace Airport_Managment_SYS.DataAccess
                 .HasForeignKey(t => t.Airport_ToId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Disable cascade on SeatId
-            modelBuilder.Entity<Trip>()
-                .HasOne(t => t.Seat)
-                .WithMany()
-                .HasForeignKey(t => t.SeatId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             // If the error persists, do the same for AirplaneId or Airports
             modelBuilder.Entity<Trip>()

@@ -1,4 +1,9 @@
-﻿namespace Airport_Managment_SYS.ViewModels
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Airport_Managment_SYS.Models;
+
+namespace Airport_Managment_SYS.Areas.Admin.ViewModels
 {
     public class CreateTripVM
     {
@@ -9,7 +14,7 @@
         public int SeatId { get; set; }
         public int Airport_ToId { get; set; }
         public int Airport_FromId { get; set; }
-        public IEnumerable<Airplane> Airplanes { get; set; }
-        public IEnumerable<Airport> Airports { get; set; }
+        public IEnumerable<Airplane> Airplanes { get; set; } = Enumerable.Empty<Airplane>();
+        public IEnumerable<Airport> Airports { get; set; } = Enumerable.Empty<Airport>();
     }
 }
