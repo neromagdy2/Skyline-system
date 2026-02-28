@@ -64,7 +64,7 @@ namespace Airport_Managment_SYS.Utilities
                         Email = "superadmin@example.com",
                         EmailConfirmed = true,
                         PhoneNumber = "+201055959599",
-                        NationalitiesId = 0
+                        NationalitiesId = null
                     };
                     await _userManager.CreateAsync(super, "Super@123");
                     await _userManager.AddToRoleAsync(super, StaticVariables.SUPER_ADMIN);
@@ -78,7 +78,7 @@ namespace Airport_Managment_SYS.Utilities
                         Email = "admin@example.com",
                         EmailConfirmed = true,
                         PhoneNumber = "+201000000000",
-                        NationalitiesId = 0
+                        NationalitiesId = null
                     };
                     await _userManager.CreateAsync(admin, "Admin@123");
                     await _userManager.AddToRoleAsync(admin, StaticVariables.ADMIN);

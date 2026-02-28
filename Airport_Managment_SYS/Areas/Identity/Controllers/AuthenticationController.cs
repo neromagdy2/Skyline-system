@@ -64,11 +64,10 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
             ApplicationUser user = new ApplicationUser()
             {
 
-       
                 UserName = registerVM.UserName,
                 Email = registerVM.Email,
                 PhoneNumber = registerVM.PhoneNumber,
-                NationalitiesId = registerVM.NationalitiesId ?? 0,
+                NationalitiesId = registerVM.NationalitiesId > 0 ? registerVM.NationalitiesId : null,
                  
             };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
