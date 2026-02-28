@@ -19,17 +19,27 @@ namespace Airport_Managment_SYS.DataAccess
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<SeatClass> SeatClasses { get; set; }
         public DbSet<Seat > Seats { get; set; }
-
+        public DbSet<PlaneSeats > planeSeats { get; set; }
+        public DbSet<Nationalities> Nationalities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-       {
-           base.OnConfiguring(optionsBuilder);
-       }
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+         
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             base.OnModelCreating(modelBuilder);
+
+            // Configure ApplicationUser-Nationalities relationship
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(u => u.National)
+                .WithMany()
+                .HasForeignKey(u => u.NationalitiesId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Configure global query filter for soft delete
             modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDeleted);

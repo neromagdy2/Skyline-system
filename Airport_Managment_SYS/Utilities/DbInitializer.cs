@@ -1,65 +1,261 @@
-﻿using Airport_Managment_SYS.DataAccess;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Airport_Managment_SYS.DataAccess;
+using Airport_Managment_SYS.Models;
+using Airport_Managment_SYS.Utilities;
+using Airport_Managment_SYS.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
-
-namespace MoviesApp.Utilities
+namespace Airport_Managment_SYS.Utilities
 {
     public class DbInitializer : IDbInitializer
     {
-
-
-        private readonly ApplicationDbcontext dbContext;
-        private readonly ILogger logger;
+        private readonly ApplicationDbcontext _dbContext;
+        private readonly ILogger<DbInitializer> _logger;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        public DbInitializer(ApplicationDbcontext dbContext, ILogger logger, RoleManager<IdentityRole> roleManager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IRepository<Country> _countryRepository;
+        private readonly IRepository<GovernerateState> _governerateRepository;
+        private readonly IRepository<Nationalities> _nationalitiesRepository;
+        private readonly IRepository<Airport> _airportRepository;
+
+        public DbInitializer(
+            ApplicationDbcontext dbContext,
+            ILogger<DbInitializer> logger,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager,
+            IRepository<Country> countryRepository,
+            IRepository<GovernerateState> governerateRepository,
+            IRepository<Nationalities> nationalitiesRepository,
+            IRepository<Airport> airportRepository)
         {
-            this.dbContext = dbContext;
-            this.logger = logger;
+            _dbContext = dbContext;
+            _logger = logger;
             _roleManager = roleManager;
+            _userManager = userManager;
+            _countryRepository = countryRepository;
+            _governerateRepository = governerateRepository;
+            _nationalitiesRepository = nationalitiesRepository;
+            _airportRepository = airportRepository;
         }
 
-        public void Initialize()
-        {
-
+    public async Task InitializeAsync()
+    {
             try
             {
-                if (dbContext.Database.GetPendingMigrations().Any())
+                if (_dbContext.Database.GetPendingMigrations().Any())
                 {
-
-                    dbContext.Database.Migrate();
-
+                    _dbContext.Database.Migrate();
                 }
+
+                // Create roles
                 if (!_roleManager.Roles.Any())
                 {
-
-                    _roleManager.CreateAsync(new(StaticVariables.SUPER_ADMIN)).GetAwaiter().GetResult();
-                    _roleManager.CreateAsync(new(StaticVariables.ADMIN)).GetAwaiter().GetResult();
-                    _roleManager.CreateAsync(new(StaticVariables.USER)).GetAwaiter().GetResult();
-
-
-
+                    await _roleManager.CreateAsync(new IdentityRole(StaticVariables.SUPER_ADMIN));
+                    await _roleManager.CreateAsync(new IdentityRole(StaticVariables.ADMIN));
+                    await _roleManager.CreateAsync(new IdentityRole(StaticVariables.USER));
                 }
-                _userManager.CreateAsync(new ApplicationUser()
+
+                // Create main users and assign roles if they don't exist
+                if (await _userManager.FindByNameAsync("superadmin") is null)
                 {
-                    UserName = "nerooo",
-                    
-                    EmailConfirmed = true,
-                    PhoneNumber = "01055959599"
-                }, "Nero14@").GetAwaiter().GetResult();
-                var user = _userManager.FindByNameAsync("nerooo").GetAwaiter().GetResult();
-                _userManager.AddToRoleAsync(user,StaticVariables.SUPER_ADMIN).GetAwaiter().GetResult();
+                    var super = new ApplicationUser
+                    {
+                        UserName = "superadmin",
+                        Email = "superadmin@example.com",
+                        EmailConfirmed = true,
+                        PhoneNumber = "+201055959599",
+                        NationalitiesId = null
+                    };
+                    await _userManager.CreateAsync(super, "Super@123");
+                    await _userManager.AddToRoleAsync(super, StaticVariables.SUPER_ADMIN);
+                }
+
+                if (await _userManager.FindByNameAsync("admin") is null)
+                {
+                    var admin = new ApplicationUser
+                    {
+                        UserName = "admin",
+                        Email = "admin@example.com",
+                        EmailConfirmed = true,
+                        PhoneNumber = "+201000000000",
+                        NationalitiesId = null
+                    };
+                    await _userManager.CreateAsync(admin, "Admin@123");
+                    await _userManager.AddToRoleAsync(admin, StaticVariables.ADMIN);
+                }
+
+                // Seed nationalities if not present
+                var existingNationalities = (await _nationalitiesRepository.GetAsync()).ToList();
+                if (!existingNationalities.Any())
+                {
+                    var nationalities = new List<Nationalities>
+                    {
+                        new Nationalities { Name = "Egypt", Code = "EG" },
+                        new Nationalities { Name = "United States", Code = "US" },
+                        new Nationalities { Name = "United Kingdom", Code = "UK" },
+                        new Nationalities { Name = "France", Code = "FR" },
+                        new Nationalities { Name = "Germany", Code = "DE" },
+                        new Nationalities { Name = "Italy", Code = "IT" },
+                        new Nationalities { Name = "Spain", Code = "ES" },
+                        new Nationalities { Name = "Canada", Code = "CA" },
+                        new Nationalities { Name = "Australia", Code = "AU" },
+                        new Nationalities { Name = "Japan", Code = "JP" },
+                        new Nationalities { Name = "China", Code = "CN" },
+                        new Nationalities { Name = "India", Code = "IN" },
+                        new Nationalities { Name = "Brazil", Code = "BR" },
+                        new Nationalities { Name = "Saudi Arabia", Code = "SA" },
+                        new Nationalities { Name = "United Arab Emirates", Code = "AE" },
+                        new Nationalities { Name = "Qatar", Code = "QA" },
+                        new Nationalities { Name = "Kuwait", Code = "KW" },
+                        new Nationalities { Name = "Jordan", Code = "JO" },
+                        new Nationalities { Name = "Lebanon", Code = "LB" },
+                        new Nationalities { Name = "Turkey", Code = "TR" },
+                        new Nationalities { Name = "South Africa", Code = "ZA" },
+                        new Nationalities { Name = "Nigeria", Code = "NG" },
+                        new Nationalities { Name = "Kenya", Code = "KE" },
+                        new Nationalities { Name = "Morocco", Code = "MA" },
+                        new Nationalities { Name = "Algeria", Code = "DZ" },
+                        new Nationalities { Name = "Tunisia", Code = "TN" },
+                        new Nationalities { Name = "Libya", Code = "LY" },
+                        new Nationalities { Name = "Sudan", Code = "SD" },
+                        new Nationalities { Name = "Iraq", Code = "IQ" },
+                        new Nationalities { Name = "Iran", Code = "IR" },
+                        new Nationalities { Name = "Pakistan", Code = "PK" },
+                        new Nationalities { Name = "Bangladesh", Code = "BD" },
+                        new Nationalities { Name = "Indonesia", Code = "ID" },
+                        new Nationalities { Name = "Malaysia", Code = "MY" },
+                        new Nationalities { Name = "Singapore", Code = "SG" },
+                        new Nationalities { Name = "Thailand", Code = "TH" },
+                        new Nationalities { Name = "Philippines", Code = "PH" },
+                        new Nationalities { Name = "Argentina", Code = "AR" },
+                        new Nationalities { Name = "Chile", Code = "CL" },
+                        new Nationalities { Name = "Colombia", Code = "CO" },
+                        new Nationalities { Name = "Peru", Code = "PE" },
+                        new Nationalities { Name = "Venezuela", Code = "VE" },
+                        new Nationalities { Name = "Greece", Code = "GR" },
+                        new Nationalities { Name = "Portugal", Code = "PT" },
+                        new Nationalities { Name = "Netherlands", Code = "NL" },
+                        new Nationalities { Name = "Belgium", Code = "BE" },
+                        new Nationalities { Name = "Switzerland", Code = "CH" },
+                        new Nationalities { Name = "Austria", Code = "AT" },
+                        new Nationalities { Name = "Sweden", Code = "SE" },
+                        new Nationalities { Name = "Norway", Code = "NO" },
+                        new Nationalities { Name = "Denmark", Code = "DK" },
+                        new Nationalities { Name = "Finland", Code = "FI" },
+                        new Nationalities { Name = "Poland", Code = "PL" },
+                        new Nationalities { Name = "Czech Republic", Code = "CZ" },
+                        new Nationalities { Name = "Hungary", Code = "HU" },
+                        new Nationalities { Name = "Romania", Code = "RO" },
+                        new Nationalities { Name = "Bulgaria", Code = "BG" },
+                        new Nationalities { Name = "Croatia", Code = "HR" },
+                        new Nationalities { Name = "Serbia", Code = "RS" },
+                        new Nationalities { Name = "Ukraine", Code = "UA" },
+                        new Nationalities { Name = "Belarus", Code = "BY" },
+                        new Nationalities { Name = "New Zealand", Code = "NZ" },
+                        new Nationalities { Name = "Israel", Code = "IL" }
+                    };
+
+                    foreach (var nationality in nationalities)
+                    {
+                        await _nationalitiesRepository.AddAsync(nationality);
+                        await _nationalitiesRepository.CommitAsync();
+                    }
+                }
+
+                // Seed countries, governorates and airports if not present
+                var existingCountries = (await _countryRepository.GetAsync()).ToList();
+                if (!existingCountries.Any())
+                {
+                    // Curated list of popular countries with a few governorates/cities and airports
+                    var seed = new List<(Country country, (string gov, string[] airports)[] govs)>
+                    {
+                        (new Country { Name = "Egypt", MobileCode = "+20" }, new[] {
+                            ("Cairo", new[] { "Cairo International Airport" }),
+                            ("Alexandria", new[] { "Borg El Arab Airport" })
+                        }),
+                        (new Country { Name = "United States", MobileCode = "+1" }, new[] {
+                            ("New York", new[] { "John F. Kennedy International Airport" }),
+                            ("Los Angeles", new[] { "Los Angeles International Airport" })
+                        }),
+                        (new Country { Name = "United Kingdom", MobileCode = "+44" }, new[] {
+                            ("London", new[] { "Heathrow Airport" }),
+                            ("Manchester", new[] { "Manchester Airport" })
+                        }),
+                        (new Country { Name = "United Arab Emirates", MobileCode = "+971" }, new[] {
+                            ("Dubai", new[] { "Dubai International Airport" }),
+                            ("Abu Dhabi", new[] { "Abu Dhabi International Airport" })
+                        }),
+                        (new Country { Name = "Saudi Arabia", MobileCode = "+966" }, new[] {
+                            ("Riyadh", new[] { "King Khalid International Airport" }),
+                            ("Jeddah", new[] { "King Abdulaziz International Airport" })
+                        }),
+                        (new Country { Name = "Canada", MobileCode = "+1" }, new[] {
+                            ("Toronto", new[] { "Toronto Pearson International Airport" }),
+                            ("Vancouver", new[] { "Vancouver International Airport" })
+                        }),
+                        (new Country { Name = "Germany", MobileCode = "+49" }, new[] {
+                            ("Frankfurt", new[] { "Frankfurt Airport" }),
+                            ("Munich", new[] { "Munich Airport" })
+                        }),
+                        (new Country { Name = "France", MobileCode = "+33" }, new[] {
+                            ("Paris", new[] { "Charles de Gaulle Airport" }),
+                            ("Nice", new[] { "Nice Cote d'Azur Airport" })
+                        }),
+                        (new Country { Name = "India", MobileCode = "+91" }, new[] {
+                            ("Delhi", new[] { "Indira Gandhi International Airport" }),
+                            ("Mumbai", new[] { "Chhatrapati Shivaji Maharaj International Airport" })
+                        }),
+                        (new Country { Name = "China", MobileCode = "+86" }, new[] {
+                            ("Beijing", new[] { "Beijing Capital International Airport" }),
+                            ("Shanghai", new[] { "Shanghai Pudong International Airport" })
+                        }),
+                        (new Country { Name = "Australia", MobileCode = "+61" }, new[] {
+                            ("Sydney", new[] { "Sydney Kingsford Smith Airport" }),
+                            ("Melbourne", new[] { "Melbourne Airport" })
+                        }),
+                    };
+
+                    // Add countries
+                    foreach (var entry in seed)
+                    {
+                        await _countryRepository.AddAsync(entry.country);
+                    }
+                    await _countryRepository.CommitAsync();
+
+                    // Add governorates and airports per country
+                    foreach (var entry in seed)
+                    {
+                        // Ensure we have the tracked country with Id
+                        var country = (await _countryRepository.GetAsync(c => c.Name == entry.country.Name)).FirstOrDefault();
+                        if (country == null) continue;
+
+                        foreach (var g in entry.govs)
+                        {
+                            var gov = new GovernerateState { Name = g.gov, CountryId = country.Id };
+                            await _governerateRepository.AddAsync(gov);
+                            await _governerateRepository.CommitAsync();
+
+                            // fetch the saved governorate to get Id
+                            var savedGov = (await _governerateRepository.GetAsync(x => x.Name == g.gov && x.CountryId == country.Id)).FirstOrDefault();
+                            if (savedGov == null) continue;
+
+                            foreach (var apName in g.airports)
+                            {
+                                var ap = new Airport { Name = apName, GovernerateStateId = savedGov.Id };
+                                await _airportRepository.AddAsync(ap);
+                            }
+                            await _airportRepository.CommitAsync();
+                        }
+                    }
+                }
             }
-
-
             catch (Exception ex)
             {
-                logger.LogError(ex.Message);
-
+                _logger.LogError(ex, "Error initializing the database");
             }
-
         }
     }
 }

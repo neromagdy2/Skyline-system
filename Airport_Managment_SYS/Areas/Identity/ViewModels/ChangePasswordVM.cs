@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MoviesApp.ViewModels
+namespace Airport_Managment_SYS.ViewModels
 {
  
   public class ChangePasswordVM
     {
         public int Id { get; set; }
         [Required]
-        public string Email { get; set; }
+       
+            public string Email { get; set; }
 
         [Required]
         public string Token { get; set; }

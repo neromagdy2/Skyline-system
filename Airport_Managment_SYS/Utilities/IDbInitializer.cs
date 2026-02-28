@@ -1,7 +1,9 @@
-﻿namespace MoviesApp.Utilities
+﻿using System.Threading.Tasks;
+
+namespace Airport_Managment_SYS.Utilities
 {
     public interface IDbInitializer
     {
-        void Initialize();
+        Task InitializeAsync();
     }
 }
