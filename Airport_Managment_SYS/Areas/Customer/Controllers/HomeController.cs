@@ -32,6 +32,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             }
             searchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
 
+
             var trips = await _tripRepository.GetAsync(
                 t => t.Airport_FromId == searchTripsVM.DepartureCity &&
                      t.Airport_ToId == searchTripsVM.ArrivalCity,
@@ -41,15 +42,57 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                     t => t.Airport_To
                 });
 
+
             searchTripsVM.trips = trips;
+
             return View(searchTripsVM);
         }
 
-            searchTripsVM.trips=trips;
-          
-            return View(searchTripsVM);
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var trip = await _tripRepository.GetOneAsync(t => t.Id == id,
+                includes: new System.Linq.Expressions.Expression<Func<Trip, object>>[]
+                {
+                    t => t.TripSeats,
+                    t => t.Airport_From,
+                    t => t.Airport_To
+                });
+            if (trip == null)
+                return NotFound();
+
+            var available = trip.TripSeats.Count(ts => !ts.IsBooked);
+            return View(new DetailsTripVM { Trip = trip, AvailableSeats = available });
         }
-        
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reserve(int tripId, int seatsToReserve)
+        {
+            var trip = await _tripRepository.GetOneAsync(t => t.Id == tripId,
+                includes: new System.Linq.Expressions.Expression<Func<Trip, object>>[]
+                {
+                    t => t.TripSeats
+                });
+            if (trip == null)
+                return NotFound();
+
+            var unbooked = trip.TripSeats.Where(ts => !ts.IsBooked).Take(seatsToReserve).ToList();
+            if (unbooked.Count < seatsToReserve)
+            {
+                // not enough seats, redirect back with message
+                TempData["Error"] = "Not enough available seats.";
+                return RedirectToAction(nameof(Details), new { id = tripId });
+            }
+            foreach (var ts in unbooked)
+            {
+                ts.IsBooked = true;
+            }
+            _tripRepository.Update(trip);
+            await _tripRepository.CommitAsync();
+            TempData["Success"] = "Seats reserved successfully.";
+            return RedirectToAction(nameof(Details), new { id = tripId });
+        }
     }
 }
