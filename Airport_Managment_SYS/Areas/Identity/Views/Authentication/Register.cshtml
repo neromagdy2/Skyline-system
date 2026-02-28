@@ -47,8 +47,18 @@
                                                 <input class="form-control" type="email" autocomplete="on" id="card-email" name="Email" />
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label" >Nationality</label>
-                                                <input class="form-control" type="text" autocomplete="on" id="card-email" name="Nationality" />
+                                                <label class="form-label" for="nationalitySearchReg">Nationality</label>
+                                                <input class="form-control" type="text" id="nationalitySearchReg" placeholder="Search for nationality..." autocomplete="off" />
+                                                <select class="form-control mt-2" id="nationalitySelectReg" name="NationalitiesId" style="display: none;">
+                                                    <option value="">-- Select Nationality --</option>
+                                                    @if (Model.Nationalities != null)
+                                                    {
+                                                        @foreach (var nationality in Model.Nationalities)
+                                                        {
+                                                            <option value="@nationality.Id">@nationality.Name</option>
+                                                        }
+                                                    }
+                                                </select>
                                             </div>
                                             <div class="row gx-2">
                                                 <div class="mb-3 col-sm-6">
@@ -248,10 +258,30 @@
                     selectElement.size = Math.min(10, selectElement.options.length);
                 });
                 
+                // Handle selection from dropdown
+                selectElement.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        searchInput.value = selectedOption.text;
+                    } else {
+                        searchInput.value = '';
+                    }
+                    this.size = 1;
+                });
+                
                 // Hide dropdown size when clicking outside
                 document.addEventListener('click', function(e) {
                     if (e.target !== searchInput && e.target !== selectElement) {
                         selectElement.size = 1;
+                    }
+                });
+                
+                // Handle keyboard navigation
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        selectElement.focus();
+                        selectElement.size = Math.min(10, selectElement.options.length);
                     }
                 });
             }
