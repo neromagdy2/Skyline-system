@@ -1,0 +1,60 @@
+@model IEnumerable<Airport_Managment_SYS.Models.Reservation>
+
+@{
+ Layout = "~/Views/Shared/_admin_layout.cshtml";
+}
+
+<h2>Reservations</h2>
+
+<div class="mb-3">
+ <form method="get" asp-area="Admin" asp-controller="Reservations" asp-action="Index" class="row g-2">
+ <div class="col-auto">
+ <select name="userId" class="form-select">
+ <option value="">All Users</option>
+ @foreach(var u in (IEnumerable<Airport_Managment_SYS.Models.ApplicationUser>)ViewBag.Users)
+ {
+ var isSelected = ViewBag.SelectedUserId == u.Id;
+ <option value="@u.Id" selected="@(isSelected ? "selected" : null)">@u.UserName (@u.Email)</option>
+ }
+ </select>
+ </div>
+ <div class="col-auto">
+ <button class="btn btn-primary" type="submit">Filter</button>
+ </div>
+ </form>
+</div>
+
+<p>Total price of shown reservations: <strong>@((decimal)ViewBag.TotalPrice)</strong></p>
+
+@if (!Model.Any())
+{
+ <div class="alert alert-info">No reservations found.</div>
+}
+
+<table class="table table-bordered table-striped">
+ <thead>
+ <tr>
+ <th>Trip Id</th>
+ <th>Trip Date</th>
+ <th>Price</th>
+ <th>User Name</th>
+ <th>User Email</th>
+ <th>Actions</th>
+ </tr>
+ </thead>
+ <tbody>
+ @foreach (var r in Model)
+ {
+ <tr>
+ <td>@r.TripId</td>
+ <td>@(r.Trip?.DateTime.ToString("g") ?? "-")</td>
+ <td>@(r.Trip?.Price.ToString("C") ?? "-")</td>
+ <td>@(r.ApplicationUser?.UserName ?? "-")</td>
+ <td>@(r.ApplicationUser?.Email ?? "-")</td>
+ <td>
+ <a asp-area="Admin" asp-controller="Reservations" asp-action="Details" asp-route-tripId="@r.TripId" asp-route-userId="@r.ApplicationUserId" class="btn btn-sm btn-info">Details</a>
+ </td>
+ </tr>
+ }
+ </tbody>
+</table>
