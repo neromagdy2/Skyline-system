@@ -5,6 +5,7 @@ using Airport_Managment_SYS.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
@@ -28,7 +29,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
-            var user = await _context.ApplicationUsers
+            var user = await _context.Users
                 .Include(u => u.National)
                 .FirstOrDefaultAsync(u => u.Id == userId);
             
@@ -51,7 +52,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
-            var user = await _context.ApplicationUsers
+            var user = await _context.Users
                 .Include(u => u.National)
                 .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
             
