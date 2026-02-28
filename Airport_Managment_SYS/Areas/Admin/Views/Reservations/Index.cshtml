@@ -1,0 +1,116 @@
+@model IEnumerable<Airport_Managment_SYS.Models.Reservation>
+
+@{
+ Layout = "~/Views/Shared/_admin_layout.cshtml";
+}
+
+<h2>Reservations</h2>
+
+<div class="mb-3">
+ <form method="get" asp-area="Admin" asp-controller="Reservations" asp-action="Index" class="row g-2">
+ <div class="col-auto">
+ <select name="userId" class="form-select">
+ <option value="">All Users</option>
+ @foreach(var u in (IEnumerable<Airport_Managment_SYS.Models.ApplicationUser>)ViewBag.Users)
+ {
+ var isSelected = ViewBag.SelectedUserId == u.Id;
+ if (isSelected)
+ {
+ <option value="@u.Id" selected="selected">@u.UserName (@u.Email)</option>
+ }
+ else
+ {
+ <option value="@u.Id">@u.UserName (@u.Email)</option>
+ }
+ }
+ </select>
+ </div>
+ <div class="col-auto">
+ <select name="pageSize" class="form-select">
+ @if ((int)ViewBag.PageSize ==5)
+ {
+ <option value="5" selected="selected">5</option>
+ }
+ else
+ {
+ <option value="5">5</option>
+ }
+ @if ((int)ViewBag.PageSize ==10)
+ {
+ <option value="10" selected="selected">10</option>
+ }
+ else
+ {
+ <option value="10">10</option>
+ }
+ @if ((int)ViewBag.PageSize ==20)
+ {
+ <option value="20" selected="selected">20</option>
+ }
+ else
+ {
+ <option value="20">20</option>
+ }
+ </select>
+ </div>
+ <div class="col-auto">
+ <button class="btn btn-primary" type="submit">Filter</button>
+ </div>
+ </form>
+</div>
+
+<p>Total price of shown reservations: <strong>@((decimal)ViewBag.TotalPrice)</strong></p>
+
+@if (!Model.Any())
+{
+ <div class="alert alert-info">No reservations found.</div>
+}
+
+<table class="table table-bordered table-striped">
+ <thead>
+ <tr>
+ <th>Trip Id</th>
+ <th>Trip Date</th>
+ <th>Price</th>
+ <th>User Name</th>
+ <th>User Email</th>
+ <th>Actions</th>
+ </tr>
+ </thead>
+ <tbody>
+ @foreach (var r in Model)
+ {
+ <tr>
+ <td>@r.TripId</td>
+ <td>@(r.Trip?.DateTime.ToString("g") ?? "-")</td>
+ <td>@(r.Trip?.Price.ToString("C") ?? "-")</td>
+ <td>@(r.ApplicationUser?.UserName ?? "-")</td>
+ <td>@(r.ApplicationUser?.Email ?? "-")</td>
+ <td>
+ <a asp-area="Admin" asp-controller="Reservations" asp-action="Details" asp-route-tripId="@r.TripId" asp-route-userId="@r.ApplicationUserId" class="btn btn-sm btn-info">Details</a>
+ </td>
+ </tr>
+ }
+ </tbody>
+</table>
+
+@{
+ var page = (int)ViewBag.PageNumber;
+ var pageSize = (int)ViewBag.PageSize;
+ var totalPages = (int)ViewBag.TotalPages;
+}
+
+<nav aria-label="Page navigation">
+ <ul class="pagination">
+ <li class="page-item @(page <=1 ? "disabled" : "")">
+ <a class="page-link" href="?userId=@ViewBag.SelectedUserId&page=@(page-1)&pageSize=@pageSize">Previous</a>
+ </li>
+ @for (int p =1; p <= totalPages; p++)
+ {
+ <li class="page-item @(p == page ? "active" : "")"><a class="page-link" href="?userId=@ViewBag.SelectedUserId&page=@p&pageSize=@pageSize">@p</a></li>
+ }
+ <li class="page-item @(page >= totalPages ? "disabled" : "")">
+ <a class="page-link" href="?userId=@ViewBag.SelectedUserId&page=@(page+1)&pageSize=@pageSize">Next</a>
+ </li>
+ </ul>
+</nav>

@@ -1,5 +1,4 @@
-@using Airport_Managment_SYS.Areas.Identity.ViewModels
-@model ProfileVM
+@model MoviesApp.ViewModels.ProfileVM
 
 @{
     Layout = "~/Views/Shared/_admin_layout.cshtml";
@@ -9,6 +8,7 @@
 <div class="container-fluid py-4 px-lg-5">
     <div class="row justify-content-center">
         <div class="col-12 col-xl-10">
+
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <div>
                     <h4 class="fw-bold text-dark mb-1">Account Settings</h4>
@@ -31,6 +31,7 @@
                             </div>
                             <h5 class="fw-bold mb-1">@Model.UserName</h5>
                             <p class="text-muted small mb-4">@Model.Email</p>
+
                             <div class="d-grid gap-4 px-4">
                                 <a asp-area="Identity" asp-controller="Profile" asp-action="Edit" class="btn btn-primary btn-sm py-2">Update Profile</a>
                                 <a asp-area="Identity" asp-controller="Profile" asp-action="ChangePassword" class="btn btn-outline-warning btn-sm py-2">Change Password</a>
@@ -58,16 +59,10 @@
                                         <div class="col-8 text-dark fw-semibold">@Model.Email</div>
                                     </div>
                                 </div>
-                                <div class="list-group-item px-0 py-3 border-0 border-bottom">
+                                <div class="list-group-item px-0 py-3 border-0">
                                     <div class="row align-items-center">
                                         <div class="col-4 text-muted small fw-bold text-uppercase">Phone</div>
-                                        <div class="col-8 text-dark fw-semibold">@(!string.IsNullOrEmpty(Model.PhoneNumber) ? Model.PhoneNumber : "Not provided")</div>
-                                    </div>
-                                </div>
-                                <div class="list-group-item px-0 py-3 border-0 border-bottom">
-                                    <div class="row align-items-center">
-                                        <div class="col-4 text-muted small fw-bold text-uppercase">Nationality</div>
-                                        <div class="col-8 text-dark fw-semibold">@(Model.National?.Name ?? "Not provided")</div>
+                                        <div class="col-8 text-dark fw-semibold">@(!string.IsNullOrEmpty(Model.PhoneNumber) ? Model.PhoneNumber : "—")</div>
                                     </div>
                                 </div>
                             </div>

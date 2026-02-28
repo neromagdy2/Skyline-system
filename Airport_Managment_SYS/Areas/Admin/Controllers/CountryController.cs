@@ -30,7 +30,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             {
                 return View(country);
             }
-        await    _countryRepository.AddAsync(country);
+            await _countryRepository.AddAsync(country);
             await _countryRepository.CommitAsync();
             TempData["Success"] = "Country created successfully.";
             return RedirectToAction("Index");
@@ -57,12 +57,13 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var country = await _countryRepository.GetOneAsync(c => c.Id == id);
-            _countryRepository.Delete(country);
-            await _countryRepository.CommitAsync();
-            TempData["Success"] = "Country deleted successfully.";
-
+            if (country != null)
+            {
+                _countryRepository.Delete(country);
+                await _countryRepository.CommitAsync();
+                TempData["Success"] = "Country deleted successfully.";
+            }
             return RedirectToAction("Index");
-            ;
         }
     }
 }

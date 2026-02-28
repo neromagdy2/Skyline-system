@@ -1,4 +1,4 @@
-﻿@using Airport_Managment_SYS.ViewModels
+﻿@using Airport_Managment_SYS.Areas.Identity.ViewModels
 @model RegisterVM
 
 <body>
@@ -48,7 +48,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label" >Nationality</label>
-                                                <select asp-for="NationalityId" class="form-control"
+                                                <select asp-for="NationalitiesId" class="form-control"
                                                         asp-items="@(new SelectList(Model.Nationalities, "Id", "Name"))">
                                                     <option value="">-- Select Nationality --</option>
                                                 </select>

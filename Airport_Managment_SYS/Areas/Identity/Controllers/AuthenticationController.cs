@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Airport_Managment_SYS.ViewModels;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Identity.UI.Services;
+using Airport_Managment_SYS.Areas.Identity.ViewModels;
 using Airport_Managment_SYS.Utilities;
+using System.Threading.Tasks;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
 { 
@@ -68,11 +64,10 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
             ApplicationUser user = new ApplicationUser()
             {
 
-       
                 UserName = registerVM.UserName,
                 Email = registerVM.Email,
                 PhoneNumber = registerVM.PhoneNumber,
-                NationalitiesId= registerVM.NationalityId,
+                NationalitiesId = registerVM.NationalitiesId > 0 ? registerVM.NationalitiesId : null,
                  
             };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
@@ -185,8 +180,11 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
                     return View(loginVM);
                 }
+            }if (await _userManager.IsInRoleAsync(user, StaticVariables.ADMIN))
+            {
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
             }
-            return RedirectToAction("Index", "Home", new { area = "Admin" });
+            return RedirectToAction("Index", "Home", new { area = "Customer" });
         }
         public IActionResult ForgetPassword()
         {
