@@ -1,11 +1,11 @@
-using Airport_Managment_SYS.Models;
+using Airport_Managment_SYS.ViewModels;
+using Airport_Managment_SYS.Areas.Identity.ViewModels;
 using Airport_Managment_SYS.DataAccess;
 using Airport_Managment_SYS.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MoviesApp.ViewModels;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
 {
@@ -91,7 +91,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
             }
 
             user.PhoneNumber = model.PhoneNumber;
-            user.NationalitiesId = model.NationalitiesId;
+            user.NationalitiesId = model.NationalitiesId ?? 0;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)

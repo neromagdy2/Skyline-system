@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Airport_Managment_SYS.ViewModels;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Identity.UI.Services;
+using Airport_Managment_SYS.Areas.Identity.ViewModels;
 using Airport_Managment_SYS.Utilities;
+using System.Threading.Tasks;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
 { 
@@ -72,7 +68,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                 UserName = registerVM.UserName,
                 Email = registerVM.Email,
                 PhoneNumber = registerVM.PhoneNumber,
-                NationalitiesId= registerVM.NationalityId,
+                NationalitiesId = registerVM.NationalitiesId ?? 0,
                  
             };
             var result = await _userManager.CreateAsync(user, registerVM.Password);

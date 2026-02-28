@@ -11,7 +11,7 @@ namespace Airport_Managment_SYS.DataAccess
 
         DbSet<Payment> Payments { get; set; }
         DbSet<Trip> Trips { get; set; }
-        DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         DbSet<Airport> airports { get; set; }   
         DbSet<Airplane> Airplanes { get; set; }
         DbSet<Country > Countrys { get; set; }
@@ -20,7 +20,7 @@ namespace Airport_Managment_SYS.DataAccess
         DbSet<SeatClass> SeatClasses { get; set; }
         DbSet<Seat > Seats { get; set; }
         DbSet<PlaneSeats > planeSeats { get; set; }
-        DbSet <Nationalities> Nationalities { get; set; }
+        public DbSet<Nationalities> Nationalities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

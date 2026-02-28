@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Airport_Managment_SYS.Models;
 
-namespace MoviesApp.ViewModels
+namespace Airport_Managment_SYS.Areas.Identity.ViewModels
 {
     public class EditProfileVM
     {
