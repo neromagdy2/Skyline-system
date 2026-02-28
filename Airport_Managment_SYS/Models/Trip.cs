@@ -6,14 +6,14 @@
         public float Price { get; set; }
         public DateTime DateTime { get; set; }
         public int AirplaneId{ get; set; }
-        public int SeatId { get; set; }
         public int Airport_ToId { get; set; }
         public int Airport_FromId { get; set; }
 
         public bool IsDeleted { get; set; }
 
+        public List<TripSeat> TripSeats { get; set; }
+
         public Airplane Airplane{ get; set; }
-        public Seat Seat { get; set; }
         public Airport Airport_To { get; set; }
         public Airport Airport_From { get; set; }
 

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using Airport_Managment_SYS.DataAccess;
+using Airport_Managment_SYS.Models;
+using Airport_Managment_SYS.Repositories;
 
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
 {
@@ -25,7 +28,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.NoOfTrips = (await _tripRepository.GetAsync()).ToList().Count();
-            ViewBag.NoOfUsers = (await _applicationUserRepository.GetAsync()).ToList().Count;
+            ViewBag.NoOfUsers = (await _applicationUserRepository.GetAsync()).ToList().Count();
             ViewBag.NoOfAirports = (await _airportRepository.GetAsync()).ToList().Count();
             ViewBag.NoOfPlanes = (await _airplaneRepository.GetAsync()).ToList().Count();
             ViewBag.TotalPaymentMoney = (await _paymentRepo.GetAsync()).ToList().Sum(p => (double?)p.Total);

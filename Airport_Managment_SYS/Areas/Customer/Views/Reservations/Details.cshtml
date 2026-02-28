@@ -16,9 +16,6 @@
  <dt class="col-sm-3">Date & Time</dt>
  <dd class="col-sm-9">@(Model.Trip?.DateTime.ToString("f") ?? "-")</dd>
 
- <dt class="col-sm-3">Seat</dt>
- <dd class="col-sm-9">@Model.Trip?.Seat?.Id.ToString() ?? "-"</dd>
-
  <dt class="col-sm-3">Price</dt>
  <dd class="col-sm-9">@(Model.Trip != null ? ((decimal)Model.Trip.Price).ToString("C") : "-")</dd>
 
