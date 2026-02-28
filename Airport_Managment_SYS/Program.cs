@@ -1,4 +1,6 @@
+using Airport_Managment_SYS.Utilities;
 using Ecommerce;
+using Stripe;
 
 namespace Airport_Managment_SYS
 {
@@ -21,6 +23,9 @@ namespace Airport_Managment_SYS
 
             var app = builder.Build();
 
+            builder.Services.Configure<StripeSittings>(builder.Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -33,7 +38,7 @@ namespace Airport_Managment_SYS
             app.UseRouting();
 
             app.UseAuthorization();
-
+            
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
