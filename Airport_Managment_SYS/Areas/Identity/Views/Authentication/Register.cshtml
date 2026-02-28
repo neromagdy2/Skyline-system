@@ -47,11 +47,18 @@
                                                 <input class="form-control" type="email" autocomplete="on" id="card-email" name="Email" />
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label" >Nationality</label>
-                                                <select asp-for="NationalitiesId" class="form-control"
-                                                        asp-items="@(new SelectList(Model.Nationalities, "Id", "Name"))">
-                                                    <option value="">-- Select Nationality --</option>
-                                                </select>
+                                                <label class="form-label" for="nationalitySelectReg">Nationality</label>
+                                                <input class="form-control" list="nationalitiesList" id="nationalitySelectReg" name="NationalitiesId" placeholder="Search and select nationality..." autocomplete="off" />
+                                                <datalist id="nationalitiesList">
+                                                    @if (Model.Nationalities != null)
+                                                    {
+                                                        @foreach (var nationality in Model.Nationalities)
+                                                        {
+                                                            <option value="@nationality.Id">@nationality.Name</option>
+                                                        }
+                                                    }
+                                                </datalist>
+                                                <input type="hidden" name="NationalitiesId" id="selectedNationalityId" />
                                             </div>
                                             <div class="mb-3 ">
                                                 <label class="form-label" for="card-confirm-password">Phone Number</label>
