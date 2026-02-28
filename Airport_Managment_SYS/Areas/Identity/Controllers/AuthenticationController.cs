@@ -28,8 +28,11 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         {
             return View();
         }
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
+            // Get all nationalities for dropdown
+            var nationalities = await _context.Nationalities.OrderBy(n => n.Name).ToListAsync();
+            ViewBag.Nationalities = new SelectList(nationalities, "Id", "Name");
             return View();
         }
         [HttpPost]
@@ -38,6 +41,9 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
 
             if (!ModelState.IsValid)
             {
+                // Get nationalities again for dropdown in case of validation error
+                var nationalities = await _context.Nationalities.OrderBy(n => n.Name).ToListAsync();
+                ViewBag.Nationalities = new SelectList(nationalities, "Id", "Name");
                 return View(registerVM);
             }
             ApplicationUser user = new ApplicationUser()

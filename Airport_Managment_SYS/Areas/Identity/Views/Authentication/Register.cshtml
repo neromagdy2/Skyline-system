@@ -1,4 +1,7 @@
-﻿<body>
+﻿@using Airport_Managment_SYS.Areas.Identity.ViewModels
+@model RegisterVM
+
+<body>
 
     <!-- ===============================================-->
     <!--    Main Content-->
@@ -34,7 +37,7 @@
                                             <div asp-validation-summary="ModelOnly" class="text-danger mb-3">
                                                 
                                             </div>
-                                           
+                                            
                                             <div class="mb-3">
                                                 <label class="form-label" for="card-name">User name</label>
                                                 <input class="form-control" type="text" autocomplete="on" id="card-name" name="UserName" />
@@ -44,8 +47,23 @@
                                                 <input class="form-control" type="email" autocomplete="on" id="card-email" name="Email" />
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label" >Nationality</label>
-                                                <input class="form-control" type="text" autocomplete="on" id="card-email" name="Nationality" />
+                                                <label class="form-label">Nationality</label>
+                                                <div class="position-relative">
+                                                    <input type="text" 
+                                                           id="nationalitySearchReg" 
+                                                           class="form-control" 
+                                                           placeholder="Search nationality..."
+                                                           autocomplete="off"
+                                                           style="margin-bottom: 5px;" />
+                                                    <select asp-for="NationalitiesId" 
+                                                            class="form-control" 
+                                                            id="nationalitySelectReg"
+                                                            asp-items="@(new SelectList(ViewBag.Nationalities, "Id", "Name", Model.NationalitiesId))"
+                                                            style="display: none;">
+                                                        <option value="">-- Select Nationality --</option>
+                                                    </select>
+                                                    <span asp-validation-for="NationalitiesId" class="text-danger"></span>
+                                                </div>
                                             </div>
                                             <div class="row gx-2">
                                                 <div class="mb-3 col-sm-6">
@@ -217,5 +235,44 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="../../../vendors/list.js/list.min.js"></script>
     <script src="../../../assets/js/theme.js"></script>
-
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('nationalitySearchReg');
+            const selectElement = document.getElementById('nationalitySelectReg');
+            
+            if (searchInput && selectElement) {
+                // Show the select element
+                selectElement.style.display = 'block';
+                
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const options = selectElement.options;
+                    
+                    for (let i = 0; i < options.length; i++) {
+                        const option = options[i];
+                        const text = option.text.toLowerCase();
+                        
+                        if (text.includes(searchTerm) || searchTerm === '') {
+                            option.style.display = 'block';
+                        } else {
+                            option.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // Handle search input click to show dropdown
+                searchInput.addEventListener('focus', function() {
+                    selectElement.size = Math.min(10, selectElement.options.length);
+                });
+                
+                // Hide dropdown size when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (e.target !== searchInput && e.target !== selectElement) {
+                        selectElement.size = 1;
+                    }
+                });
+            }
+        });
+    </script>
 </body>

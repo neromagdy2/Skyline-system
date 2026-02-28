@@ -31,9 +31,23 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Nationality" class="form-label"></label>
-                <input asp-for="Nationality" class="form-control" />
-                <span asp-validation-for="Nationality" class="text-danger"></span>
+                <label asp-for="NationalitiesId" class="form-label">Nationality</label>
+                <div class="position-relative">
+                    <input type="text" 
+                           id="nationalitySearch" 
+                           class="form-control" 
+                           placeholder="Search nationality..."
+                           autocomplete="off"
+                           style="margin-bottom: 5px;" />
+                    <select asp-for="NationalitiesId" 
+                            class="form-control" 
+                            id="nationalitySelect"
+                            asp-items="@(new SelectList(ViewBag.Nationalities, "Id", "Name", Model.NationalitiesId))"
+                            style="display: none;">
+                        <option value="">-- Select Nationality --</option>
+                    </select>
+                    <span asp-validation-for="NationalitiesId" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="d-flex justify-content-end gap-2">
@@ -49,5 +63,45 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         <partial name="_NotificationPartial" />
     }
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('nationalitySearch');
+            const selectElement = document.getElementById('nationalitySelect');
+            
+            if (searchInput && selectElement) {
+                // Show the select element
+                selectElement.style.display = 'block';
+                
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const options = selectElement.options;
+                    
+                    for (let i = 0; i < options.length; i++) {
+                        const option = options[i];
+                        const text = option.text.toLowerCase();
+                        
+                        if (text.includes(searchTerm) || searchTerm === '') {
+                            option.style.display = 'block';
+                        } else {
+                            option.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // Handle search input click to show dropdown
+                searchInput.addEventListener('focus', function() {
+                    selectElement.size = Math.min(10, selectElement.options.length);
+                });
+                
+                // Hide dropdown size when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (e.target !== searchInput && e.target !== selectElement) {
+                        selectElement.size = 1;
+                    }
+                });
+            }
+        });
+    </script>
 }
 
