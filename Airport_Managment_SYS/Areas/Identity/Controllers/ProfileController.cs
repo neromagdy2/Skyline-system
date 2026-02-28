@@ -27,9 +27,10 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var userId = _userManager.GetUserId(User);
             var user = await _context.ApplicationUsers
                 .Include(u => u.National)
-                .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
+                .FirstOrDefaultAsync(u => u.Id == userId);
             
             if (user == null)
                 return Challenge();
