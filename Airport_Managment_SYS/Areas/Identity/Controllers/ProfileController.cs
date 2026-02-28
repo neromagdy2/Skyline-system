@@ -91,7 +91,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
             }
 
             user.PhoneNumber = model.PhoneNumber;
-            user.NationalitiesId = model.NationalitiesId ?? 0;
+            user.NationalitiesId = model.NationalitiesId > 0 ? model.NationalitiesId : null;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)

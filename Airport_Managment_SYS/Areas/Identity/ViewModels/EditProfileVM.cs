@@ -17,6 +17,7 @@ namespace Airport_Managment_SYS.Areas.Identity.ViewModels
         public string? PhoneNumber { get; set; }
 
         [Display(Name = "Nationality")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid nationality")]
         public int? NationalitiesId { get; set; }
         
         public Nationalities? National { get; set; }
