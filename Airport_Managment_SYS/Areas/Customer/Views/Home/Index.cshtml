@@ -1,0 +1,264 @@
+﻿
+
+
+@model Airport_Managment_SYS.Areas.Customer.ViewModels.SearchTripsVM
+
+@{
+    Layout = "_customer_layout";
+    ViewData["Title"] = "Home";
+}
+
+<main class="flex-1">
+
+    <!-- Hero Section -->
+    <section class="relative w-full min-h-[600px] flex flex-col items-center justify-center px-4 py-20 bg-slate-900 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10"></div>
+            <div class="w-full h-full bg-cover bg-center"
+                 style='background-image: url("https://islamonline.net/wp-content/uploads/2022/06/Madinah-Mosque.jpg");'>
+            </div>
+        </div>
+
+        <div class="relative z-20 w-full max-w-5xl mx-auto flex flex-col items-center gap-8">
+
+            <div class="text-center space-y-4">
+                <h1 class="text-white text-4xl md:text-6xl font-800 leading-tight tracking-tight">
+                    Where to next?
+                </h1>
+                <p class="text-slate-100 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+                    Explore 500+ destinations with the world's most awarded airline.
+                </p>
+            </div>
+
+            <!-- SEARCH FORM -->
+            <div class="w-full bg-white/95 backdrop-blur-xl p-6 md:p-8 rounded-xl shadow-2xl border border-white/20">
+
+                <form asp-area="Customer"
+                      asp-controller="Home"
+                      asp-action="SearchTrips"
+                      method="get"
+                      class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+                    <!-- From -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">
+                            From
+                        </label>
+
+                        <div class="border border-slate-200 rounded-lg bg-white h-14 px-4 flex items-center">
+                            <span class="material-symbols-outlined text-slate-400 mr-2">
+                                flight_takeoff
+                            </span>
+
+                            <select asp-for="DepartureCity"
+                                    class="w-full bg-transparent border-none focus:ring-0 font-semibold">
+
+                                <option value="">Select Departure</option>
+
+                                @foreach (var state in Model.States!)
+                                {
+                                    <option value="@state.Id">
+                                        @state.Name
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <span asp-validation-for="DepartureCity"
+                              class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <!-- To -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">
+                            To
+                        </label>
+
+                        <div class="border border-slate-200 rounded-lg bg-white h-14 px-4 flex items-center">
+                            <span class="material-symbols-outlined text-slate-400 mr-2">
+                                flight_land
+                            </span>
+
+                            <select asp-for="ArrivalCity"
+                                    class="w-full bg-transparent border-none focus:ring-0 font-semibold">
+
+                                <option value="">Select Destination</option>
+
+                                @foreach (var state in Model.States!)
+                                {
+                                    <option value="@state.Id"
+                                            selected="@(Model.ArrivalCity == state.Id)">
+                                        @state.Name
+                                    </option>
+                                }
+
+                            </select>
+                        </div>
+
+                        <span asp-validation-for="ArrivalCity"
+                              class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <!-- Date -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">
+                            Departure Date
+                        </label>
+                        <div class="flex items-center border border-slate-200 rounded-lg bg-white h-14 px-4">
+                            <span class="material-symbols-outlined text-slate-400 mr-2">
+                                calendar_today
+                            </span>
+                            <input asp-for="DepartureTime"
+                                   type="date"
+                                   class="w-full border-none bg-transparent p-0 font-semibold focus:ring-0" />
+                        </div>
+                        <span asp-validation-for="DepartureTime"
+                              class="text-red-500 text-sm"></span>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="flex items-end">
+                        <button type="submit"
+                                class="w-full h-14 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 shadow-lg hover:opacity-90 transition">
+                            <span class="material-symbols-outlined">search</span>
+                            Search Flights
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </section>
+    <section class="max-w-7xl mx-auto px-6 py-16">
+        <div class="mb-20">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-2xl font-800 text-slate-900 dark:text-slate-100">Your Upcoming Trip</h3>
+                <a class="text-primary font-bold text-sm hover:underline flex items-center gap-1" href="#">Manage All Bookings <span class="material-symbols-outlined text-lg">chevron_right</span></a>
+            </div>
+            <div class="max-w-xl mx-auto">
+                <div class="group bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700 hover:shadow-2xl transition-all">
+                    <div class="relative h-56 overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Eiffel Tower in Paris with bright blue sky" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC9hnlQu4ud6hAa6rQQAu2Q5qCHjlNWJN72yQ8BXcQy1OoOuK-qmWtEp_QB1HPNJpdtpaOLJJNmpy_w3AcurGaIYpVOwRMlPSjdv4Fivai6vNcMfNvJe_cwVvhlYvq8mhNV1EtHr9SXPAux5_-Cv2tJJZaRHl1sp3OaDNCmYUvINYGs995tnDLuDZ2k2WmDyqUOVVjYkaKJlle78E76lkoWtMoiblUcTTfnHeOV6_pt_1_Pnub2x-yD5IQWFpsZ-hFfJOX4EJQQK4I");'></div>
+                        <div class="absolute top-4 left-4 bg-white/95 dark:bg-slate-900/95 px-4 py-1.5 rounded-full text-xs font-extrabold text-primary shadow-sm uppercase tracking-wider">Confirmed Booking</div>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h4 class="text-2xl font-800">Paris, France</h4>
+                                <p class="text-slate-500 dark:text-slate-400 font-medium">Oct 24 - Oct 30, 2023</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-xs font-bold text-primary uppercase tracking-tighter">Gate</span>
+                                <span class="text-2xl font-bold">B12</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class="text-xs font-bold text-slate-400 uppercase shrink-0">Progress</span>
+                            <div class="flex-1 bg-slate-100 dark:bg-slate-700 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full w-2/3 shadow-sm shadow-primary/30"></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="w-full py-3 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                                Check-in Now
+                            </button>
+                            <button class="w-full py-3 rounded-xl border-2 border-slate-100 dark:border-slate-700 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                                Trip Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-20">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-800 text-slate-900 dark:text-slate-100 mb-3">Explore Our Best Deals</h3>
+                <p class="text-slate-500 dark:text-slate-400 max-w-xl mx-auto font-medium">Hand-picked destinations for your next escape with exclusive seasonal discounts.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="group relative aspect-[4/5] overflow-hidden rounded-2xl cursor-pointer">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDemsvn13MhAz6QxDf_-IZq_g9XIp5h3Sql1NmYrOZjmYinKN8-Uh7yLgB-dRXruAoD-F7P1viY_u11Ho1wFsKjBwb9D3JC28UGxzjyvGywcApxw1bIfWGU2uTvq8OihRMhEWNoYaxWTwiPfFV_IbrHaRDOW8S8KmhENLVc2vHSJSNb_HXpkInUEwr4RuqwbGSms5ZszkevJ7YSSUYYJcgHE-ZYk5DtLSN9LBJCA1ST0fzFMOjrZyvLB6w1u0nh2JQP_zhER1I503s')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 p-6 w-full">
+                        <span class="inline-block bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded mb-2 uppercase">Sale: 30% Off</span>
+                        <h4 class="text-2xl font-bold text-white mb-1">Tokyo Haneda</h4>
+                        <p class="text-white/80 text-sm mb-4">Discover the perfect blend of tradition and future.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold">From $699</span>
+                            <span class="material-symbols-outlined text-white">arrow_forward</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="group relative aspect-[4/5] overflow-hidden rounded-2xl cursor-pointer">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD99CW0oMgfxIqcDH35o-PuiTDfrOY-c2W0hELwtmRoN4636W9BOjvcZe2KYnrSXgZduZoJ4AelWDC2Bk7s3FkyfbGm8QXbdWkqrPpHKjUfoJkIaCKbWsSAlqGXgvhmAeOSCvRBQ8ntjs7jgoKkVCM-MARSXroKAf9lAstSL9jazcieYgL7LQqUemkvfyYIVXU308gRDkIQ4jXNuiVoYK94N6VSJjXL99ofZyIRS9yOnEkAOk19sJAmsip3Oe28G__URVAhQhHmhI4')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 p-6 w-full">
+                        <span class="inline-block bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded mb-2 uppercase">New Route</span>
+                        <h4 class="text-2xl font-bold text-white mb-1">Dubai Marina</h4>
+                        <p class="text-white/80 text-sm mb-4">Experience luxury and skyline views like never before.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold">From $549</span>
+                            <span class="material-symbols-outlined text-white">arrow_forward</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="group relative aspect-[4/5] overflow-hidden rounded-2xl cursor-pointer">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAZJAyN9szoU1QhgznM0-LsY077PdHEA8QSmE2ue2vR3a9Z4EoO7S6TQzDpSBBHw0rBmB_7x7uAe83659dd1e1DxIqfFcs57iN-5Ffg6Fzc1lbJOVVPQlD2wmGATU-5U6CLBv28pXuisoksZVBF4nD1ZxPNaAUNUxhxYppammrDIa4CQpOP3M8v8Y4TniszsdY9MDHl0SO9wWlzbBeH92Pq3OU9ZA7KnjEMx1A40mWWo-3CNJv2SRA-BBkJiBO2g5OSEhPu-vhRUro')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 p-6 w-full">
+                        <span class="inline-block bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded mb-2 uppercase">Early Bird</span>
+                        <h4 class="text-2xl font-bold text-white mb-1">Rio de Janeiro</h4>
+                        <p class="text-white/80 text-sm mb-4">Feel the rhythm of the world's most vibrant city.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold">From $720</span>
+                            <span class="material-symbols-outlined text-white">arrow_forward</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 md:p-12 border border-slate-100 dark:border-slate-700">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="w-full md:w-1/2 space-y-6 text-center md:text-left">
+                    <h3 class="text-3xl md:text-4xl font-800 text-slate-900 dark:text-slate-100">Discover Our Premium Services</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">We're constantly innovating to make your journey smoother, from biometric boarding to our new award-winning inflight entertainment system.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="flex items-start gap-4">
+                            <div class="size-12 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-primary">wifi</span>
+                            </div>
+                            <div class="text-left">
+                                <h5 class="font-bold text-slate-900 dark:text-white">Ultra-Fast Wi-Fi</h5>
+                                <p class="text-sm text-slate-500">Free 5G connectivity on all long-haul flights.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="size-12 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-primary">restaurant</span>
+                            </div>
+                            <div class="text-left">
+                                <h5 class="font-bold text-slate-900 dark:text-white">Gourmet Dining</h5>
+                                <p class="text-sm text-slate-500">Chef-curated meals reflecting your destination.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-xl font-bold hover:opacity-90 transition-opacity">
+                        Learn More About Our Experience
+                    </button>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <img alt="Airline Service Experience" class="w-full h-auto object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxiDukFdaxk2jsNSsZQc1HChDyfGT88DeaDcbrGv3_CsEOL8INLRUpJGDGNC2TCEMWta7IsTNtJ3gWHCyClso940dl1dTH-_N7tAYO_CUEHlv68j0E9ATalcoH-S27_swk0aSiQy1DH7Y0SF3hUs9J-Cc1ejLDgnXgBgIkUJoUkddD2ci12yoOVnYG7Ln_mxOrsiadan4U5vuIYnXPnPVvys59fYrpS4O8GIiPyj_IxY-Q7cOw63AJ1o0KPmgPjgppKtZRynhBeoY" />
+                        <div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+ 

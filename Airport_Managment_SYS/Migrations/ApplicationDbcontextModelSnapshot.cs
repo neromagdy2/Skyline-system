@@ -513,6 +513,9 @@ namespace Airport_Managment_SYS.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
                     b.Property<int?>("NationalitiesId")
                         .HasColumnType("int");
 
