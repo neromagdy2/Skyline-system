@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Airport_Managment_SYS.DataAccess;
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 
 namespace Airport_Managment_SYS.Utilities
 {
@@ -342,8 +343,8 @@ namespace Airport_Managment_SYS.Utilities
                 {
                     var seats = new List<Seat>
                     {
-                        new Seat { SeatNumber = 1, Available = true, Price = 20f, seatClassId = econ.Id, AirplaneId = planeA.Id },
-                        new Seat { SeatNumber = 2, Available = true, Price = 20f, seatClassId = econ.Id, AirplaneId = planeA.Id }
+                        new Seat { SeatNumber = 1, Available = true, seatClassId = econ.Id, AirplaneId = planeA.Id },
+                        new Seat { SeatNumber = 2, Available = true, seatClassId = econ.Id, AirplaneId = planeA.Id }
                     };
                     foreach (var s in seats) await _seatRepository.AddAsync(s);
                     await _seatRepository.CommitAsync();
@@ -353,8 +354,8 @@ namespace Airport_Managment_SYS.Utilities
                 {
                     var seats = new List<Seat>
                     {
-                        new Seat { SeatNumber = 1, Available = true, Price = 25f, seatClassId = econ.Id, AirplaneId = planeB.Id },
-                        new Seat { SeatNumber = 2, Available = true, Price = 25f, seatClassId = econ.Id, AirplaneId = planeB.Id }
+                        new Seat { SeatNumber = 1, Available = true, seatClassId = econ.Id, AirplaneId = planeB.Id },
+                        new Seat { SeatNumber = 2, Available = true, seatClassId = econ.Id, AirplaneId = planeB.Id }
                     };
                     foreach (var s in seats) await _seatRepository.AddAsync(s);
                     await _seatRepository.CommitAsync();
@@ -375,6 +376,7 @@ namespace Airport_Managment_SYS.Utilities
                         {
                             Price = 199.99f,
                             DateTime = new DateTime(2026, 3, 1, 9, 0, 0),
+                            ArrivalDateTime = new DateTime(2026, 3, 1, 12, 0, 0),
                             AirplaneId = planeA.Id,
                             Airport_FromId = airports[1].Id,
                             Airport_ToId = airports[0].Id,
@@ -385,6 +387,7 @@ namespace Airport_Managment_SYS.Utilities
                         {
                             Price = 299.99f,
                             DateTime = new DateTime(2026, 3, 2, 15, 30, 0),
+                            ArrivalDateTime = new DateTime(2026, 3, 2, 18, 30, 0),
                             AirplaneId = planeB.Id,
                             Airport_FromId = airports[0].Id,
                             Airport_ToId = airports[1].Id,

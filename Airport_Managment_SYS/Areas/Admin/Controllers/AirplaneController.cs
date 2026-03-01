@@ -1,4 +1,4 @@
-﻿using Airport_Managment_SYS.Areas.Admin.ViewModels;
+using Airport_Managment_SYS.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -50,7 +50,6 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
 
 
             if (createAirplaneVM.Seats != null)
-
             {
                 foreach (var seat in createAirplaneVM.Seats)
                 {
@@ -60,8 +59,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
                             SeatNumber = seat.SeatNumber,
                             AirplaneId = airplane.Id,
                             seatClassId = seat.seatClassId,
-                            Available = seat.Available,
-                            Price = seat.Price
+                            Available = true, // availability is per trip (TripSeat.IsBooked)
                         });
                     await _seatsRepository.CommitAsync();
                 }
@@ -119,35 +117,13 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
                             SeatNumber = seat.SeatNumber,
                             AirplaneId = airplane.Id,
                             seatClassId = seat.seatClassId,
-                            Available = seat.Available,
-                            Price = seat.Price
+                            Available = true, // availability is per trip (TripSeat.IsBooked)
                         });
                     await _seatsRepository.CommitAsync();
                 }
             }
 
-
-            await _airplaneRepository.CommitAsync();
-
-
-            if (EditAirplaneVM.Seats != null)
-
-            {
-                foreach (var seat in EditAirplaneVM.Seats)
-                {
-                    await _seatsRepository.AddAsync(
-                        new Seat()
-                        {
-                            SeatNumber = seat.SeatNumber,
-                            AirplaneId = airplane.Id,
-                            seatClassId = seat.seatClassId,
-                            Available = seat.Available,
-                            Price = seat.Price
-                        });
-                    await _seatsRepository.CommitAsync();
-                }
-            }
-            TempData["Success"] = "Airplane created successfully.";
+            TempData["Success"] = "Airplane updated successfully.";
             return RedirectToAction("Index");
         }
 

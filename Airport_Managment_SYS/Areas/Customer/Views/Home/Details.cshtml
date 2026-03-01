@@ -1,58 +1,123 @@
 @model Airport_Managment_SYS.Areas.Customer.ViewModels.DetailsTripVM
 
 <section class="max-w-4xl mx-auto p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-lg">
-    <h2 class="text-3xl font-bold mb-6 text-center">Trip Details</h2>
+    <h2 class="text-3xl font-bold mb-6 text-center text-slate-800 dark:text-white">Trip Details</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 dark:text-slate-200">
         <div>
-            <p><strong>From:</strong> <span class="text-primary">@(Model.Trip.Airport_From?.Name ?? "(unknown)")</span></p>
-            <p><strong>To:</strong> <span class="text-primary">@(Model.Trip.Airport_To?.Name ?? "(unknown)")</span></p>
+            <p><strong>From:</strong> <span class="text-blue-600 font-semibold">@(Model.Trip?.Airport_From?.Name ?? "N/A")</span></p>
+            <p><strong>To:</strong> <span class="text-blue-600 font-semibold">@(Model.Trip?.Airport_To?.Name ?? "N/A")</span></p>
         </div>
         <div>
-            <p><strong>Departure:</strong> @Model.Trip.DateTime.ToString("f")</p>
-            <p><strong>Price:</strong> <span class="text-xl font-bold text-green-600">$@Model.Trip.Price</span></p>
+            <p><strong>Departure:</strong> @(Model.Trip?.DateTime.ToString("f") ?? "N/A")</p>
+            <p><strong>Arrival:</strong> @(Model.Trip?.ArrivalDateTime.ToString("f") ?? "N/A")</p>
+            <p><strong>Base Price:</strong> <span class="text-xl font-bold text-green-600">$@Model.Trip?.Price</span></p>
         </div>
     </div>
+
+    <div class="mb-4 dark:text-slate-200">
+        <p><strong>Total Available Seats:</strong> <span id="availableCount" class="font-semibold">@Model.AvailableSeats</span></p>
+    </div>
+
     <div class="mb-4">
-        <p><strong>Available seats:</strong> <span id="availableCount" class="font-semibold">@Model.AvailableSeats</span></p>
+        <label for="seatClassSelect" class="block font-medium dark:text-slate-200">Select Seat Class</label>
+        <select id="seatClassSelect" name="SelectedSeatClassId" class="border p-2 rounded w-full dark:bg-slate-700 dark:text-white">
+            <option value="0" data-mult="0">-- Choose class --</option>
+            @if (Model.SeatClasses != null)
+            {
+                foreach (var sc in Model.SeatClasses)
+                {
+                    var avail = Model.AvailableByClass?.ContainsKey(sc.Id) == true ? Model.AvailableByClass[sc.Id] : 0;
+                    <option value="@sc.Id" data-mult="@sc.PriceMult" data-avail="@avail">
+                        @sc.Name (@avail available)
+                    </option>
+                }
+            }
+        </select>
     </div>
 
+    <div class="mb-4 dark:text-slate-200">
+        <p><strong>Per-seat price:</strong> <span id="perSeatPrice" class="text-xl font-bold text-green-600">-</span></p>
+    </div>
+
+    @* Notifications *@
     @if (TempData["Success"] != null)
     {
-        <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
-            @TempData["Success"]
-        </div>
+        <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">@TempData["Success"]</div>
     }
     @if (TempData["Error"] != null)
     {
-        <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
-            @TempData["Error"]
-        </div>
+        <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">@TempData["Error"]</div>
     }
 
     <form asp-controller="Home" asp-action="Reserve" method="post" id="reserveForm" class="space-y-4">
-        <input type="hidden" name="TripId" value="@Model.Trip.Id" />
+        <input type="hidden" name="TripId" value="@Model.Trip?.Id" />
+        <input type="hidden" id="seatClassHidden" name="seatClassId" value="0" />
+        <input type="hidden" id="totalPriceHidden" name="TotalPrice" value="0" />
+
         <div class="mb-4">
-            <label for="seatCount" class="block font-medium">Number of seats</label>
-            <input type="number" id="seatCount" name="SeatsToReserve" value="1" min="1" max="@Model.AvailableSeats" class="border p-2 rounded" />
+            <label for="seatCount" class="block font-medium dark:text-slate-200">Number of seats</label>
+            <input type="number" id="seatCount" name="SeatsToReserve" value="1" min="1" class="border p-2 rounded w-full dark:bg-slate-700 dark:text-white" />
         </div>
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Reserve</button>
+
+        <div class="mb-4">
+            <p class="dark:text-slate-200"><strong>Total price:</strong> <span id="totalPrice" class="text-2xl font-bold text-green-600">$0.00</span></p>
+        </div>
+
+        <button type="submit" id="reserveBtn" disabled class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400">
+            Reserve Seats
+        </button>
     </form>
 </section>
 
 @section Scripts {
     <script>
-        (function() {
-            const available = @Model.AvailableSeats;
+        document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('seatCount');
-            input.addEventListener('input', function() {
-                const val = parseInt(this.value, 10) || 0;
-                if (val > available) {
-                    this.value = available;
-                } else if (val < 1) {
-                    this.value = 1;
+            const select = document.getElementById('seatClassSelect');
+            const seatClassHidden = document.getElementById('seatClassHidden');
+            const perSeatPriceElem = document.getElementById('perSeatPrice');
+            const totalPriceElem = document.getElementById('totalPrice');
+            const totalPriceHidden = document.getElementById('totalPriceHidden');
+            const reserveBtn = document.getElementById('reserveBtn');
+
+            // Safe injection of C# decimals to JS numbers
+            const basePrice = parseFloat("@(Model.Trip?.Price ?? 0)");
+
+            function updatePrice() {
+                const opt = select.options[select.selectedIndex];
+                const mult = parseFloat(opt.dataset.mult) || 1;
+                const classAvailable = parseInt(opt.dataset.avail) || 0;
+
+                let per = basePrice * mult;
+                let count = parseInt(input.value) || 0;
+
+                // Toggle Button and Max Logic
+                if (parseInt(select.value) === 0) {
+                    reserveBtn.disabled = true;
+                    perSeatPriceElem.textContent = "-";
+                    totalPriceElem.textContent = "$0.00";
+                    return;
                 }
-            });
-        })();
+
+                reserveBtn.disabled = false;
+                input.max = classAvailable;
+                if (count > classAvailable) input.value = classAvailable;
+
+                // Calculations
+                perSeatPriceElem.textContent = '$' + per.toFixed(2);
+                const total = per * count;
+                totalPriceElem.textContent = '$' + total.toFixed(2);
+
+                // Update hidden fields for Form POST
+                seatClassHidden.value = select.value;
+                totalPriceHidden.value = total.toFixed(2);
+            }
+
+            select.addEventListener('change', updatePrice);
+            input.addEventListener('input', updatePrice);
+
+            updatePrice(); // Initial run
+        });
     </script>
 }

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Linq.Expressions;
 using Airport_Managment_SYS.Areas.Admin.ViewModels;
 using Airport_Managment_SYS.Repositories;
 using Airport_Managment_SYS.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
@@ -44,7 +45,8 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             {
                 Airports = Airports,
                 Airplanes = Airplanes,
-                DateTime = DateTime.Now
+                DateTime = DateTime.Now,
+                ArrivalDateTime = DateTime.Now.AddHours(3)
             };
             return View(TripPlaceholder);
         }
@@ -62,20 +64,23 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             {
                 Price = TripVM.Price,
                 DateTime = TripVM.DateTime,
+                ArrivalDateTime = TripVM.ArrivalDateTime,
                 AirplaneId = TripVM.AirplaneId,
                 Airport_ToId = TripVM.Airport_ToId,
-                Airport_FromId = TripVM.Airport_FromId
+                Airport_FromId = TripVM.Airport_FromId,
+                TripSeats = new List<TripSeat>()
             };
 
             var plane = await _AirplaneRepo.GetOneAsync(
                 p => p.Id == TripVM.AirplaneId,
-                includes: [p=>p.Seats]);
+                includeFunc: q => q.Include(p => p.Seats)
+            );
 
             if (plane == null)
                 return View(Trip);
 
-            // copy airplane seats into trip seats
-            foreach (var seat in plane.Seats)
+            // copy airplane seats into trip seats (plane.Seats may be null if no seats were configured)
+            foreach (var seat in plane.Seats ?? Enumerable.Empty<Seat>())
             {
                 Trip.TripSeats.Add(new TripSeat
                 {
@@ -125,6 +130,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
 
             Trip.Price = vmTrip.Price;
             Trip.DateTime = vmTrip.DateTime;
+            Trip.ArrivalDateTime = vmTrip.ArrivalDateTime;
             Trip.AirplaneId = vmTrip.AirplaneId;
             Trip.Airport_ToId = vmTrip.Airport_ToId;
             Trip.Airport_FromId = vmTrip.Airport_FromId;

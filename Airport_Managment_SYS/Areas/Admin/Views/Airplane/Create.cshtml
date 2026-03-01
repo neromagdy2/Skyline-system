@@ -1,4 +1,4 @@
-﻿@using Airport_Managment_SYS.Areas.Admin.ViewModels
+@using Airport_Managment_SYS.Areas.Admin.ViewModels
 @model CreateAirplaneVM
 
 <form asp-action="Create" method="post">
@@ -45,25 +45,12 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label>Seat Number</label>
                         <input name="Seats[${index}].SeatNumber" class="form-control" />
                     </div>
 
-                    <div class="col-md-3">
-                        <label>Price</label>
-                        <input name="Seats[${index}].Price" class="form-control" />
-                    </div>
-
-                    <div class="col-md-3">
-                        <label>Available</label>
-                        <select name="Seats[${index}].Available" class="form-select">
-                            <option value="true">true</option>
-                            <option value="false">false</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label>Seat Class</label>
                         <select name="Seats[${index}].seatClassId" class="form-select">
                             @foreach (var item in Model.SeatClasses)

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Trip>
+@model IEnumerable<Trip>
 
 <div class="container">
     <div class="row mb-3 align-items-center my-3">
@@ -16,7 +16,8 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Departure Time</th>
+                        <th scope="col">Departure</th>
+                        <th scope="col">Arrival</th>
                         <th scope="col">Price</th>
                         <th scope="col">From / To</th>
                         <th scope="col">Airplane ID</th>
@@ -28,7 +29,8 @@
                     {
                         <tr>
                             <th scope="row">@item.Id</th>
-                            <td>@item.DateTime.ToString("g")</td> @* Formats: 2/20/2026 2:00 PM *@
+                            <td>@item.DateTime.ToString("g")</td>
+                            <td>@item.ArrivalDateTime.ToString("g")</td>
                             <td>@item.Price.ToString("C")</td> @* Formats as Currency: $150.00 *@
                             <td>
                                 <span class="badge bg-secondary">@item.Airport_FromId</span>

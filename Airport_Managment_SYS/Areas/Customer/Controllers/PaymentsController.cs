@@ -1,6 +1,6 @@
-﻿
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Stripe.Checkout;
 
 namespace Airport_Managment_SYS.Areas.Customer.Controllers
@@ -44,7 +44,20 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             {
                 return RedirectToAction("Login", "Authentication", new { area = "Identity" });
             }
-            var reservation = await _ReservationRepository.GetOneAsync(r => r.ApplicationUserId == user.Id);
+
+            var reservation = await _ReservationRepository.GetOneAsync(
+                    r => r.ApplicationUserId == user.Id,
+                    includeFunc: q => q
+                        .Include(r => r.Trip)
+                            .ThenInclude(t => t.Airport_From)
+                        .Include(r => r.Trip)
+                            .ThenInclude(t => t.Airport_To)
+                );
+
+            if (reservation==null)
+            {
+                return RedirectToAction("Index", "Reservations", new { area = "Customer" });
+            }
             var payment = new Payment
             {
                 Total = reservation.Trip.Price,
@@ -76,11 +89,38 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
         }
         public IActionResult success()
         {
+                       // Payment was successful — mark reservation paid and book seats
+                       var userName = User.Identity?.Name;
+                       var userTask = _userManager.GetUserAsync(User);
+                       userTask.Wait();
+                       var user = userTask.Result;
+                       if (user == null) return View();
+
+                       var reservation = _ReservationRepository.GetOneAsync(r => r.ApplicationUserId == user.Id).Result;
+                       if (reservation == null) return View();
+
+                       // mark reservation paid
+                       reservation.IsPaid = true;
+
+                       // load trip with seats
+                       var trip = _tripRepository.GetOneAsync(t => t.Id == reservation.TripId, includeFunc: q => q
+                            .Include(t => t.TripSeats)
+                                .ThenInclude(ts => ts.Seat)).Result;
+
+                       if (trip != null)
+                       {
+                           var availableSeats = trip.TripSeats.Where(ts => !ts.IsBooked && ts.Seat != null && ts.Seat.seatClassId == reservation.SeatClassId).Take(reservation.NumSeats).ToList();
+                           foreach (var ts in availableSeats)
+                           {
+                               ts.IsBooked = true;
+                           }
+                           _tripRepository.Update(trip);
+                       }
+
+                       _ReservationRepository.Update(reservation);
+                       _ReservationRepository.CommitAsync().Wait();
+
                        return View();   
         }
-        public IActionResult cancel()
-        {
-            return View();
-
-        }
-     }}
+    }
+}

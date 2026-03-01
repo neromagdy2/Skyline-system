@@ -12,12 +12,14 @@ namespace Airport_Managment_SYS.Repositories
         Task<IEnumerable<T>> GetAsync(
             Expression<Func<T, bool>>? expression = null,
             Expression<Func<T, object>>[]? includes = null,
+            Func<IQueryable<T>, IQueryable<T>>? includeFunc = null,
             bool trackd = true,
             CancellationToken cancellationToken = default
             );
         Task<T?> GetOneAsync(
             Expression<Func<T, bool>>? expressions = null,
             Expression<Func<T, object>>?[] includes = null,
+            Func<IQueryable<T>, IQueryable<T>>? includeFunc = null,
             bool trackd = true,
             CancellationToken cancellationToken = default
             );

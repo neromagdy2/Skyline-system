@@ -1,9 +1,14 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-weight: 400; font-style: normal; font-size: inherit; line-height: 1; letter-spacing: normal; }
+    </style>
     <script id="tailwind-config">
         tailwind.config = {
           darkMode: "class",
@@ -11,100 +16,51 @@
             extend: {
               colors: {
                 "primary": "#137fec",
-                "background-light": "#f6f7f8",
-                "background-dark": "#101922",
+                "background-light": "#f8fafc",
+                "background-dark": "#0f172a",
               },
-              fontFamily: {
-                "display": ["Plus Jakarta Sans", "sans-serif"]
-              },
-              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+              fontFamily: { "display": ["Plus Jakarta Sans", "sans-serif"] },
             },
           },
         }
     </script>
-    @await RenderSectionAsync("Scripts", required: false)
-
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
-    <div class="relative flex min-h-screen w-full flex-col">
-        <header class="sticky top-0 z-50 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 py-4 lg:px-20 shadow-sm">
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 border-b border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-6 py-4 lg:px-20">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-2 text-primary">
                 <span class="material-symbols-outlined text-3xl font-bold">flight_takeoff</span>
-                <h2 class="text-xl font-800 leading-tight tracking-tight text-slate-900 dark:text-slate-100">SkyStream</h2>
+                <h2 class="text-xl font-800 tracking-tight text-slate-900 dark:text-white">SkyStream</h2>
             </div>
-            <nav class="hidden md:flex items-center gap-8">
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Bookings</a>
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Account</a>
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">About Us</a>
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">FAQ</a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="/Customer/Home/Index">Home</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="/Customer/Home/Bookings">Bookings</a>
             </nav>
-            <div class="flex items-center gap-4">
-                <a asp-action="Logout" asp-controller="Authentication" asp-area="Identity">
-                    <button class="flex items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all">
-                        Logout
-                    </button>
-                </a>
-              
-                <div class="bg-slate-200 dark:bg-slate-800 bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User profile avatar smiling businessman" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjNZ4wG5KCPYB1K3AaZdxZJuUNnNgFfpdUYNd_rq1JId-Lvs3UF-Kqb61ShVGFLfB3uLYHNOn0ti5BQMekCbjY7uDxpC6oZHjMOPjeEjHI9dJOrb8RmpI7iR_Bjvwc5xp3M624fdSPtEO34yQy1ck-po98QuUNpR5PUfj9xihpZc874yDHDkOJmHGgCPVERQie71v7JEvkKIP178RocKwM6APBANUnRDRfkvHsq0UuLef_vVl4Nrbir8KWmVmLNxqQLiH9GvkIEuU");'></div>
-            </div>
-        </header>
-        <div class="container">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
+            <button class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90">Logout</button>
         </div>
-        <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-6 py-12 lg:px-20">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">
-                <div class="max-w-xs space-y-4">
-                    <div class="flex items-center gap-2 text-primary">
-                        <span class="material-symbols-outlined text-2xl font-bold">flight_takeoff</span>
-                        <h2 class="text-lg font-800 text-slate-900 dark:text-slate-100">SkyStream</h2>
-                    </div>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">
-                        Redefining the skies with comfort, technology, and unbeatable prices since 2010.
-                    </p>
-                    <div class="flex gap-4 text-slate-400">
-                        <span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">public</span>
-                        <span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">thumb_up</span>
-                        <span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">mail</span>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-8">
-                    <div class="space-y-4">
-                        <h5 class="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100">Company</h5>
-                        <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
-                            <li><a class="hover:text-primary transition-colors" href="#">About</a></li>
-                            <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
-                            <li><a class="hover:text-primary transition-colors" href="#">Press</a></li>
-                        </ul>
-                    </div>
-                    <div class="space-y-4">
-                        <h5 class="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100">Support</h5>
-                        <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
-                            <li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
-                            <li><a class="hover:text-primary transition-colors" href="#">Refunds</a></li>
-                            <li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
-                        </ul>
-                    </div>
-                    <div class="space-y-4 col-span-2 sm:col-span-1">
-                        <h5 class="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100">Newsletter</h5>
-                        <div class="flex flex-col gap-2">
-                            <input class="rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary" placeholder="Email address" type="email" />
-                            <button class="bg-primary text-white py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition-all">Subscribe</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
-                <p>© 2023 SkyStream Airlines Inc. All rights reserved.</p>
-                <div class="flex gap-6">
-                    <a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Privacy Policy</a>
-                    <a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Terms of Service</a>
-                    <a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Cookies</a>
-                </div>
-            </div>
-        </footer>
-    </div>
-    ```
+    </header>
+
+    <!-- FIXED MAIN AREA -->
+    <main class="flex-grow relative">
+        <!-- Visual background grid -->
+        <div class="absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50"></div>
+
+        <!-- RenderBody Container -->
+        <div class="max-w-7xl mx-auto px-6 py-10 lg:px-20">
+            @RenderBody()
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-12 px-6 lg:px-20">
+        <div class="max-w-7xl mx-auto text-center text-slate-500 text-sm">
+            <p>ï¿½ 2024 SkyStream Airlines. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- REQUIRED FOR SCRIPTS TO WORK -->
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿@using Airport_Managment_SYS.Areas.Admin.ViewModels
+@using Airport_Managment_SYS.Areas.Admin.ViewModels
 @model EditAirplaneVM
 
 <form asp-action="Edit" method="post">
@@ -29,29 +29,14 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label>Seat Number</label>
                         <input name="Seats[@i].SeatNumber"
                                value="@Model.Seats[i].SeatNumber"
                                class="form-control" />
                     </div>
 
-                    <div class="col-md-3">
-                        <label>Price</label>
-                        <input name="Seats[@i].Price"
-                               value="@Model.Seats[i].Price"
-                               class="form-control" />
-                    </div>
-
-                    <div class="col-md-3">
-                        <label>Available</label>
-                        <select name="Seats[@i].Available" class="form-select">
-                            <option value="true" selected="@(Model.Seats[i].Available)">true</option>
-                            <option value="false" selected="@(!Model.Seats[i].Available)">false</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label>Seat Class</label>
                         <select name="Seats[@i].seatClassId" class="form-select">
                             @foreach (var item in Model.SeatClasses)
@@ -101,25 +86,12 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label>Seat Number</label>
                         <input name="Seats[${index}].SeatNumber" class="form-control" />
                     </div>
 
-                    <div class="col-md-3">
-                        <label>Price</label>
-                        <input name="Seats[${index}].Price" class="form-control" />
-                    </div>
-
-                    <div class="col-md-3">
-                        <label>Available</label>
-                        <select name="Seats[${index}].Available" class="form-select">
-                            <option value="true">true</option>
-                            <option value="false">false</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label>Seat Class</label>
                         <select name="Seats[${index}].seatClassId" class="form-select">
                             @foreach (var item in Model.SeatClasses)
