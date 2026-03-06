@@ -15,12 +15,22 @@
                 <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+            <div class="mb-3 col-sm-12">
 
+                <label class="form-label">Password</label>
+
+                <div class="input-group">
+                    <input asp-for="Password" class="form-control" id="passwordInput" />
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+           
+
+                <span asp-validation-for="Password" class="text-danger"></span>
+
+            </div>
             <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
 
@@ -54,7 +64,37 @@
         </div>
     </div>
 </div>
+<script>
 
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("passwordInput");
+
+    togglePassword.addEventListener("click", function () {
+
+        const type = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = type;
+
+        this.querySelector("i").classList.toggle("fa-eye");
+        this.querySelector("i").classList.toggle("fa-eye-slash");
+
+    });
+
+
+    const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+    const confirmPasswordInput = document.getElementById("confirmPasswordInput");
+
+    toggleConfirmPassword.addEventListener("click", function () {
+
+        const type = confirmPasswordInput.type === "password" ? "text" : "password";
+        confirmPasswordInput.type = type;
+
+        this.querySelector("i").classList.toggle("fa-eye");
+        this.querySelector("i").classList.toggle("fa-eye-slash");
+
+    });
+
+</script>
+<script src="../../../vendors/fontawesome/all.min.js"></script>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

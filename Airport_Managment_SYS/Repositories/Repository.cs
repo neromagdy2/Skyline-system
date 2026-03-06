@@ -11,6 +11,7 @@ namespace Airport_Managment_SYS.Repositories
         private readonly DbSet<T> _dbSet;
         public Repository(ApplicationDbcontext context)
         {
+
             _context = context;
             _dbSet = _context.Set<T>();
         }

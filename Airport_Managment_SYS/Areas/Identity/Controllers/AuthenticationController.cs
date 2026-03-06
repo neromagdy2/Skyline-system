@@ -180,7 +180,11 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
                     return View(loginVM);
                 }
-            }if (await _userManager.IsInRoleAsync(user, StaticVariables.ADMIN))
+            }
+            
+           bool isAdmin= await _userManager.IsInRoleAsync(user, StaticVariables.SUPER_ADMIN);
+                
+                if (isAdmin) 
             {
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             }
