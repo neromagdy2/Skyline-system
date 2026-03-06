@@ -1,3 +1,6 @@
+using Airport_Managment_SYS.Utilities;
+using Stripe;
+using Microsoft.Extensions.Logging;
 
 
 namespace Airport_Managment_SYS
@@ -19,7 +22,9 @@ namespace Airport_Managment_SYS
 
             builder.Services.Config(connectionString);
 
-
+            // Configure Stripe (must be done before app.Build())
+            builder.Services.Configure<StripeSittings>(builder.Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             var app = builder.Build();
 
@@ -40,13 +45,6 @@ namespace Airport_Managment_SYS
                 }
             }
 
-            // Initialize the database
-            using (var scope = app.Services.CreateScope())
-            {
-                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-                dbInitializer.InitializeAsync().Wait();
-            }
-
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -60,7 +58,7 @@ namespace Airport_Managment_SYS
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",

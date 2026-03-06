@@ -31,6 +31,7 @@ namespace Airport_Managment_SYS.Repositories
         public async Task<IEnumerable<T>> GetAsync(
             Expression<Func<T, bool>>? expression = null,
             Expression<Func<T, object>>[]? includes = null,
+            Func<IQueryable<T>, IQueryable<T>>? includeFunc = null,
             bool trackd = true,
             CancellationToken cancellationToken = default
             )
@@ -47,6 +48,10 @@ namespace Airport_Managment_SYS.Repositories
                     entities = entities.Include(include);
                 }
             }
+            if (includeFunc is not null)
+            {
+                entities = includeFunc(entities);
+            }
             if (!trackd)
             {
                 entities = entities.AsNoTracking();
@@ -56,11 +61,12 @@ namespace Airport_Managment_SYS.Repositories
         public async Task<T?> GetOneAsync(
             Expression<Func<T, bool>>? expressions = null,
             Expression<Func<T, object>>?[] includes = null,
+            Func<IQueryable<T>, IQueryable<T>>? includeFunc = null,
             bool trackd = true,
             CancellationToken cancellationToken = default
             )
         {
-            var entity = (await GetAsync(expressions, includes, trackd, cancellationToken)).FirstOrDefault();
+            var entity = (await GetAsync(expressions, includes, includeFunc, trackd, cancellationToken)).FirstOrDefault();
             return entity;
         }
 

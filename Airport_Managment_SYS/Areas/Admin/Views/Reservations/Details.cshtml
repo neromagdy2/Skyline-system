@@ -12,8 +12,11 @@
  <dt class="col-sm-3">Trip Id</dt>
  <dd class="col-sm-9">@Model.TripId</dd>
 
- <dt class="col-sm-3">Trip Date</dt>
+ <dt class="col-sm-3">Departure</dt>
  <dd class="col-sm-9">@(Model.Trip?.DateTime.ToString("f") ?? "-")</dd>
+
+ <dt class="col-sm-3">Arrival</dt>
+ <dd class="col-sm-9">@(Model.Trip?.ArrivalDateTime.ToString("f") ?? "-")</dd>
 
  <dt class="col-sm-3">Trip Price</dt>
  <dd class="col-sm-9">@(Model.Trip?.Price.ToString("C") ?? "-")</dd>

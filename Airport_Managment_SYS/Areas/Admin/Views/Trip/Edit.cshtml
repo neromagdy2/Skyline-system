@@ -1,4 +1,4 @@
-﻿@model Airport_Managment_SYS.Areas.Admin.ViewModels.EditTripVM
+@model Airport_Managment_SYS.Areas.Admin.ViewModels.EditTripVM
 
 <div class="container">
     <div class="row mb-3 align-items-center my-3">
@@ -22,12 +22,19 @@
                         <span class="text-danger" asp-validation-for="Trip.Price"></span>
                     </div>
 
-                    @* Date *@
+                    @* Departure Date *@
                     <div class="col-md-6 mb-3">
                         <label asp-for="Trip.DateTime" class="form-label">Departure Date & Time</label>
                         <input type="datetime-local" class="form-control" asp-for="Trip.DateTime"
                                value="@Model.Trip?.DateTime.ToString("yyyy-MM-ddTHH:mm")">
                         <span class="text-danger" asp-validation-for="Trip.DateTime"></span>
+                    </div>
+                    @* Arrival Date *@
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Trip.ArrivalDateTime" class="form-label">Arrival Date & Time</label>
+                        <input type="datetime-local" class="form-control" asp-for="Trip.ArrivalDateTime"
+                               value="@Model.Trip?.ArrivalDateTime.ToString("yyyy-MM-ddTHH:mm")">
+                        <span class="text-danger" asp-validation-for="Trip.ArrivalDateTime"></span>
                     </div>
                 </div>
 
@@ -35,9 +42,20 @@
                     @* From Airport Dropdown *@
                     <div class="col-md-6 mb-3">
                         <label asp-for="Trip.Airport_FromId" class="form-label">From Airport</label>
-                        <select asp-for="Trip.Airport_FromId" class="form-select"
-                                asp-items="@(new SelectList(Model.Airports, "Id", "Name"))">
+                        @{ var selectedFrom = Model.Trip?.Airport_FromId ?? 0; }
+                        <select asp-for="Trip.Airport_FromId" class="form-select">
                             <option value="">-- Select Departure Airport --</option>
+                            @foreach (var airport in Model.Airports)
+                            {
+                                if (selectedFrom == airport.Id)
+                                {
+                                    <option value="@airport.Id" selected>@airport.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@airport.Id">@airport.Name</option>
+                                }
+                            }
                         </select>
                         <span class="text-danger" asp-validation-for="Trip.Airport_FromId"></span>
                     </div>
@@ -45,9 +63,20 @@
                     @* To Airport Dropdown *@
                     <div class="col-md-6 mb-3">
                         <label asp-for="Trip.Airport_ToId" class="form-label">To Airport</label>
-                        <select asp-for="Trip.Airport_ToId" class="form-select"
-                                asp-items="@(new SelectList(Model.Airports, "Id", "Name"))">
+                        @{ var selectedTo = Model.Trip?.Airport_ToId ?? 0; }
+                        <select asp-for="Trip.Airport_ToId" class="form-select">
                             <option value="">-- Select Destination Airport --</option>
+                            @foreach (var airport in Model.Airports)
+                            {
+                                if (selectedTo == airport.Id)
+                                {
+                                    <option value="@airport.Id" selected>@airport.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@airport.Id">@airport.Name</option>
+                                }
+                            }
                         </select>
                         <span class="text-danger" asp-validation-for="Trip.Airport_ToId"></span>
                     </div>
@@ -57,19 +86,24 @@
                     @* Airplane Dropdown *@
                     <div class="col-md-6 mb-3">
                         <label asp-for="Trip.AirplaneId" class="form-label">Airplane</label>
-                        <select asp-for="Trip.AirplaneId" class="form-select"
-                                asp-items="@(new SelectList(Model.Airplanes, "Id", "Name"))">
+                        @{ var selectedPlane = Model.Trip?.AirplaneId ?? 0; }
+                        <select asp-for="Trip.AirplaneId" class="form-select">
                             <option value="">-- Select Airplane --</option>
+                            @foreach (var plane in Model.Airplanes)
+                            {
+                                if (selectedPlane == plane.Id)
+                                {
+                                    <option value="@plane.Id" selected>@plane.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@plane.Id">@plane.Name</option>
+                                }
+                            }
                         </select>
                         <span class="text-danger" asp-validation-for="Trip.AirplaneId"></span>
                     </div>
 
-                    @* Seat ID - Keep as input or change to select if you have a Seats list *@
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Trip.SeatId" class="form-label">Seat ID</label>
-                        <input type="number" class="form-control" asp-for="Trip.SeatId">
-                        <span class="text-danger" asp-validation-for="Trip.SeatId"></span>
-                    </div>
                 </div>
 
                 <div class="mt-4">

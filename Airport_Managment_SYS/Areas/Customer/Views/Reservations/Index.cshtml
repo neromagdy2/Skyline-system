@@ -26,7 +26,8 @@
  <div class="card h-100">
  <div class="card-body">
  <h5 class="card-title">Trip #@r.TripId</h5>
- <p class="card-text mb-1"><strong>Date:</strong> @(r.Trip?.DateTime.ToString("f") ?? "-")</p>
+ <p class="card-text mb-1"><strong>Departure:</strong> @(r.Trip?.DateTime.ToString("f") ?? "-")</p>
+ <p class="card-text mb-1"><strong>Arrival:</strong> @(r.Trip?.ArrivalDateTime.ToString("f") ?? "-")</p>
  <p class="card-text mb-1"><strong>Price:</strong> @(r.Trip != null ? ((decimal)r.Trip.Price).ToString("C") : "-")</p>
  <a class="btn btn-sm btn-primary" asp-area="Customer" asp-controller="Reservations" asp-action="Details" asp-route-tripId="@r.TripId">View Details</a>
  </div>

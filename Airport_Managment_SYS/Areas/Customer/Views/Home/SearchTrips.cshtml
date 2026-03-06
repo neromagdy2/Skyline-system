@@ -1,4 +1,4 @@
-﻿@model Airport_Managment_SYS.Areas.Customer.ViewModels.SearchTripsVM
+@model Airport_Managment_SYS.Areas.Customer.ViewModels.SearchTripsVM
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
     <div class="relative flex min-h-screen w-full flex-col">
         <main class="flex-1">
@@ -149,7 +149,7 @@
 
                                             <div class="text-center md:text-right">
                                                 <span class="block text-xl font-800">
-                                                    @trip.DateTime.ToString("hh:mm tt")
+                                                    @trip.ArrivalDateTime.ToString("hh:mm tt")
                                                 </span>
                                                 <span class="text-xs font-bold text-slate-400 uppercase">
                                                     @trip.Airport_To.GovernerateState.Name

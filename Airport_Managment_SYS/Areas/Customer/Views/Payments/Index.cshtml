@@ -1,0 +1,14 @@
+﻿@model Reservation
+<div class="container mt-5">
+	<div class="card">
+		<div class="card-header">
+			<h2>Payment for Reservation</h2>
+		</div>
+		<div class="card-body">
+			<p><strong>Trip:</strong> @Model.TripId</p>
+			
+			<a asp-action="pay" class="btn btn-primary mt-3">Proceed to Payment</a>
+		</div>
+	</div>
+</div> 
+

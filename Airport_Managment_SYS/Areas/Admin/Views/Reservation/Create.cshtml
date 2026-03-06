@@ -22,7 +22,7 @@
  <select id="tripId" name="tripId" class="form-control">
  @foreach (var t in (IEnumerable<Airport_Managment_SYS.Models.Trip>)ViewBag.Trips)
  {
- <option value="@t.Id">@t.DateTime.ToString("g") - @t.Price.ToString("C")</option>
+ <option value="@t.Id">@t.DateTime.ToString("g") → @t.ArrivalDateTime.ToString("g") - @t.Price.ToString("C")</option>
  }
  </select>
  </div>

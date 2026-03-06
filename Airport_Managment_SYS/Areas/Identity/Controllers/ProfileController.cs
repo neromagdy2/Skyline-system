@@ -5,6 +5,7 @@ using Airport_Managment_SYS.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Airport_Managment_SYS.Areas.Identity.Controllers
@@ -27,9 +28,10 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await _context.ApplicationUsers
+            var userId = _userManager.GetUserId(User);
+            var user = await _userManager.Users
                 .Include(u => u.National)
-                .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
+                .FirstOrDefaultAsync(u => u.Id == userId);
             
             if (user == null)
                 return Challenge();
@@ -50,12 +52,16 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
-            var user = await _context.ApplicationUsers
+            var user = await _userManager.Users
                 .Include(u => u.National)
                 .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
             
             if (user == null)
                 return Challenge();
+
+            // Get all nationalities for dropdown
+            var nationalities = await _context.Nationalities.OrderBy(n => n.Name).ToListAsync();
+            ViewBag.Nationalities = new SelectList(nationalities, "Id", "Name");
 
             return View(new EditProfileVM
             {
@@ -76,7 +82,12 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                 return Challenge();
 
             if (!ModelState.IsValid)
+            {
+                // Get nationalities again for dropdown in case of validation error
+                var nationalities = await _context.Nationalities.OrderBy(n => n.Name).ToListAsync();
+                ViewBag.Nationalities = new SelectList(nationalities, "Id", "Name");
                 return View(model);
+            }
 
             // Update username via UserManager to keep identity normalized fields consistent
             if (!string.Equals(user.UserName, model.UserName, StringComparison.Ordinal))

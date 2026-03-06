@@ -1,4 +1,4 @@
-﻿@using Airport_Managment_SYS.Areas.Admin.ViewModels
+@using Airport_Managment_SYS.Areas.Admin.ViewModels
 @model CreateTripVM
 
 <div class="container">
@@ -17,11 +17,18 @@
                     <span class="text-danger" asp-validation-for="Price"></span>
                 </div>
 
-                @* DateTime Field *@
-                <div class="mb-3">
-                    <label asp-for="DateTime" class="form-label">Departure Date & Time</label>
-                    <input type="datetime-local" class="form-control" asp-for="DateTime">
-                    <span class="text-danger" asp-validation-for="DateTime"></span>
+                @* DateTime Fields *@
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="DateTime" class="form-label">Departure Date & Time</label>
+                        <input type="datetime-local" class="form-control" asp-for="DateTime">
+                        <span class="text-danger" asp-validation-for="DateTime"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ArrivalDateTime" class="form-label">Arrival Date & Time</label>
+                        <input type="datetime-local" class="form-control" asp-for="ArrivalDateTime">
+                        <span class="text-danger" asp-validation-for="ArrivalDateTime"></span>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -30,7 +37,17 @@
                         <label asp-for="Airport_FromId" class="form-label">From Airport</label>
                         <select asp-for="Airport_FromId" class="form-select">
                             <option value="">-- Select Departure --</option>
-                            @* Logic to populate these would usually be in ViewBag or the VM *@
+                            @foreach (var airport in Model.Airports)
+                            {
+                                if (Model.Airport_FromId == airport.Id)
+                                {
+                                    <option value="@airport.Id" selected>@airport.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@airport.Id">@airport.Name</option>
+                                }
+                            }
                         </select>
                         <span class="text-danger" asp-validation-for="Airport_FromId"></span>
                     </div>
@@ -40,6 +57,17 @@
                         <label asp-for="Airport_ToId" class="form-label">To Airport</label>
                         <select asp-for="Airport_ToId" class="form-select">
                             <option value="">-- Select Destination --</option>
+                            @foreach (var airport in Model.Airports)
+                            {
+                                if (Model.Airport_ToId == airport.Id)
+                                {
+                                    <option value="@airport.Id" selected>@airport.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@airport.Id">@airport.Name</option>
+                                }
+                            }
                         </select>
                         <span class="text-danger" asp-validation-for="Airport_ToId"></span>
                     </div>
@@ -51,18 +79,21 @@
                         <label asp-for="AirplaneId" class="form-label">Airplane</label>
                         <select asp-for="AirplaneId" class="form-select">
                             <option value="">-- Select Airplane --</option>
+                            @foreach (var plane in Model.Airplanes)
+                            {
+                                if (Model.AirplaneId == plane.Id)
+                                {
+                                    <option value="@plane.Id" selected>@plane.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@plane.Id">@plane.Name</option>
+                                }
+                            }
                         </select>
                         <span class="text-danger" asp-validation-for="AirplaneId"></span>
                     </div>
 
-                    @* Seat *@
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="SeatId" class="form-label">Seat Assignment</label>
-                        <select asp-for="SeatId" class="form-select">
-                            <option value="">-- Select Seat --</option>
-                        </select>
-                        <span class="text-danger" asp-validation-for="SeatId"></span>
-                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Create Trip</button>

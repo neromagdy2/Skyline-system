@@ -26,7 +26,7 @@
  <select id="newTripId" name="newTripId" class="form-control">
  @foreach (var t in (IEnumerable<Airport_Managment_SYS.Models.Trip>)ViewBag.Trips)
  {
- @Html.Raw(string.Format("<option value=\"{0}\"{1}>{2} - {3}</option>", t.Id, t.Id == Model.TripId ? " selected" : "", t.DateTime.ToString("g"), t.Price.ToString("C")))
+ @Html.Raw(string.Format("<option value=\"{0}\"{1}>{2} → {3} - {4}</option>", t.Id, t.Id == Model.TripId ? " selected" : "", t.DateTime.ToString("g"), t.ArrivalDateTime.ToString("g"), t.Price.ToString("C")))
  }
  </select>
  </div>

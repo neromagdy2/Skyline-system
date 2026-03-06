@@ -9,17 +9,18 @@ namespace Airport_Managment_SYS.DataAccess
         public ApplicationDbcontext(DbContextOptions<ApplicationDbcontext> options)
         : base(options) { }
 
-        DbSet<Payment> Payments { get; set; }
-        DbSet<Trip> Trips { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Trip> Trips { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        DbSet<Airport> airports { get; set; }   
-        DbSet<Airplane> Airplanes { get; set; }
-        DbSet<Country > Countrys { get; set; }
-        DbSet<GovernerateState> GoverneratesStates { get; set; }
-        DbSet<Reservation> Reservations { get; set; }
-        DbSet<SeatClass> SeatClasses { get; set; }
-        DbSet<Seat > Seats { get; set; }
-       public DbSet <Nationalities> Nationalities { get; set; }
+        public DbSet<Airport> airports { get; set; }   
+        public DbSet<Airplane> Airplanes { get; set; }
+        public DbSet<Country > Countrys { get; set; }
+        public DbSet<GovernerateState> GoverneratesStates { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<SeatClass> SeatClasses { get; set; }
+        public DbSet<Seat > Seats { get; set; }
+        public DbSet<TripSeat> TripSeats { get; set; }
+        public DbSet <Nationalities> Nationalities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -58,12 +59,6 @@ namespace Airport_Managment_SYS.DataAccess
                 .HasForeignKey(t => t.Airport_ToId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Disable cascade on SeatId
-            modelBuilder.Entity<Trip>()
-                .HasOne(t => t.Seat)
-                .WithMany()
-                .HasForeignKey(t => t.SeatId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             // If the error persists, do the same for AirplaneId or Airports
             modelBuilder.Entity<Trip>()
