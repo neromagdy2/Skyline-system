@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin , Admin")]
     public class PaymentsController : Controller
     {
         private readonly IRepository<Payment> _paymentRepository;

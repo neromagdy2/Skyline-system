@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -8,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
+            console.log(@User.IsInRole("ADMIN")),
           darkMode: "class",
           theme: {
             extend: {
@@ -65,15 +67,23 @@
                 <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-white" href="/Customer/Home/Index">Home</a>
                 <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-white" href="/Customer/Home/Bookings">Bookings</a>
             </nav>
-            <div class="flex items-center gap-6">
-                <a href="/Identity/Authentication/Logout">
-                    <button class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90">Logout</button>
-                </a>
-                <a href="/Customer/Profile/Index">
-                    <div class="bg-slate-800 aspect-square bg-cover rounded-full size-10 border border-white/10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjNZ4wG5KCPYB1K3AaZdxZJuUNnNgFfpdUYNd_rq1JId-Lvs3UF-Kqb61ShVGFLfB3uLYHNOn0ti5BQMekCbjY7uDxpC6oZHjMOPjeEjHI9dJOrb8RmpI7iR_Bjvwc5xp3M624fdSPtEO34yQy1ck-po98QuUNpR5PUfj9xihpZc874yDHDkOJmHGgCPVERQie71v7JEvkKIP178RocKwM6APBANUnRDRfkvHsq0UuLef_vVl4Nrbir8KWmVmLNxqQLiH9GvkIEuU");'></div>
-                </a>
+            <div>
+                @*!! does Nothing !!*@
+                <a class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90" href="/Identity/Authentication/Logout">Logout</a>
+                @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                {
+                    <a class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-info shadow-lg shadow-primary/20 hover:opacity-90" style="background-color: sandybrown " href="/Admin/Home/Index">AdminMode</a>
+                }
+
             </div>
-        </header>
+        </div>
+    </header>
+
+    <!-- FIXED MAIN AREA -->
+    <main class="flex-grow relative">
+        <!-- Visual background grid -->
+        <div class="absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50"></div>
+
         <!-- RenderBody Container -->
         <div class="max-w-7xl mx-auto px-6  lg:px-20">
             @RenderBody()
@@ -148,4 +158,3 @@
 
 </body>
 </html>
-

@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
 {
  [Area("Admin")]
- [Authorize(Roles = "Admin")]
- public class ReservationController : Controller
+    [Authorize(Roles = "SuperAdmin , Admin")]
+    public class ReservationController : Controller
  {
  private readonly IRepository<Reservation> _reservationRepo;
  private readonly IRepository<Trip> _tripRepo;

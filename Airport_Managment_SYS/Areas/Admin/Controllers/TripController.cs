@@ -1,16 +1,18 @@
+using Airport_Managment_SYS.Areas.Admin.ViewModels;
+using Airport_Managment_SYS.Models;
+using Airport_Managment_SYS.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
-using Airport_Managment_SYS.Areas.Admin.ViewModels;
-using Airport_Managment_SYS.Repositories;
-using Airport_Managment_SYS.Models;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin , Admin")]
     public class TripController : Controller
     {           
         private IRepository<Trip> _TripRepo;

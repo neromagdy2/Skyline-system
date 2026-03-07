@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe.Checkout;
@@ -6,6 +7,7 @@ using Stripe.Checkout;
 namespace Airport_Managment_SYS.Areas.Customer.Controllers
 {
     [Area("Customer")]
+    [Authorize]
     public class PaymentsController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

@@ -26,6 +26,16 @@ namespace Airport_Managment_SYS
             builder.Services.Configure<StripeSittings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
+
+            //defaultLogin
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Authentication/Login"; // Example: "/Account/SignIn"
+                options.AccessDeniedPath = "/YourNewAccessDeniedPath"; // Optional: for 403 Forbidden cases
+            });
+
+
             var app = builder.Build();
 
             // Run DB initializer (migrations + seeding) at startup

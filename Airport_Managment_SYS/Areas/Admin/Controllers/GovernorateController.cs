@@ -1,4 +1,5 @@
 ﻿using Airport_Managment_SYS.Areas.Admin.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Tasks;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
 {
     [Area("Admin")]
 
+    [Authorize(Roles = "SuperAdmin , Admin")]
     public class GovernorateController : Controller
     {
         private readonly IRepository<GovernerateState> _governerateState;

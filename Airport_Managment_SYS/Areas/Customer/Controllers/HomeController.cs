@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Airport_Managment_SYS.Areas.Customer.Controllers
 {
     [Area("Customer")]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IRepository<GovernerateState> _governerateStateRepository;
