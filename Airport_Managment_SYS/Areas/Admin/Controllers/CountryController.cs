@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
 {
 
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin , Admin")]
     public class CountryController : Controller
     {
         private readonly IRepository<Country> _countryRepository;

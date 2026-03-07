@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using Airport_Managment_SYS.DataAccess;
+﻿using Airport_Managment_SYS.DataAccess;
 using Airport_Managment_SYS.Models;
 using Airport_Managment_SYS.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "SuperAdmin , Admin")]
     public class HomeController : Controller
     {
         private readonly IRepository<Trip> _tripRepository;

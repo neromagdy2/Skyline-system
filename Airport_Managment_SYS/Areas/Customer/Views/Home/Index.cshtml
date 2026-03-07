@@ -110,7 +110,8 @@
                             </span>
                             <input asp-for="DepartureTime"
                                    type="date"
-                                   value="@DateTime.Now.ToString("dd-MM-yyyy")"
+                                   min="@DateTime.UtcNow"
+                                   value="@DateTime.UtcNow.Date"
                                    class="w-full border-none bg-transparent p-0 font-semibold focus:ring-0" />
                         </div>
                         <span asp-validation-for="DepartureTime"

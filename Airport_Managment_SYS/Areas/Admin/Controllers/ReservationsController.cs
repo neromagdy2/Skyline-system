@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 namespace Airport_Managment_SYS.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "SuperAdmin , Admin")]
     public class ReservationsController : Controller
     {
         private readonly IRepository<Reservation> _reservationRepo;

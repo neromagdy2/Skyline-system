@@ -1,3 +1,5 @@
+@using Airport_Managment_SYS.Utilities;
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +13,7 @@
     </style>
     <script id="tailwind-config">
         tailwind.config = {
+            console.log(@User.IsInRole("ADMIN")),
           darkMode: "class",
           theme: {
             extend: {
@@ -38,7 +41,15 @@
                 <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="/Customer/Home/Index">Home</a>
                 <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="/Customer/Home/Bookings">Bookings</a>
             </nav>
-            <button class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90">Logout</button>
+            <div>
+                @*!! does Nothing !!*@
+                <a class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90" href="/Identity/Authentication/Logout">Logout</a>
+                @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                {
+                    <a class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-info shadow-lg shadow-primary/20 hover:opacity-90" style="background-color: sandybrown " href="/Admin/Home/Index">AdminMode</a>
+                }
+
+            </div>
         </div>
     </header>
 
@@ -64,3 +75,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
