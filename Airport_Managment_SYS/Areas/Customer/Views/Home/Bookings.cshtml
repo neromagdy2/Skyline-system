@@ -29,7 +29,7 @@
             @foreach (var r in Model)
             {
                 var trip = r.Trip;
-                <article class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden transition-shadow hover:shadow-md">
+                <article class="bg-white/10 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-white/20 mt-6 mb-6">
                     <div class="p-6 sm:p-8">
                         <div class="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-8">
                             @* Route & times *@
@@ -39,18 +39,18 @@
                                         <span class="material-symbols-outlined text-primary">flight</span>
                                     </div>
                                     <div>
-                                        <h2 class="font-bold text-slate-900 dark:text-white">
+                                        <h2 class="font-bold text-slate-900 text-white">
                                             @(trip != null ? $"{trip.Airport_From?.Name ?? "—"} → {trip.Airport_To?.Name ?? "—"}" : "Trip")
                                         </h2>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                                        <p class="text-xs text-slate-500 text-slate-400">
                                             Booking #@r.Id
                                         </p>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
                                     <div>
-                                        <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Departure</p>
-                                        <p class="font-medium text-slate-800 dark:text-slate-200">@(trip?.DateTime.ToString("MMM d, h:mm tt") ?? "—")</p>
+                                        <p class="text-xs font-semibold text-white dark:text-slate-500 uppercase tracking-wider">Departure</p>
+                                        <p class="font-medium text-slate-800 text-white">@(trip?.DateTime.ToString("MMM d, h:mm tt") ?? "—")</p>
                                     </div>
                                     <div>
                                         <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Arrival</p>
