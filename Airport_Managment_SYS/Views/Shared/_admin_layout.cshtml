@@ -56,18 +56,17 @@
     </script>
     <script id="tailwind-config">
         tailwind.config = {
-            console.log(@User.IsInRole("ADMIN")),
-          darkMode: "class",
-          theme: {
-            extend: {
-              colors: {
-                "primary": "#137fec",
-                "background-light": "#f8fafc",
-                "background-dark": "#0f172a",
-              },
-              fontFamily: { "display": ["Plus Jakarta Sans", "sans-serif"] },
-            },
-          },
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#137fec",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a"
+                    },
+                    fontFamily: { display: ["Plus Jakarta Sans", "sans-serif"] }
+                }
+            }
         }
     </script>
 </head>
@@ -356,7 +355,12 @@
                         </li>
                     </ul>
 
-                    <a class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-info shadow-lg shadow-primary/20 hover:opacity-90" style="background-color: sandybrown; border-radius:20px; color: white " href="/Customer/Home/Index">Customer Mode</a>
+                    <a href="/Customer/Home/Index"
+                       class="btn btn-warning ms-3 px-4 py-1 fw-semibold d-flex align-items-center gap-2"
+                       style="border-radius:999px;">
+                        <span class="fas fa-plane-departure fs--1"></span>
+                        Customer mode
+                    </a>
 
 
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
