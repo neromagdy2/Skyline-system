@@ -21,5 +21,7 @@
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+
+        public int NoOfSeats { get; set; } = 1;
     }
 }

@@ -62,7 +62,11 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  var duplicate = await _reservationRepo.GetOneAsync(r => r.TripId == tripId && r.ApplicationUserId == userId);
  if (duplicate != null)
  {
- ModelState.AddModelError(string.Empty, "This reservation already exists for the selected user and trip.");
+ // If user already has a reservation for this trip, increment the seat count instead of creating a new reservation
+ duplicate.NoOfSeats += 1;
+ _reservationRepo.Update(duplicate);
+ await _reservationRepo.CommitAsync();
+ return RedirectToAction(nameof(Index));
  }
 
  if (!ModelState.IsValid)
@@ -77,7 +81,8 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  var reservation = new Reservation
  {
  TripId = tripId,
- ApplicationUserId = userId
+ ApplicationUserId = userId,
+ NoOfSeats = 1
  };
 
  await _reservationRepo.AddAsync(reservation);
@@ -126,11 +131,16 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  ModelState.AddModelError(string.Empty, "Selected trip does not exist.");
  }
 
- // prevent duplicate reservation
+ // check if there is already a reservation for the same user on the new trip
  var duplicate = await _reservationRepo.GetOneAsync(r => r.TripId == newTripId && r.ApplicationUserId == originalUserId);
  if (duplicate != null)
  {
- ModelState.AddModelError(string.Empty, "A reservation for this user and trip already exists.");
+ // Merge seat counts: add existing seats to the duplicate reservation, remove the old reservation
+ duplicate.NoOfSeats += existing.NoOfSeats;
+ _reservationRepo.Update(duplicate);
+ _reservationRepo.Delete(existing);
+ await _reservationRepo.CommitAsync();
+ return RedirectToAction(nameof(Index));
  }
 
  if (!ModelState.IsValid)
@@ -144,13 +154,14 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  return View(reservation);
  }
 
- // remove old reservation and add new one for same user
+ // remove old reservation and add new one for same user preserving seat count
  _reservationRepo.Delete(existing);
 
  var newReservation = new Reservation
  {
  TripId = newTripId,
- ApplicationUserId = originalUserId
+ ApplicationUserId = originalUserId,
+ NoOfSeats = existing.NoOfSeats
  };
 
  await _reservationRepo.AddAsync(newReservation);
