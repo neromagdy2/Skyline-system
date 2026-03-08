@@ -120,7 +120,16 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             {
                 return RedirectToAction("Login", "Authentication", new { area = "Identity" });
             }
+            var isReservedervationExists = await _reservationRepository.GetOneAsync(r => r.TripId == tripId && r.ApplicationUserId == user.Id);
+            if (isReservedervationExists != null)
+            {
+                isReservedervationExists.NumSeats=isReservedervationExists.NumSeats+ seatsToReserve;
+                isReservedervationExists.TotalPrice = isReservedervationExists.TotalPrice + (decimal)totalPrice;
+                _reservationRepository.Update(isReservedervationExists);
+                await _reservationRepository.CommitAsync();
+                return RedirectToAction("pay", "Payments", new { area = "Customer" });
 
+            }
             var reservation = new Reservation
             {
                 TripId = tripId,

@@ -1,33 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#3b82f6",
-                        accent: "#0ea5e9",
-                        "background-dark": "#020617",
-                        "card-dark": "rgba(15, 23, 42, 0.6)"
-                    },
-                    fontFamily: {
-                        display: ["Plus Jakarta Sans", "sans-serif"]
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.5rem",
-                        lg: "1rem",
-                        xl: "1.5rem",
-                        "2xl": "2.5rem",
-                        full: "9999px"
-                    }
-                }
-            }
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#3b82f6",
+                "accent": "#0ea5e9",
+                "background-dark": "#020617",
+                "card-dark": "rgba(15, 23, 42, 0.6)",
+              },
+              fontFamily: {
+                "display": ["Plus Jakarta Sans", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2.5rem", "full": "9999px"},
+            },
+          },
         }
     </script>
     <style>
@@ -57,54 +52,32 @@
         }
     </style>
 </head>
-<body class="font-display antialiased mesh-bg bg-background-dark text-slate-200 selection:bg-primary/30">
+<body class="font-display antialiased mesh-bg bg-background-dark text-slate-200 selection:bg-primary/30 font-display antialiased mesh-bg">
     <div class="relative flex min-h-screen w-full flex-col">
-        <header class="sticky top-0 z-50 border-b border-white/10 bg-background-dark/80 backdrop-blur-xl">
-            <div class="max-w-7xl mx-auto px-6 lg:px-20 py-3 flex items-center justify-between gap-4">
-                <div class="flex items-center gap-2 group cursor-pointer">
-                    <div class="relative flex items-center justify-center size-10 bg-primary/20 rounded-xl overflow-hidden group-hover:bg-primary/30 transition-all">
-                        <span class="material-symbols-outlined text-primary text-2xl group-hover:scale-110 transition-transform">flight_takeoff</span>
-                    </div>
-                    <h2 class="text-xl font-extrabold leading-tight tracking-tighter text-white">SKYSTREAM</h2>
+        <header class="sticky top-0 z-50 flex items-center justify-between border-b border-white/5 bg-background-dark/60 backdrop-blur-xl px-6 py-4 lg:px-20">
+            <div class="flex items-center gap-2 group cursor-pointer">
+                <div class="relative flex items-center justify-center size-10 bg-primary/20 rounded-xl overflow-hidden group-hover:bg-primary/30 transition-all">
+                    <span class="material-symbols-outlined text-primary text-2xl group-hover:scale-110 transition-transform">flight_takeoff</span>
                 </div>
-                <nav class="flex items-center gap-6 text-xs sm:text-sm font-semibold">
-                    <a class="text-slate-300 hover:text-white transition-colors" href="/Customer/Home/Index">Home</a>
-                    <a class="text-slate-300 hover:text-white transition-colors" href="/Customer/Home/Bookings">Bookings</a>
-                </nav>
-                <div class="flex items-center gap-3">
-                    @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
-                    {
-                        <a href="/Admin/Home/Index"
-                           class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-900 shadow-md hover:bg-amber-300 transition">
-                            <span class="material-symbols-outlined text-base">admin_panel_settings</span>
-                            Admin mode
-                        </a>
-                    }
-                    <a class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-lg shadow-primary/25 hover:bg-primary/90 transition"
-                       href="/Identity/Authentication/Logout">
-                        <span class="material-symbols-outlined text-base">logout</span>
-                        Logout
-                    </a>
-                    <a href="/Customer/Profile/Index" class="shrink-0">
-                        <div class="bg-slate-800 aspect-square bg-cover rounded-full size-10 border border-white/10"
-                             style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjNZ4wG5KCPYB1K3AaZdxZJuUNnNgFfpdUYNd_rq1JId-Lvs3UF-Kqb61ShVGFLfB3uLYHNOn0ti5BQMekCbjY7uDxpC6oZHjMOPjeEjHI9dJOrb8RmpI7iR_Bjvwc5xp3M624fdSPtEO34yQy1ck-po98QuUNpR5PUfj9xihpZc874yDHDkOJmHGgCPVERQie71v7JEvkKIP178RocKwM6APBANUnRDRfkvHsq0UuLef_vVl4Nrbir8KWmVmLNxqQLiH9GvkIEuU");'>
-                        </div>
-                    </a>
-                </div>
+                <h2 class="text-xl font-800 leading-tight tracking-tighter text-white">SKYSTREAM</h2>
+            </div>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-white" href="/Customer/Home/Index">Home</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-white" href="/Customer/Home/Bookings">Bookings</a>
+            </nav>
+            <div class="flex items-center gap-6">
+                <a href="/Identity/Authentication/Logout">
+                    <button class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90">Logout</button>
+                </a>
+                <a href="/Customer/Profile/Index">
+                    <div class="bg-slate-800 aspect-square bg-cover rounded-full size-10 border border-white/10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjNZ4wG5KCPYB1K3AaZdxZJuUNnNgFfpdUYNd_rq1JId-Lvs3UF-Kqb61ShVGFLfB3uLYHNOn0ti5BQMekCbjY7uDxpC6oZHjMOPjeEjHI9dJOrb8RmpI7iR_Bjvwc5xp3M624fdSPtEO34yQy1ck-po98QuUNpR5PUfj9xihpZc874yDHDkOJmHGgCPVERQie71v7JEvkKIP178RocKwM6APBANUnRDRfkvHsq0UuLef_vVl4Nrbir8KWmVmLNxqQLiH9GvkIEuU");'></div>
+                </a>
             </div>
         </header>
-
-        <!-- MAIN AREA -->
-        <main class="flex-grow relative">
-            <!-- Visual background grid -->
-            <div class="absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50"></div>
-
-            <!-- RenderBody Container -->
-            <div class="max-w-7xl mx-auto px-6 lg:px-20 pt-10 pb-16">
-                @RenderBody()
-            </div>
-        </main>
-
+        <!-- RenderBody Container -->
+        <div class="max-w-7xl mx-auto px-6  lg:px-20">
+            @RenderBody()
+        </div>
         <footer class="bg-background-dark border-t border-white/5 px-6 py-20 lg:px-20 relative overflow-hidden">
             <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
             <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between gap-20 relative z-10">
@@ -175,3 +148,4 @@
 
 </body>
 </html>
+
