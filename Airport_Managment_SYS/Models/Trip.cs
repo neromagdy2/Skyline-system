@@ -12,11 +12,11 @@ namespace Airport_Managment_SYS.Models
 
         public bool IsDeleted { get; set; }
 
-        public List<TripSeat> TripSeats { get; set; }
+        public List<TripSeat>? TripSeats { get; set; }
 
-        public Airplane Airplane{ get; set; }
-        public Airport Airport_To { get; set; }
-        public Airport Airport_From { get; set; }
+        public Airplane? Airplane{ get; set; }
+        public Airport? Airport_To { get; set; }
+        public Airport? Airport_From { get; set; }
 
     }
 }
