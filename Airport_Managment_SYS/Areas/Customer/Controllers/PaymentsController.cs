@@ -65,6 +65,8 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                 Total = reservation.Trip.Price,
                 ApplicationUserId = user.Id
             };
+            await _paymentRepository.AddAsync(payment);
+            await _paymentRepository.CommitAsync();
             var trip = await _tripRepository.GetOneAsync(t=> t.Id == reservation.TripId);
               
 
