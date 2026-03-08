@@ -66,8 +66,18 @@
                 <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-white" href="/Customer/Home/Bookings">Bookings</a>
             </nav>
             <div class="flex items-center gap-6">
+                @if(User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                {
+
+                    <a class="rounded-full px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90" style="background-color:sandybrown;"href="/Admin/Home/Index">
+
+                            AdminMode
+
+                    </a>
+                        
+                }
                 <a href="/Identity/Authentication/Logout">
-                    <button class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90">Logout</button>
+                        <button class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90">Logout</button>
                 </a>
                 <a href="/Customer/Profile/Index">
                     <div class="bg-slate-800 aspect-square bg-cover rounded-full size-10 border border-white/10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjNZ4wG5KCPYB1K3AaZdxZJuUNnNgFfpdUYNd_rq1JId-Lvs3UF-Kqb61ShVGFLfB3uLYHNOn0ti5BQMekCbjY7uDxpC6oZHjMOPjeEjHI9dJOrb8RmpI7iR_Bjvwc5xp3M624fdSPtEO34yQy1ck-po98QuUNpR5PUfj9xihpZc874yDHDkOJmHGgCPVERQie71v7JEvkKIP178RocKwM6APBANUnRDRfkvHsq0UuLef_vVl4Nrbir8KWmVmLNxqQLiH9GvkIEuU");'></div>
