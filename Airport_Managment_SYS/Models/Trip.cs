@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Airport_Managment_SYS.Models
 {
     public class Trip
@@ -10,6 +12,8 @@ namespace Airport_Managment_SYS.Models
         public DateTime ArrivalDateTime { get; set; }
         public int AirplaneId{ get; set; }
         public int Airport_ToId { get; set; }
+
+        [NotEqual(nameof(Airport_ToId),ErrorMessage = "The Distanation Airport and Deprture Airport can't be the same")]
         public int Airport_FromId { get; set; }
 
         public bool IsDeleted { get; set; }
@@ -19,7 +23,6 @@ namespace Airport_Managment_SYS.Models
         public Airplane? Airplane{ get; set; }
         public Airport? Airport_To { get; set; }
 
-        [NotEqual(nameof(Airport_To))]
         public Airport? Airport_From { get; set; }
 
     }

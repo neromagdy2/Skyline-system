@@ -3,6 +3,7 @@ using Airport_Managment_SYS.Models;
 using Airport_Managment_SYS.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
@@ -38,6 +39,9 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             var Trip = await _TripRepo.GetOneAsync(t => t.Id == id);
             return View(Trip);
         }
+
+
+        //Create
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -58,6 +62,14 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 // repopulate lists for the view
+                TripVM.Airports = await _AirportRepo.GetAsync();
+                TripVM.Airplanes = await _AirplaneRepo.GetAsync();
+                return View(TripVM);
+            }
+            if (TripVM.DateTime < DateTime.Now)
+            {
+                ModelState.AddModelError("TripVM.DateTime", "The trip date cannot be in the past.");
+
                 TripVM.Airports = await _AirportRepo.GetAsync();
                 TripVM.Airplanes = await _AirplaneRepo.GetAsync();
                 return View(TripVM);
@@ -95,6 +107,10 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             await _TripRepo.CommitAsync();
             return RedirectToAction("Index");
         }
+
+
+
+        //Edit/Update
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -115,8 +131,20 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
+                TripVM.Airports = await _AirportRepo.GetAsync();
+                TripVM.Airplanes = await _AirplaneRepo.GetAsync();
                 return View(TripVM);
             }
+
+            if (TripVM.Trip.DateTime < DateTime.Now && !User.IsInRole("SuperAdmin"))
+            {
+                ModelState.AddModelError("Trip.DateTime", "You don't have acces to make the date in the past.");
+
+                TripVM.Airports = await _AirportRepo.GetAsync();
+                TripVM.Airplanes = await _AirplaneRepo.GetAsync();
+                return View(TripVM);
+            }
+
             var Trip = await _TripRepo.GetOneAsync(t => t.Id == TripVM.Id);
 
             if (Trip == null)
@@ -140,7 +168,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             await _TripRepo.CommitAsync();
             return RedirectToAction("Index");
         }
-        [HttpDelete]
+        [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             var Trip = await _TripRepo.GetOneAsync(t => t.Id == id);

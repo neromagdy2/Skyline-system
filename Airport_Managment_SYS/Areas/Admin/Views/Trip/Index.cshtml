@@ -38,9 +38,23 @@
                                 <span class="badge bg-info">@item.Airport_ToId</span>
                             </td>
                             <td>ID: @item.AirplaneId</td>
-                            <td>
-                                <a href="/Admin/Trip/Edit/@item.Id" class="btn btn-warning">Edit</a>
-                                <a href="/Admin/Trip/Delete/@item.Id" class="btn btn-danger btn-delete">Delete</a>
+                            <td class="d-flex flex-row">
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-warning btn-sm me-2">
+                                    Edit
+                                </a>
+
+                                <form asp-action="Delete"
+                                      asp-route-id="@item.Id"
+                                      method="post"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Are you sure you want to delete this Trip?');">
+
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Delete
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     }
