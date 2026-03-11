@@ -32,40 +32,42 @@ namespace Airport_Managment_SYS.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-                base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
-                // Configure ApplicationUser-Nationalities relationship
-                modelBuilder.Entity<ApplicationUser>()
-                    .HasOne(u => u.National)
-                    .WithMany()
-                    .HasForeignKey(u => u.NationalitiesId)
-                    .OnDelete(DeleteBehavior.SetNull);
+            // Configure ApplicationUser-Nationalities relationship
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(u => u.National)
+                .WithMany()
+                .HasForeignKey(u => u.NationalitiesId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-                // Configure global query filter for soft delete
-                modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDeleted);
+            // Configure global query filter for soft delete
+            modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDeleted);
 
-                // Configure Origin Airport
-                modelBuilder.Entity<Reservation>().HasKey(r => new { r.TripId , r.ApplicationUserId });
+            // Configure Origin Airport
+            modelBuilder.Entity<Reservation>().HasKey(r => new { r.TripId , r.ApplicationUserId });
 
-                modelBuilder.Entity<Trip>()
-                    .HasOne(t => t.Airport_From)
-                    .WithMany()
-                    .HasForeignKey(t => t.Airport_FromId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Airport_From)
+                .WithMany()
+                .HasForeignKey(t => t.Airport_FromId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-                modelBuilder.Entity<Trip>()
-                    .HasOne(t => t.Airport_To)
-                    .WithMany()
-                    .HasForeignKey(t => t.Airport_ToId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Airport_To)
+                .WithMany()
+                .HasForeignKey(t => t.Airport_ToId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
-                // If the error persists, do the same for AirplaneId or Airports
-                modelBuilder.Entity<Trip>()
-                    .HasOne(t => t.Airplane)
-                    .WithMany()
-                    .HasForeignKey(t => t.AirplaneId)
-                    .OnDelete(DeleteBehavior.NoAction);
+            // If the error persists, do the same for AirplaneId or Airports
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Airplane)
+                .WithMany()
+                .HasForeignKey(t => t.AirplaneId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            
         }
 
 
