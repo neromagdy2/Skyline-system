@@ -17,6 +17,7 @@ namespace Airport_Managment_SYS.DataAccess
         public DbSet<Country > Countrys { get; set; }
         public DbSet<GovernerateState> GoverneratesStates { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<ReservationSeat> ReservationSeats { get; set; }
         public DbSet<SeatClass> SeatClasses { get; set; }
         public DbSet<Seat > Seats { get; set; }
         public DbSet<TripSeat> TripSeats { get; set; }
@@ -44,19 +45,35 @@ namespace Airport_Managment_SYS.DataAccess
             // Configure global query filter for soft delete
             modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDeleted);
 
-                // Configure Reservation
-                modelBuilder.Entity<Reservation>().HasKey(r => new { r.TripId , r.ApplicationUserId });
-                
-                modelBuilder.Entity<Reservation>()
-                    .Property(r => r.TotalPrice)
-                    .HasPrecision(18, 2);
+            // Configure Reservation with independent Id
+            modelBuilder.Entity<Reservation>().HasKey(r => r.Id);
+            
+            modelBuilder.Entity<Reservation>()
+                .Property(r => r.TotalPrice)
+                .HasPrecision(18, 2);
 
-                // Configure Origin Airport
-                modelBuilder.Entity<Trip>()
-                    .HasOne(t => t.Airport_From)
-                    .WithMany()
-                    .HasForeignKey(t => t.Airport_FromId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            // Configure ReservationSeat (Many-to-Many)
+            modelBuilder.Entity<ReservationSeat>()
+                .HasKey(rs => new { rs.ReservationId, rs.SeatId });
+
+            modelBuilder.Entity<ReservationSeat>()
+                .HasOne(rs => rs.Reservation)
+                .WithMany(r => r.ReservationSeats)
+                .HasForeignKey(rs => rs.ReservationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ReservationSeat>()
+                .HasOne(rs => rs.Seat)
+                .WithMany(s => s.ReservationSeats)
+                .HasForeignKey(rs => rs.SeatId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure Origin Airport
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Airport_From)
+                .WithMany()
+                .HasForeignKey(t => t.Airport_FromId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Trip>()
                 .HasOne(t => t.Airport_To)
