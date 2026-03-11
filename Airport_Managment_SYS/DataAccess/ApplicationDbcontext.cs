@@ -44,14 +44,19 @@ namespace Airport_Managment_SYS.DataAccess
             // Configure global query filter for soft delete
             modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDeleted);
 
-            // Configure Origin Airport
-            modelBuilder.Entity<Reservation>().HasKey(r => new { r.TripId , r.ApplicationUserId });
+                // Configure Reservation
+                modelBuilder.Entity<Reservation>().HasKey(r => new { r.TripId , r.ApplicationUserId });
+                
+                modelBuilder.Entity<Reservation>()
+                    .Property(r => r.TotalPrice)
+                    .HasPrecision(18, 2);
 
-            modelBuilder.Entity<Trip>()
-                .HasOne(t => t.Airport_From)
-                .WithMany()
-                .HasForeignKey(t => t.Airport_FromId)
-                .OnDelete(DeleteBehavior.Restrict);
+                // Configure Origin Airport
+                modelBuilder.Entity<Trip>()
+                    .HasOne(t => t.Airport_From)
+                    .WithMany()
+                    .HasForeignKey(t => t.Airport_FromId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Trip>()
                 .HasOne(t => t.Airport_To)
