@@ -33,10 +33,10 @@ namespace Airport_Managment_SYS.Controllers
             }
             else
             {
-                user.LockoutEnd = DateTime.UtcNow.AddMinutes(5);
+                user.LockoutEnd = DateTime.UtcNow.AddYears(1);
             }
             await _userManager.UpdateAsync(user);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
 
         }
 

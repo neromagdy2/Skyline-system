@@ -1,19 +1,21 @@
 @model IEnumerable<Trip>
 
-<div class="container">
-    <div class="row mb-3 align-items-center my-3">
-        <div class="col-md-6">
-            <h2 class="display-6">All Trips</h2>
-        </div>
-        <div class="col-md-6 text-md-end text-start mt-2 mt-md-0">
-            <a href="/Admin/Trip/Create" class="btn btn-success">Create New Trip</a>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12">
-            <table class="table table-hover">
-                <thead>
+    <div class="container mt-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Trips Management</h2>
+            <a asp-action="Create" class="btn btn-primary">
+                + Add New Trip
+            </a>
+        </div>
+
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <table class="table table-striped table-hover align-middle text-center">
+                <thead class="table-dashboard">
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Departure</th>
@@ -40,7 +42,7 @@
                             <td>ID: @item.AirplaneId</td>
                             <td>
                                 <a href="/Admin/Trip/Update/@item.Id" class="btn btn-warning">Edit</a>
-                                <a href="/Admin/Trip/Delete/@item.Id" class="btn btn-danger btn-delete">Delete</a>
+                                <a href="/Admin/Trip/Delete/@item.Id" class="btn btn-danger btn-delete" >Delete</a>
                             </td>
                         </tr>
                     }
