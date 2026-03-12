@@ -21,12 +21,12 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label asp-for="DateTime" class="form-label">Departure Date & Time</label>
-                        <input type="datetime-local" class="form-control" asp-for="DateTime">
+                        <input type="datetime-local" class="form-control" asp-for="DateTime" min="@DateTime.Now">
                         <span class="text-danger" asp-validation-for="DateTime"></span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="ArrivalDateTime" class="form-label">Arrival Date & Time</label>
-                        <input type="datetime-local" class="form-control" asp-for="ArrivalDateTime">
+                        <input type="datetime-local" class="form-control" asp-for="ArrivalDateTime" min="@DateTime.Now.AddMinutes(30)">
                         <span class="text-danger" asp-validation-for="ArrivalDateTime"></span>
                     </div>
                 </div>
@@ -105,4 +105,5 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <partial name="_NotificationPartial" />
+
 }

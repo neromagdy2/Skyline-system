@@ -100,7 +100,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                        var user = userTask.Result;
                        if (user == null) return View();
 
-                       var reservation = _ReservationRepository.GetOneAsync(r => r.ApplicationUserId == user.Id).Result;
+                       var reservation = _ReservationRepository.GetOneAsync(r => r.ApplicationUserId == user.Id&&r.IsPaid==false).Result;
                        if (reservation == null) return View();
 
                        // mark reservation paid

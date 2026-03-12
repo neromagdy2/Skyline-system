@@ -63,7 +63,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  if (duplicate != null)
  {
  // If user already has a reservation for this trip, increment the seat count instead of creating a new reservation
- duplicate.NoOfSeats += 1;
+ duplicate.NumSeats += 1;
  _reservationRepo.Update(duplicate);
  await _reservationRepo.CommitAsync();
  return RedirectToAction(nameof(Index));
@@ -82,7 +82,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  {
  TripId = tripId,
  ApplicationUserId = userId,
- NoOfSeats = 1
+ NumSeats = 1
  };
 
  await _reservationRepo.AddAsync(reservation);
@@ -136,7 +136,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  if (duplicate != null)
  {
  // Merge seat counts: add existing seats to the duplicate reservation, remove the old reservation
- duplicate.NoOfSeats += existing.NoOfSeats;
+ duplicate.NumSeats += existing.NumSeats;
  _reservationRepo.Update(duplicate);
  _reservationRepo.Delete(existing);
  await _reservationRepo.CommitAsync();
@@ -161,7 +161,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  {
  TripId = newTripId,
  ApplicationUserId = originalUserId,
- NoOfSeats = existing.NoOfSeats
+ NumSeats = existing.NumSeats
  };
 
  await _reservationRepo.AddAsync(newReservation);

@@ -48,7 +48,9 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
 
             var trips = await _tripRepository.GetAsync(
                 t => t.Airport_FromId == searchTripsVM.DepartureCity &&
-                     t.Airport_ToId == searchTripsVM.ArrivalCity,
+                     t.Airport_ToId == searchTripsVM.ArrivalCity
+                     &&t.DateTime.Day==searchTripsVM.DepartureTime.Day
+                     &&t.ArrivalDateTime.Year==searchTripsVM.DepartureTime.Year&& t.DateTime.Month==searchTripsVM.DepartureTime.Month,
                 includes: new System.Linq.Expressions.Expression<Func<Trip, object>>[]
                 {
                     t => t.Airport_From,

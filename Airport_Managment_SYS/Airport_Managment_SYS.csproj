@@ -8,16 +8,12 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\**" />
-    <Compile Remove="NewFolder\**" />
     <Compile Remove="Views\Home\**" />
     <Content Remove="Controllers\**" />
-    <Content Remove="NewFolder\**" />
     <Content Remove="Views\Home\**" />
     <EmbeddedResource Remove="Controllers\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
     <EmbeddedResource Remove="Views\Home\**" />
     <None Remove="Controllers\**" />
-    <None Remove="NewFolder\**" />
     <None Remove="Views\Home\**" />
   </ItemGroup>
 
