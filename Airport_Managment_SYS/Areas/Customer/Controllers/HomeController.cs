@@ -31,8 +31,9 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var seatClasses = await _seatClassesRepository.GetAsync();
             var governerateStates = await _governerateStateRepository.GetAsync();
-            return View(new SearchTripsVM() { States = governerateStates });
+            return View(new SearchTripsVM() { States = governerateStates ,seatClasses=seatClasses});
         }
 
         [HttpGet]
@@ -40,11 +41,12 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
         {
             if (!ModelState.IsValid)
             {
+                searchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
                 searchTripsVM.States = await _governerateStateRepository.GetAsync();
                 return View("Index", searchTripsVM);
             }
             searchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
-
+           searchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
 
             var trips = await _tripRepository.GetAsync(
                 t => t.Airport_FromId == searchTripsVM.DepartureCity &&
@@ -56,8 +58,15 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                     t => t.Airport_From,
                     t => t.Airport_To
                 });
+            if (searchTripsVM.MaxPrice >0)
+            {
+                trips = trips.Where(t => t.Price < searchTripsVM.MaxPrice);
 
-
+            }
+            if (searchTripsVM.SeatClassId>0)
+            {
+                trips = trips.Where(t => t.TripSeats.Any(ts => !ts.IsBooked && ts.Seat != null && ts.Seat.seatClassId == searchTripsVM.SeatClassId));
+            }
             searchTripsVM.trips = trips;
 
             return View(searchTripsVM);

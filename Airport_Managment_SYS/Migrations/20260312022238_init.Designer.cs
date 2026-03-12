@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Airport_Managment_SYS.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
-    [Migration("20260308215426_Pull")]
-    partial class Pull
+    [Migration("20260312022238_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,20 +162,18 @@ namespace Airport_Managment_SYS.Migrations
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Reservation", b =>
                 {
-                    b.Property<int>("TripId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
-
-                    b.Property<int>("NoOfSeats")
-                        .HasColumnType("int");
 
                     b.Property<int>("NumSeats")
                         .HasColumnType("int");
@@ -184,13 +182,34 @@ namespace Airport_Managment_SYS.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("TripId", "ApplicationUserId");
+                    b.Property<int>("TripId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
+                    b.HasIndex("TripId");
+
                     b.ToTable("Reservations");
+                });
+
+            modelBuilder.Entity("Airport_Managment_SYS.Models.ReservationSeat", b =>
+                {
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeatId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReservationId", "SeatId");
+
+                    b.HasIndex("SeatId");
+
+                    b.ToTable("ReservationSeats");
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Seat", b =>
@@ -207,12 +226,6 @@ namespace Airport_Managment_SYS.Migrations
                     b.Property<bool>("Available")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ReservationApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("ReservationTripId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SeatNumber")
                         .HasColumnType("int");
 
@@ -224,8 +237,6 @@ namespace Airport_Managment_SYS.Migrations
                     b.HasIndex("AirplaneId");
 
                     b.HasIndex("seatClassId");
-
-                    b.HasIndex("ReservationTripId", "ReservationApplicationUserId");
 
                     b.ToTable("Seats");
                 });
@@ -579,6 +590,25 @@ namespace Airport_Managment_SYS.Migrations
                     b.Navigation("Trip");
                 });
 
+            modelBuilder.Entity("Airport_Managment_SYS.Models.ReservationSeat", b =>
+                {
+                    b.HasOne("Airport_Managment_SYS.Models.Reservation", "Reservation")
+                        .WithMany("ReservationSeats")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Airport_Managment_SYS.Models.Seat", "Seat")
+                        .WithMany("ReservationSeats")
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reservation");
+
+                    b.Navigation("Seat");
+                });
+
             modelBuilder.Entity("Airport_Managment_SYS.Models.Seat", b =>
                 {
                     b.HasOne("Airport_Managment_SYS.Models.Airplane", "Airplane")
@@ -592,10 +622,6 @@ namespace Airport_Managment_SYS.Migrations
                         .HasForeignKey("seatClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Airport_Managment_SYS.Models.Reservation", null)
-                        .WithMany("Seats")
-                        .HasForeignKey("ReservationTripId", "ReservationApplicationUserId");
 
                     b.Navigation("Airplane");
 
@@ -721,11 +747,13 @@ namespace Airport_Managment_SYS.Migrations
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Reservation", b =>
                 {
-                    b.Navigation("Seats");
+                    b.Navigation("ReservationSeats");
                 });
 
             modelBuilder.Entity("Airport_Managment_SYS.Models.Seat", b =>
                 {
+                    b.Navigation("ReservationSeats");
+
                     b.Navigation("TripSeats");
                 });
 

@@ -12,7 +12,7 @@ namespace Airport_Managment_SYS.Utilities
             {
                 EnableSsl = true,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("neromagdy2@gmail.com", "quvg lxdn sdfp nurw ")
+                Credentials = new NetworkCredential("neromagdy2@gmail.com", "eboo fmqb tgym tqjo ")
             };
 
             return client.SendMailAsync(

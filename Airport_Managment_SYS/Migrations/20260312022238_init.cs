@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Airport_Managment_SYS.Migrations
 {
     /// <inheritdoc />
-    public partial class softReboot : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,7 +45,7 @@ namespace Airport_Managment_SYS.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     MobileCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -73,7 +73,8 @@ namespace Airport_Managment_SYS.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PriceMult = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -152,6 +153,34 @@ namespace Airport_Managment_SYS.Migrations
                         principalTable: "Nationalities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Seats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SeatNumber = table.Column<int>(type: "int", nullable: false),
+                    Available = table.Column<bool>(type: "bit", nullable: false),
+                    seatClassId = table.Column<int>(type: "int", nullable: false),
+                    AirplaneId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Seats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Seats_Airplanes_AirplaneId",
+                        column: x => x.AirplaneId,
+                        principalTable: "Airplanes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Seats_SeatClasses_seatClassId",
+                        column: x => x.seatClassId,
+                        principalTable: "SeatClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -289,6 +318,7 @@ namespace Airport_Managment_SYS.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<float>(type: "real", nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ArrivalDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AirplaneId = table.Column<int>(type: "int", nullable: false),
                     Airport_ToId = table.Column<int>(type: "int", nullable: false),
                     Airport_FromId = table.Column<int>(type: "int", nullable: false),
@@ -320,13 +350,18 @@ namespace Airport_Managment_SYS.Migrations
                 name: "Reservations",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TripId = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    NumSeats = table.Column<int>(type: "int", nullable: false)
+                    NumSeats = table.Column<int>(type: "int", nullable: false),
+                    SeatClassId = table.Column<int>(type: "int", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservations", x => new { x.TripId, x.ApplicationUserId });
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Reservations_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
@@ -337,42 +372,6 @@ namespace Airport_Managment_SYS.Migrations
                         name: "FK_Reservations_Trips_TripId",
                         column: x => x.TripId,
                         principalTable: "Trips",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Seats",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SeatNumber = table.Column<int>(type: "int", nullable: false),
-                    Available = table.Column<bool>(type: "bit", nullable: false),
-                    Price = table.Column<float>(type: "real", nullable: false),
-                    seatClassId = table.Column<int>(type: "int", nullable: false),
-                    AirplaneId = table.Column<int>(type: "int", nullable: false),
-                    ReservationApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ReservationTripId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Seats", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Seats_Airplanes_AirplaneId",
-                        column: x => x.AirplaneId,
-                        principalTable: "Airplanes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Seats_Reservations_ReservationTripId_ReservationApplicationUserId",
-                        columns: x => new { x.ReservationTripId, x.ReservationApplicationUserId },
-                        principalTable: "Reservations",
-                        principalColumns: new[] { "TripId", "ApplicationUserId" });
-                    table.ForeignKey(
-                        name: "FK_Seats_SeatClasses_seatClassId",
-                        column: x => x.seatClassId,
-                        principalTable: "SeatClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -398,6 +397,30 @@ namespace Airport_Managment_SYS.Migrations
                         name: "FK_TripSeats_Trips_TripId",
                         column: x => x.TripId,
                         principalTable: "Trips",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReservationSeats",
+                columns: table => new
+                {
+                    ReservationId = table.Column<int>(type: "int", nullable: false),
+                    SeatId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReservationSeats", x => new { x.ReservationId, x.SeatId });
+                    table.ForeignKey(
+                        name: "FK_ReservationSeats_Reservations_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "Reservations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReservationSeats_Seats_SeatId",
+                        column: x => x.SeatId,
+                        principalTable: "Seats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -467,14 +490,19 @@ namespace Airport_Managment_SYS.Migrations
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reservations_TripId",
+                table: "Reservations",
+                column: "TripId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationSeats_SeatId",
+                table: "ReservationSeats",
+                column: "SeatId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Seats_AirplaneId",
                 table: "Seats",
                 column: "AirplaneId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Seats_ReservationTripId_ReservationApplicationUserId",
-                table: "Seats",
-                columns: new[] { "ReservationTripId", "ReservationApplicationUserId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Seats_seatClassId",
@@ -524,25 +552,28 @@ namespace Airport_Managment_SYS.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
+                name: "ReservationSeats");
+
+            migrationBuilder.DropTable(
                 name: "TripSeats");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Seats");
-
-            migrationBuilder.DropTable(
                 name: "Reservations");
 
             migrationBuilder.DropTable(
-                name: "SeatClasses");
+                name: "Seats");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Trips");
+
+            migrationBuilder.DropTable(
+                name: "SeatClasses");
 
             migrationBuilder.DropTable(
                 name: "Nationalities");

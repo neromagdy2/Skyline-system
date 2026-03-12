@@ -1,4 +1,4 @@
-@model Airport_Managment_SYS.Areas.Customer.ViewModels.SearchTripsVM
+﻿@model Airport_Managment_SYS.Areas.Customer.ViewModels.SearchTripsVM
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
     <div class="relative flex min-h-screen w-full flex-col">
         <main class="flex-1">
@@ -6,7 +6,7 @@
                 <div class="max-w-7xl mx-auto">
 
                     <form asp-action="SearchTrips" method="get"
-                          class="flex flex-col md:flex-row items-center justify-between bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 gap-4">
+                          class="flex flex-col md:flex-row items-center justify-between bg-white/10 backdrop-blur-md p-4 rounded-2xl  gap-4">
 
                         <div class="flex flex-col md:flex-row items-center gap-6 w-full">
 
@@ -78,58 +78,68 @@
             <div class="max-w-7xl mx-auto px-6 py-10 lg:px-20">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     <aside class="space-y-6">
-                        <div class="bg-white/10 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-white/20">
+                        <div class="bg-white/5 backdrop-blur-xl p-6 rounded-3xl  shadow-xl">
 
-                            <h4 class="text-sm font-bold uppercase tracking-widest mb-6 text-white">
+                            <h4 class="text-sm font-bold uppercase tracking-widest mb-6 text-slate-300">
                                 Filters
                             </h4>
 
-                            <!-- Departure Time -->
-                            <div class="mb-8">
+                            <form asp-action="SearchTrips" method="get">
 
-                                <label class="block text-xs font-bold text-slate-400 uppercase mb-3">
-                                    Departure Time
-                                </label>
+                                <!-- نخلي البحث الأساسي محفوظ -->
+                                <input type="hidden" name="DepartureCity" value="@Model.DepartureCity" />
+                                <input type="hidden" name="ArrivalCity" value="@Model.ArrivalCity" />
+                                <input type="hidden" name="DepartureTime" value="@Model.DepartureTime" />
 
-                                <div class="grid grid-cols-2 gap-2">
+                                <!-- Seat Class -->
+                                <div class="mb-8">
 
-                                    <button class="px-3 py-2 border border-white/20 rounded-lg text-xs font-bold text-slate-300 hover:border-primary hover:text-white transition-all">
-                                        Morning
-                                    </button>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase mb-3">
+                                        Seat Class
+                                    </label>
 
-                                    <button class="px-3 py-2 border border-primary bg-primary/20 rounded-lg text-xs font-bold text-primary">
-                                        Afternoon
-                                    </button>
+                                    <select name="SeatClassId"
+                                            class="w-full h-12 rounded-xl border border-white/10 bg-white/10 text-white px-4 focus:ring-2 focus:ring-primary">
 
-                                    <button class="px-3 py-2 border border-white/20 rounded-lg text-xs font-bold text-slate-300 hover:border-primary hover:text-white transition-all">
-                                        Evening
-                                    </button>
+                                        <option value="0">All Classes</option>
 
-                                    <button class="px-3 py-2 border border-white/20 rounded-lg text-xs font-bold text-slate-300 hover:border-primary hover:text-white transition-all">
-                                        Night
-                                    </button>
+                                        @foreach (var seatClass in Model.seatClasses)
+                                        {
+                                            <option value="@seatClass.Id"
+                                                    selected="@(Model.SeatClassId == seatClass.Id)">
+                                                @seatClass.Name
+                                            </option>
+                                        }
+
+                                    </select>
 
                                 </div>
 
-                            </div>
 
+                                <!-- Max Price -->
+                                <div class="mb-8">
 
-                            <!-- Price Range -->
-                            <div class="mb-6">
+                                    <label class="block text-xs font-bold text-slate-400 uppercase mb-3">
+                                        Max Price
+                                    </label>
 
-                                <label class="block text-xs font-bold text-slate-400 uppercase mb-3">
-                                    Price Range
-                                </label>
-
-                                <input type="range"
-                                       class="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-primary" />
-
-                                <div class="flex justify-between mt-2 text-xs font-bold text-slate-400">
-                                    <span>$150</span>
-                                    <span>$1,200</span>
+                                    <input name="MaxPrice"
+                                           type="range"
+                                           min="50"
+                                           max="2000"
+                                           value="@Model.MaxPrice"
+                                           step="50"
+                                           class="mb-3  w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" />
+                                    <span id="priceValue">$@Model.MaxPrice</span>
                                 </div>
 
-                            </div>
+
+                                <button type="submit"
+                                        class="w-full bg-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition">
+                                    Apply Filters
+                                </button>
+
+                            </form>
 
                         </div>
                     </aside>
@@ -248,8 +258,15 @@
             </div>
         </main>
     </div>
+    <script>
+        const range = document.querySelector("input[name='MaxPrice']");
+        const price = document.getElementById("priceValue");
 
+        range.addEventListener("input", () => {
+            price.innerText = "$" + range.value;
+        });</script>
 </body>
+
 <style>
     .flight-card-hover:hover {
         transform: translateY(-4px);
