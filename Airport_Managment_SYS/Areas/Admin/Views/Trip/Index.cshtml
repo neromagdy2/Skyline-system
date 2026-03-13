@@ -9,32 +9,32 @@
 }
 
 <div class="container py-4">
-    <!-- Amazon-style Header -->
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-1">Trips</h1>
             <p class="text-secondary small mb-0">@totalItems trips</p>
         </div>
-        <a asp-action="Create" class="btn btn-warning">
+        <a asp-action="Create" class="btn btn-primary">
             <i class="bi bi-plus-lg me-2"></i>Create trip
         </a>
     </div>
 
-    <!-- Amazon-style Search and Filters -->
+    <!-- Active Search Bar -->
     <div class="border rounded p-3 mb-4 bg-light">
         <div class="row g-3">
             <div class="col-lg-8">
                 <div class="input-group">
-                    <input type="text" name="searchTerm" value="@searchTerm" 
+                    <input type="text" id="searchInput" name="searchTerm" value="@searchTerm" 
                            class="form-control border-end-0" 
                            placeholder="Search trips by airport, airplane, or route..." />
-                    <button type="submit" class="btn btn-secondary border-start-0">
+                    <button type="button" id="searchBtn" class="btn btn-secondary border-start-0">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
             </div>
             <div class="col-lg-2">
-                <select name="searchBy" class="form-select">
+                <select id="searchBySelect" name="searchBy" class="form-select">
                     @if (searchBy == "all")
                     {
                         <option value="all" selected>All fields</option>
@@ -78,7 +78,7 @@
                 </select>
             </div>
             <div class="col-lg-2">
-                <select name="pageSize" class="form-select">
+                <select id="pageSizeSelect" name="pageSize" class="form-select">
                     @if (pageSize == 10)
                     {
                         <option value="10" selected>10 per page</option>
@@ -112,13 +112,13 @@
             <div class="mt-2">
                 <small class="text-secondary">
                     Search results for "<strong>@searchTerm</strong>" 
-                    <a asp-action="Index" class="text-decoration-none ms-2">Clear search</a>
+                    <a href="/Admin/Trip" class="text-decoration-none ms-2">Clear search</a>
                 </small>
             </div>
         }
     </div>
 
-    <!-- Amazon-style Results Count -->
+    <!-- Results Count -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="small text-secondary">
             @if (!string.IsNullOrEmpty(searchTerm))
@@ -142,13 +142,21 @@
         </div>
     </div>
 
-    <!-- Amazon-style Product Grid -->
-    <div class="row">
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="text-center py-4" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2 text-muted">Searching trips...</p>
+    </div>
+
+    <!-- Trip Cards Grid -->
+    <div id="tripsGrid" class="row">
         @if (Model.Any())
         {
             @foreach (var item in Model)
             {
-                <div class="col-lg-6 col-xl-4 mb-4">
+                <div class="col-lg-6 col-xl-4 mb-4 trip-card">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
                             <!-- Trip Header -->
@@ -240,13 +248,13 @@
                     <i class="bi bi-search fs-1 text-muted"></i>
                     <h5 class="mt-3">No trips found</h5>
                     <p class="text-secondary">Try adjusting your search or filters</p>
-                    <a asp-action="Index" class="btn btn-outline-primary">Clear search</a>
+                    <a href="/Admin/Trip" class="btn btn-outline-primary">Clear search</a>
                 </div>
             </div>
         }
     </div>
 
-    <!-- Amazon-style Pagination -->
+    <!-- Pagination -->
     @if (totalPages > 1)
     {
         <nav aria-label="Trips pagination" class="mt-4">
@@ -326,19 +334,99 @@
         font-weight: 500;
     }
     
-    .table {
-        display: none;
-    }
-    
     .input-group .btn {
         border-color: #ced4da;
     }
     
     .form-control:focus {
-        border-color: #f0c14b;
-        box-shadow: 0 0 0 0.2rem rgba(240, 193, 75, 0.25);
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .trip-card {
+        animation: fadeIn 0.3s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchBySelect = document.getElementById('searchBySelect');
+    const pageSizeSelect = document.getElementById('pageSizeSelect');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const tripsGrid = document.getElementById('tripsGrid');
+    
+    let searchTimeout;
+    
+    // Active search on input
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const searchTerm = this.value.trim();
+        
+        if (searchTerm.length >= 2 || searchTerm.length === 0) {
+            searchTimeout = setTimeout(() => {
+                performSearch();
+            }, 500); // Wait 500ms after user stops typing
+        }
+    });
+    
+    // Search on button click
+    searchBtn.addEventListener('click', performSearch);
+    
+    // Search on Enter key
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            performSearch();
+        }
+    });
+    
+    // Search on filter change
+    searchBySelect.addEventListener('change', performSearch);
+    pageSizeSelect.addEventListener('change', performSearch);
+    
+    function performSearch() {
+        const searchTerm = searchInput.value.trim();
+        const searchBy = searchBySelect.value;
+        const pageSize = pageSizeSelect.value;
+        
+        // Show loading
+        loadingIndicator.style.display = 'block';
+        tripsGrid.style.opacity = '0.5';
+        
+        // Build URL
+        const params = new URLSearchParams();
+        if (searchTerm) params.append('searchTerm', searchTerm);
+        if (searchBy !== 'all') params.append('searchBy', searchBy);
+        if (pageSize !== '10') params.append('pageSize', pageSize);
+        params.append('page', '1'); // Reset to first page on new search
+        
+        // Navigate to search results
+        const url = '/Admin/Trip' + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = url;
+    }
+    
+    // Highlight search term in results
+    function highlightSearchTerm() {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm && searchTerm.length >= 2) {
+            // Add highlighting logic here if needed
+            console.log('Highlighting:', searchTerm);
+        }
+    }
+    
+    // Initialize highlighting on page load
+    if (searchTerm) {
+        highlightSearchTerm();
+    }
+});
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
