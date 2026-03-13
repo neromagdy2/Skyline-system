@@ -27,7 +27,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int page = 1, string fromSearch = "", string toSearch = "", DateTime? dateSearch = null, int pageSize = 10)
+        public async Task<IActionResult> Index(int page = 1, string fromSearch = "", string toSearch = "", DateTime? dateSearch = null, string sortOrder = "", int pageSize = 10)
         {
             // Get trips with includes
             var query = await _TripRepo.GetAsync(
@@ -63,8 +63,23 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
                 query = query.Where(t => t.DateTime.Date == dateSearch.Value.Date);
             }
             
-            // Apply sorting for better performance
-            query = query.OrderByDescending(t => t.DateTime);
+            // Apply sorting
+            switch (sortOrder)
+            {
+                case "price_asc":
+                    query = query.OrderBy(t => t.Price);
+                    break;
+                case "duration_asc":
+                    query = query.OrderBy(t => t.ArrivalDateTime - t.DateTime);
+                    break;
+                case "time_asc":
+                    query = query.OrderBy(t => t.DateTime);
+                    break;
+                default:
+                    // Default to latest flights first or whichever makes sense
+                    query = query.OrderByDescending(t => t.DateTime);
+                    break;
+            }
             
             // Apply pagination
             var totalItems = query.Count();
@@ -78,6 +93,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             ViewBag.FromSearch = fromSearch;
             ViewBag.ToSearch = toSearch;
             ViewBag.DateSearch = dateSearch;
+            ViewBag.SortOrder = sortOrder;
 
             return View(trips);
         }

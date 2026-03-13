@@ -51,6 +51,7 @@
                     </button>
                     <!-- Hidden page size param -->
                     <input type="hidden" name="pageSize" value="@pageSize" />
+                    <input type="hidden" name="sortOrder" id="sortOrderInput" value="@ViewBag.SortOrder" />
                 </div>
             </form>
         </div>
@@ -71,12 +72,18 @@
         <!-- Sorting Criteria Tab mimicking image -->
         <div class="dropdown">
             <button class="btn btn-sm btn-light border dropdown-toggle fw-semi-bold shadow-sm" type="button" data-bs-toggle="dropdown">
-                <i class="fas fa-sort-amount-down me-2"></i>Other Sorting criteria
+                <i class="fas fa-sort-amount-down me-2"></i>
+                @{
+                    var sortLabel = ViewBag.SortOrder == "price_asc" ? "Cheapest first" : 
+                                    ViewBag.SortOrder == "duration_asc" ? "Fastest first" : 
+                                    ViewBag.SortOrder == "time_asc" ? "Earliest first" : "Other Sorting criteria";
+                }
+                @sortLabel
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Cheapest</a></li>
-                <li><a class="dropdown-item" href="#">Fastest</a></li>
-                <li><a class="dropdown-item" href="#">Departure Time</a></li>
+                <li><a class="dropdown-item sort-btn @(ViewBag.SortOrder == "price_asc" ? "active" : "")" href="#" data-sort="price_asc">Cheapest</a></li>
+                <li><a class="dropdown-item sort-btn @(ViewBag.SortOrder == "duration_asc" ? "active" : "")" href="#" data-sort="duration_asc">Fastest</a></li>
+                <li><a class="dropdown-item sort-btn @(string.IsNullOrEmpty(ViewBag.SortOrder) || ViewBag.SortOrder == "time_asc" ? "active" : "")" href="#" data-sort="time_asc">Departure Time</a></li>
             </ul>
         </div>
     </div>
@@ -132,7 +139,6 @@
                                         <div class="fs--2 text-600 fw-semi-bold">
                                             <i class="far fa-clock me-1 d-none d-md-inline"></i>@durationStr • <span class="text-danger fw-bold">Direct</span>
                                         </div>
-                                        <div class="fs--2 text-500 mt-1 d-none d-md-block"><i class="fas fa-suitcase-rolling me-1"></i>1x23 kg</div>
                                     </div>
                                     
                                     <!-- Arrival -->
@@ -228,7 +234,6 @@
                     confirmButtonText: "Yes, delete it"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Create a form dynamically to POST the request as required by AntiForgery setup (if any)
                         const form = document.createElement('form');
                         form.method = 'POST';
                         form.action = url;
@@ -236,6 +241,20 @@
                         form.submit();
                     }
                 });
+            });
+        });
+
+        // Sorting behavior
+        const sortButtons = document.querySelectorAll(".sort-btn");
+        const sortInput = document.getElementById("sortOrderInput");
+        const searchForm = document.getElementById("searchForm");
+        
+        sortButtons.forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                const sortValue = this.getAttribute("data-sort");
+                sortInput.value = sortValue;
+                searchForm.submit();
             });
         });
     });
