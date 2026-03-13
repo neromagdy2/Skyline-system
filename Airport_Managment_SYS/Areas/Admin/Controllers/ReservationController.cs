@@ -23,13 +23,23 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
  }
 
  // View all user reservations
- public async Task<IActionResult> Index()
+ public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
  {
  var reservations = (await _reservationRepo.GetAsync(
  includes: new System.Linq.Expressions.Expression<System.Func<Reservation, object>>[] { r => r.Trip, r => r.ApplicationUser }))
  .ToList();
 
- return View(reservations);
+ int totalItems = reservations.Count();
+ int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+ 
+ var pagedReservations = reservations.Skip((page - 1) * pageSize).Take(pageSize);
+
+ ViewBag.CurrentPage = page;
+ ViewBag.PageSize = pageSize;
+ ViewBag.TotalItems = totalItems;
+ ViewBag.TotalPages = totalPages;
+
+ return View(pagedReservations);
  }
 
  // Create reservation - GET

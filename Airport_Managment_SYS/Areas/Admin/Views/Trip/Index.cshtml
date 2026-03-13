@@ -255,53 +255,7 @@
     </div>
 
     <!-- Pagination -->
-    @if (totalPages > 1)
-    {
-        <nav aria-label="Trips pagination" class="mt-4">
-            <ul class="pagination justify-content-center">
-                @if (currentPage > 1)
-                {
-                    <li class="page-item">
-                        <a class="page-link" 
-                           asp-action="Index" 
-                           asp-route-page="@(currentPage - 1)"
-                           asp-route-searchTerm="@searchTerm"
-                           asp-route-searchBy="@searchBy">
-                            <i class="bi bi-chevron-left"></i>
-                            Previous
-                        </a>
-                    </li>
-                }
-
-                @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
-                {
-                    <li class="page-item @(i == currentPage ? "active" : "")">
-                        <a class="page-link" 
-                           asp-action="Index" 
-                           asp-route-page="@i"
-                           asp-route-searchTerm="@searchTerm"
-                           asp-route-searchBy="@searchBy">
-                            @i
-                        </a>
-                    </li>
-                }
-
-                @if (currentPage < totalPages)
-                {
-                    <li class="page-item">
-                        <a class="page-link" 
-                           asp-action="Index" 
-                           asp-route-page="@(currentPage + 1)"
-                           asp-route-searchTerm="@searchTerm"
-                           asp-route-searchBy="@searchBy">
-                            Next
-                            <i class="bi bi-chevron-right"></i>
-                        </a>
-                    </li>
-                }
-            </ul>
-        </nav>
-    }
+    <partial name="_AdminPaginationPartial" />
 </div>
 
 <style>

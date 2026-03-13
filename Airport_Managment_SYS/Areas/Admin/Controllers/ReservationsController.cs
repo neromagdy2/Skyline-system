@@ -56,10 +56,9 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
 
             // safe: materialize user list for the view (may be large in real apps)
             ViewBag.Users = _userManager.Users.ToList();
-            ViewBag.SelectedUserId = userId;
-            ViewBag.PageNumber = page;
+            ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
-            ViewBag.TotalCount = totalCount;
+            ViewBag.TotalItems = totalCount;
             ViewBag.TotalPages = totalPages;
 
             return View(paged);
