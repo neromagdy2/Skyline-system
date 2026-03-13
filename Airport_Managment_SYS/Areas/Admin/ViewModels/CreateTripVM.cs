@@ -1,5 +1,6 @@
-namespace Airport_Managment_SYS.Areas.Admin.ViewModels
-{
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
     public class CreateTripVM
     {
         public float Price { get; set; }
@@ -11,7 +12,10 @@ namespace Airport_Managment_SYS.Areas.Admin.ViewModels
         [NotEqual(nameof(Airport_ToId), ErrorMessage = "The Distanation Airport and Deprture Airport can't be the same")]
 
         public int Airport_FromId { get; set; }
+        [ValidateNever]
         public IEnumerable<Airplane> Airplanes { get; set; } = Enumerable.Empty<Airplane>();
+        
+        [ValidateNever]
         public IEnumerable<Airport> Airports { get; set; } = Enumerable.Empty<Airport>();
     }
 }
