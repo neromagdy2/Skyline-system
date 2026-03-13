@@ -27,7 +27,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int page = 1, string searchTerm = "", int pageSize = 10)
+        public async Task<IActionResult> Index(int page = 1, string searchTerm = "", string searchBy = "all", int pageSize = 10)
         {
             // Get trips with includes for search functionality
             var query = await _TripRepo.GetAsync(
@@ -39,14 +39,49 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
                     t => t.Airplane
                 });
             
-            // Apply search filter
+            // Apply search filter based on search type
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                query = query.Where(t => 
-                    (t.Airport_From != null && t.Airport_From.Name.Contains(searchTerm)) ||
-                    (t.Airport_To != null && t.Airport_To.Name.Contains(searchTerm)) ||
-                    (t.Airplane != null && t.Airplane.Model.Contains(searchTerm)));
+                searchTerm = searchTerm.ToLower().Trim();
+                
+                switch (searchBy.ToLower())
+                {
+                    case "from":
+                        query = query.Where(t => t.Airport_From != null && 
+                                               t.Airport_From.Name.ToLower().Contains(searchTerm));
+                        break;
+                    case "to":
+                        query = query.Where(t => t.Airport_To != null && 
+                                               t.Airport_To.Name.ToLower().Contains(searchTerm));
+                        break;
+                    case "airplane":
+                        query = query.Where(t => t.Airplane != null && 
+                                               t.Airplane.Model.ToLower().Contains(searchTerm));
+                        break;
+                    case "price":
+                        if (decimal.TryParse(searchTerm, out decimal price))
+                        {
+                            query = query.Where(t => t.Price <= price);
+                        }
+                        break;
+                    case "route":
+                        query = query.Where(t => 
+                            (t.Airport_From != null && t.Airport_From.Name.ToLower().Contains(searchTerm)) ||
+                            (t.Airport_To != null && t.Airport_To.Name.ToLower().Contains(searchTerm)));
+                        break;
+                    default: // "all"
+                        query = query.Where(t => 
+                            (t.Airport_From != null && t.Airport_From.Name.ToLower().Contains(searchTerm)) ||
+                            (t.Airport_To != null && t.Airport_To.Name.ToLower().Contains(searchTerm)) ||
+                            (t.Airplane != null && t.Airplane.Model.ToLower().Contains(searchTerm)) ||
+                            t.Price.ToString().Contains(searchTerm) ||
+                            t.Id.ToString().Contains(searchTerm));
+                        break;
+                }
             }
+            
+            // Apply sorting for better performance
+            query = query.OrderByDescending(t => t.DateTime);
             
             // Apply pagination
             var totalItems = query.Count();
@@ -58,6 +93,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             ViewBag.TotalItems = totalItems;
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
             ViewBag.SearchTerm = searchTerm;
+            ViewBag.SearchBy = searchBy;
 
             return View(trips);
         }
