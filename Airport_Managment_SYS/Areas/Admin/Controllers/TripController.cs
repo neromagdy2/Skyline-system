@@ -27,11 +27,31 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, string searchTerm = "", int pageSize = 10)
         {
-            var Trips = (await _TripRepo.GetAsync(t=>t.IsDeleted != true)).ToList();
+            var query = await _TripRepo.GetAsync(t => t.IsDeleted != true);
+            
+            // Apply search filter
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(t => 
+                    t.Airport_From.Name.Contains(searchTerm) ||
+                    t.Airport_To.Name.Contains(searchTerm) ||
+                    t.Airplane.Model.Contains(searchTerm));
+            }
+            
+            // Apply pagination
+            var totalItems = query.Count();
+            var trips = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            
+            // Pass pagination info to view
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            ViewBag.SearchTerm = searchTerm;
 
-            return View(Trips);
+            return View(trips);
         }
         [HttpGet]
         public async Task<IActionResult> Details(int id)
