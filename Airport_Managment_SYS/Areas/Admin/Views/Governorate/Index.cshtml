@@ -25,7 +25,9 @@
                 <tbody>
                     @if (Model.Any())
                     {
-                        int counter = 1;
+                        int currentPage = ViewBag.CurrentPage ?? 1;
+                        int pageSize = ViewBag.PageSize ?? 10;
+                        int counter = (currentPage - 1) * pageSize + 1;
                         foreach (var state in Model)
                         {
                             <tr>
