@@ -59,7 +59,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
                                                t.Airplane.Model.ToLower().Contains(searchTerm));
                         break;
                     case "price":
-                        if (decimal.TryParse(searchTerm, out decimal price))
+                        if (float.TryParse(searchTerm, out float price))
                         {
                             query = query.Where(t => t.Price <= price);
                         }

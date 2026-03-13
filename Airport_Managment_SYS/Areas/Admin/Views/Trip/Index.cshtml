@@ -41,22 +41,92 @@
                 <div class="col-md-3">
                     <label class="form-label">Search By</label>
                     <select name="searchBy" class="form-select">
-                        <option value="all" @(searchBy == "all" ? "selected" : "")>🔍 All Fields</option>
-                        <option value="from" @(searchBy == "from" ? "selected" : "")>🛫 From Airport</option>
-                        <option value="to" @(searchBy == "to" ? "selected" : "")>🛬 To Airport</option>
-                        <option value="route" @(searchBy == "route" ? "selected" : "")>🛩️ Route</option>
-                        <option value="airplane" @(searchBy == "airplane" ? "selected" : "")>✈️ Airplane</option>
-                        <option value="price" @(searchBy == "price" ? "selected" : "")>💰 Max Price</option>
+                        @if (searchBy == "all")
+                        {
+                            <option value="all" selected>🔍 All Fields</option>
+                        }
+                        else
+                        {
+                            <option value="all">🔍 All Fields</option>
+                        }
+                        @if (searchBy == "from")
+                        {
+                            <option value="from" selected>🛫 From Airport</option>
+                        }
+                        else
+                        {
+                            <option value="from">🛫 From Airport</option>
+                        }
+                        @if (searchBy == "to")
+                        {
+                            <option value="to" selected>🛬 To Airport</option>
+                        }
+                        else
+                        {
+                            <option value="to">🛬 To Airport</option>
+                        }
+                        @if (searchBy == "route")
+                        {
+                            <option value="route" selected>🛩️ Route</option>
+                        }
+                        else
+                        {
+                            <option value="route">🛩️ Route</option>
+                        }
+                        @if (searchBy == "airplane")
+                        {
+                            <option value="airplane" selected>✈️ Airplane</option>
+                        }
+                        else
+                        {
+                            <option value="airplane">✈️ Airplane</option>
+                        }
+                        @if (searchBy == "price")
+                        {
+                            <option value="price" selected>💰 Max Price</option>
+                        }
+                        else
+                        {
+                            <option value="price">💰 Max Price</option>
+                        }
                     </select>
                 </div>
                 
                 <div class="col-md-2">
                     <label class="form-label">Page Size</label>
                     <select name="pageSize" class="form-select" onchange="this.form.submit()">
-                        <option value="5" @(pageSize == 5 ? "selected" : "")>5</option>
-                        <option value="10" @(pageSize == 10 ? "selected" : "")>10</option>
-                        <option value="25" @(pageSize == 25 ? "selected" : "")>25</option>
-                        <option value="50" @(pageSize == 50 ? "selected" : "")>50</option>
+                        @if (pageSize == 5)
+                        {
+                            <option value="5" selected>5</option>
+                        }
+                        else
+                        {
+                            <option value="5">5</option>
+                        }
+                        @if (pageSize == 10)
+                        {
+                            <option value="10" selected>10</option>
+                        }
+                        else
+                        {
+                            <option value="10">10</option>
+                        }
+                        @if (pageSize == 25)
+                        {
+                            <option value="25" selected>25</option>
+                        }
+                        else
+                        {
+                            <option value="25">25</option>
+                        }
+                        @if (pageSize == 50)
+                        {
+                            <option value="50" selected>50</option>
+                        }
+                        else
+                        {
+                            <option value="50">50</option>
+                        }
                     </select>
                 </div>
                 
