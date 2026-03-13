@@ -8,282 +8,337 @@
     var totalItems = ViewBag.TotalItems as int? ?? 0;
 }
 
-<div class="container mt-4">
-    <!-- Simple Header -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h3 class="fw-bold">Trips Management</h3>
-            <p class="text-muted">Search and manage flight trips</p>
+<div class="container py-4">
+    <!-- Amazon-style Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Trips</h1>
+            <p class="text-secondary small mb-0">@totalItems trips</p>
         </div>
-        <div class="col-md-4 text-end">
-            <a asp-action="Create" class="btn btn-success">
-                <i class="bi bi-plus-lg"></i> New Trip
-            </a>
-        </div>
+        <a asp-action="Create" class="btn btn-warning">
+            <i class="bi bi-plus-lg me-2"></i>Create trip
+        </a>
     </div>
 
-    <!-- Simple Search Bar -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form asp-action="Index" method="get">
-                <input type="hidden" name="page" value="1" />
-                <div class="row g-2">
-                    <div class="col-md-4">
-                        <input type="text" name="searchTerm" value="@searchTerm" 
-                               class="form-control" placeholder="Search trips..." />
-                    </div>
-                    <div class="col-md-2">
-                        <select name="searchBy" class="form-select">
-                            @if (searchBy == "all")
-                            {
-                                <option value="all" selected>All</option>
-                            }
-                            else
-                            {
-                                <option value="all">All</option>
-                            }
-                            @if (searchBy == "from")
-                            {
-                                <option value="from" selected>From</option>
-                            }
-                            else
-                            {
-                                <option value="from">From</option>
-                            }
-                            @if (searchBy == "to")
-                            {
-                                <option value="to" selected>To</option>
-                            }
-                            else
-                            {
-                                <option value="to">To</option>
-                            }
-                            @if (searchBy == "airplane")
-                            {
-                                <option value="airplane" selected>Airplane</option>
-                            }
-                            else
-                            {
-                                <option value="airplane">Airplane</option>
-                            }
-                            @if (searchBy == "price")
-                            {
-                                <option value="price" selected>Max Price</option>
-                            }
-                            else
-                            {
-                                <option value="price">Max Price</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select name="pageSize" class="form-select" onchange="this.form.submit()">
-                            @if (pageSize == 5)
-                            {
-                                <option value="5" selected>5</option>
-                            }
-                            else
-                            {
-                                <option value="5">5</option>
-                            }
-                            @if (pageSize == 10)
-                            {
-                                <option value="10" selected>10</option>
-                            }
-                            else
-                            {
-                                <option value="10">10</option>
-                            }
-                            @if (pageSize == 25)
-                            {
-                                <option value="25" selected>25</option>
-                            }
-                            else
-                            {
-                                <option value="25">25</option>
-                            }
-                            @if (pageSize == 50)
-                            {
-                                <option value="50" selected>50</option>
-                            }
-                            else
-                            {
-                                <option value="50">50</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                    <div class="col-md-2">
-                        <a asp-action="Index" class="btn btn-outline-secondary w-100">
-                            <i class="bi bi-x-lg"></i> Clear
-                        </a>
-                    </div>
+    <!-- Amazon-style Search and Filters -->
+    <div class="border rounded p-3 mb-4 bg-light">
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <div class="input-group">
+                    <input type="text" name="searchTerm" value="@searchTerm" 
+                           class="form-control border-end-0" 
+                           placeholder="Search trips by airport, airplane, or route..." />
+                    <button type="submit" class="btn btn-secondary border-start-0">
+                        <i class="bi bi-search"></i>
+                    </button>
                 </div>
-            </form>
+            </div>
+            <div class="col-lg-2">
+                <select name="searchBy" class="form-select">
+                    @if (searchBy == "all")
+                    {
+                        <option value="all" selected>All fields</option>
+                    }
+                    else
+                    {
+                        <option value="all">All fields</option>
+                    }
+                    @if (searchBy == "from")
+                    {
+                        <option value="from" selected>From airport</option>
+                    }
+                    else
+                    {
+                        <option value="from">From airport</option>
+                    }
+                    @if (searchBy == "to")
+                    {
+                        <option value="to" selected>To airport</option>
+                    }
+                    else
+                    {
+                        <option value="to">To airport</option>
+                    }
+                    @if (searchBy == "airplane")
+                    {
+                        <option value="airplane" selected>Airplane</option>
+                    }
+                    else
+                    {
+                        <option value="airplane">Airplane</option>
+                    }
+                    @if (searchBy == "price")
+                    {
+                        <option value="price" selected>Max price</option>
+                    }
+                    else
+                    {
+                        <option value="price">Max price</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <select name="pageSize" class="form-select">
+                    @if (pageSize == 10)
+                    {
+                        <option value="10" selected>10 per page</option>
+                    }
+                    else
+                    {
+                        <option value="10">10 per page</option>
+                    }
+                    @if (pageSize == 25)
+                    {
+                        <option value="25" selected>25 per page</option>
+                    }
+                    else
+                    {
+                        <option value="25">25 per page</option>
+                    }
+                    @if (pageSize == 50)
+                    {
+                        <option value="50" selected>50 per page</option>
+                    }
+                    else
+                    {
+                        <option value="50">50 per page</option>
+                    }
+                </select>
+            </div>
         </div>
+        
+        @if (!string.IsNullOrEmpty(searchTerm))
+        {
+            <div class="mt-2">
+                <small class="text-secondary">
+                    Search results for "<strong>@searchTerm</strong>" 
+                    <a asp-action="Index" class="text-decoration-none ms-2">Clear search</a>
+                </small>
+            </div>
+        }
     </div>
 
-    <!-- Results Info -->
-    <div class="row mb-3">
-        <div class="col-12">
+    <!-- Amazon-style Results Count -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="small text-secondary">
             @if (!string.IsNullOrEmpty(searchTerm))
             {
-                <span class="badge bg-info">
-                    Found @totalItems results for "@searchTerm"
-                </span>
+                <text>@totalItems results</text>
             }
             else
             {
-                <span class="text-muted">
-                    Showing @totalItems trips
-                    @if (totalItems > pageSize)
-                    {
-                        <text>(Page @currentPage of @totalPages)</text>
-                    }
-                </span>
+                <text>1-@Math.Min(pageSize, totalItems) of @totalItems results</text>
             }
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Sort by: Date
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Date</a></li>
+                <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
+                <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
+            </ul>
         </div>
     </div>
 
-    <!-- Simple Table -->
-    <div class="card">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>Departure</th>
-                            <th>Arrival</th>
-                            <th>Price</th>
-                            <th>Route</th>
-                            <th>Airplane</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Any())
-                        {
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td><strong>@item.Id</strong></td>
-                                    <td>
-                                        <div>@item.DateTime.ToString("MMM dd")</div>
-                                        <small class="text-muted">@item.DateTime.ToString("HH:mm")</small>
-                                    </td>
-                                    <td>
-                                        <div>@item.ArrivalDateTime.ToString("MMM dd")</div>
-                                        <small class="text-muted">@item.ArrivalDateTime.ToString("HH:mm")</small>
-                                    </td>
-                                    <td><span class="badge bg-success">@item.Price.ToString("C")</span></td>
-                                    <td>
-                                        <small>@item.Airport_From?.Name</small>
-                                        <i class="bi bi-arrow-right mx-1"></i>
-                                        <small>@item.Airport_To?.Name</small>
-                                    </td>
-                                    <td><small>@item.Airplane?.Model</small></td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
+    <!-- Amazon-style Product Grid -->
+    <div class="row">
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <!-- Trip Header -->
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <span class="badge bg-secondary small">Trip #@item.Id</span>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
                                             <a asp-action="Edit"
                                                asp-route-id="@item.Id"
                                                asp-route-page="@currentPage"
                                                asp-route-searchTerm="@searchTerm"
                                                asp-route-searchBy="@searchBy"
-                                               class="btn btn-outline-primary">
-                                                <i class="bi bi-pencil"></i>
+                                               class="dropdown-item">
+                                                <i class="bi bi-pencil me-2"></i>Edit
                                             </a>
+                                        </li>
+                                        <li>
                                             <form asp-action="Delete"
                                                   asp-route-id="@item.Id"
                                                   asp-route-page="@currentPage"
                                                   asp-route-searchTerm="@searchTerm"
                                                   asp-route-searchBy="@searchBy"
                                                   method="post"
-                                                  class="d-inline"
-                                                  onsubmit="return confirm('Delete this trip?');">
-                                                <button type="submit" class="btn btn-outline-danger">
-                                                    <i class="bi bi-trash"></i>
+                                                  class="d-inline">
+                                                <button type="submit" class="dropdown-item text-danger"
+                                                        onsubmit="return confirm('Delete this trip?');">
+                                                    <i class="bi bi-trash me-2"></i>Delete
                                                 </button>
                                             </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="7" class="text-center py-4">
-                                    <div class="text-muted">
-                                        <i class="bi bi-search fs-3"></i>
-                                        <p>No trips found</p>
-                                        <a asp-action="Index" class="btn btn-sm btn-outline-primary">Clear Search</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Route -->
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="text-center">
+                                        <div class="fw-bold">@item.DateTime.ToString("HH:mm")</div>
+                                        <div class="small text-secondary">@item.DateTime.ToString("MMM dd")</div>
+                                        <div class="small fw-bold mt-1">@(item.Airport_From?.Name ?? "Unknown")</div>
                                     </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                    <div class="flex-grow-1 px-3">
+                                        <div class="text-center">
+                                            <i class="bi bi-airplane text-primary"></i>
+                                            <div class="small text-secondary">@item.Airplane?.Model</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="fw-bold">@item.ArrivalDateTime.ToString("HH:mm")</div>
+                                        <div class="small text-secondary">@item.ArrivalDateTime.ToString("MMM dd")</div>
+                                        <div class="small fw-bold mt-1">@(item.Airport_To?.Name ?? "Unknown")</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Price and Actions -->
+                            <div class="d-flex justify-content-between align-items-end">
+                                <div>
+                                    <div class="text-success fw-bold fs-5">@item.Price.ToString("C")</div>
+                                    <div class="small text-secondary">per seat</div>
+                                </div>
+                                <div>
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       asp-route-page="@currentPage"
+                                       asp-route-searchTerm="@searchTerm"
+                                       asp-route-searchBy="@searchBy"
+                                       class="btn btn-warning btn-sm">
+                                        Edit
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="bi bi-search fs-1 text-muted"></i>
+                    <h5 class="mt-3">No trips found</h5>
+                    <p class="text-secondary">Try adjusting your search or filters</p>
+                    <a asp-action="Index" class="btn btn-outline-primary">Clear search</a>
+                </div>
             </div>
-        </div>
+        }
     </div>
 
-    <!-- Simple Pagination -->
+    <!-- Amazon-style Pagination -->
     @if (totalPages > 1)
     {
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="text-muted">
-                <small>Showing @((currentPage - 1) * pageSize + 1)-@(Math.Min(currentPage * pageSize, totalItems)) of @totalItems</small>
-            </div>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    @if (currentPage > 1)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" 
-                               asp-action="Index" 
-                               asp-route-page="@(currentPage - 1)"
-                               asp-route-searchTerm="@searchTerm"
-                               asp-route-searchBy="@searchBy">
-                                Previous
-                            </a>
-                        </li>
-                    }
+        <nav aria-label="Trips pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                @if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" 
+                           asp-action="Index" 
+                           asp-route-page="@(currentPage - 1)"
+                           asp-route-searchTerm="@searchTerm"
+                           asp-route-searchBy="@searchBy">
+                            <i class="bi bi-chevron-left"></i>
+                            Previous
+                        </a>
+                    </li>
+                }
 
-                    @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
-                    {
-                        <li class="page-item @(i == currentPage ? "active" : "")">
-                            <a class="page-link" 
-                               asp-action="Index" 
-                               asp-route-page="@i"
-                               asp-route-searchTerm="@searchTerm"
-                               asp-route-searchBy="@searchBy">
-                                @i
-                            </a>
-                        </li>
-                    }
+                @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" 
+                           asp-action="Index" 
+                           asp-route-page="@i"
+                           asp-route-searchTerm="@searchTerm"
+                           asp-route-searchBy="@searchBy">
+                            @i
+                        </a>
+                    </li>
+                }
 
-                    @if (currentPage < totalPages)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" 
-                               asp-action="Index" 
-                               asp-route-page="@(currentPage + 1)"
-                               asp-route-searchTerm="@searchTerm"
-                               asp-route-searchBy="@searchBy">
-                                Next
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </nav>
-        </div>
+                @if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" 
+                           asp-action="Index" 
+                           asp-route-page="@(currentPage + 1)"
+                           asp-route-searchTerm="@searchTerm"
+                           asp-route-searchBy="@searchBy">
+                            Next
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
     }
 </div>
+
+<style>
+    .card {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .btn-warning {
+        background-color: #f0c14b;
+        border-color: #a88734;
+        color: #111;
+    }
+    
+    .btn-warning:hover {
+        background-color: #e3b347;
+        border-color: #9c7e31;
+        color: #111;
+    }
+    
+    .dropdown-toggle::after {
+        display: none;
+    }
+    
+    .badge {
+        font-weight: 500;
+    }
+    
+    .table {
+        display: none;
+    }
+    
+    .input-group .btn {
+        border-color: #ced4da;
+    }
+    
+    .form-control:focus {
+        border-color: #f0c14b;
+        box-shadow: 0 0 0 0.2rem rgba(240, 193, 75, 0.25);
+    }
+</style>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
