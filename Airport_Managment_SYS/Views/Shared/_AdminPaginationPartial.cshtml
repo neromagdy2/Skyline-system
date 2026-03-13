@@ -3,6 +3,15 @@
     int totalPages = ViewBag.TotalPages ?? 1;
     int totalItems = ViewBag.TotalItems ?? 0;
     int pageSize = ViewBag.PageSize ?? 10;
+    
+    var queryString = "";
+    foreach(var key in Context.Request.Query.Keys)
+    {
+        if(key.ToLower() != "page" && key.ToLower() != "pagesize")
+        {
+            queryString += $"&{key}={Context.Request.Query[key]}";
+        }
+    }
 }
 
 @if (totalPages > 1)
@@ -16,7 +25,7 @@
                 @if (currentPage > 1)
                 {
                     <li class="page-item">
-                        <a class="page-link" href="?page=@(currentPage - 1)&pageSize=@pageSize">
+                        <a class="page-link" href="?page=@(currentPage - 1)&pageSize=@pageSize@queryString">
                             <i class="bi bi-chevron-left"></i> Previous
                         </a>
                     </li>
@@ -25,14 +34,14 @@
                 @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
                 {
                     <li class="page-item @(i == currentPage ? "active" : "")">
-                        <a class="page-link" href="?page=@i&pageSize=@pageSize">@i</a>
+                        <a class="page-link" href="?page=@i&pageSize=@pageSize@queryString">@i</a>
                     </li>
                 }
 
                 @if (currentPage < totalPages)
                 {
                     <li class="page-item">
-                        <a class="page-link" href="?page=@(currentPage + 1)&pageSize=@pageSize">
+                        <a class="page-link" href="?page=@(currentPage + 1)&pageSize=@pageSize@queryString">
                             Next <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>

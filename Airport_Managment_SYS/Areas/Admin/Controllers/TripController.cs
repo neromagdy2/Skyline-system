@@ -27,57 +27,40 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int page = 1, string searchTerm = "", string searchBy = "all", int pageSize = 10)
+        public async Task<IActionResult> Index(int page = 1, string fromSearch = "", string toSearch = "", DateTime? dateSearch = null, int pageSize = 10)
         {
-            // Get trips with includes for search functionality
+            // Get trips with includes
             var query = await _TripRepo.GetAsync(
                 t => t.IsDeleted != true,
                 includes: new Expression<Func<Trip, object>>[]
                 {
                     t => t.Airport_From,
+                    t => t.Airport_From.GovernerateState,
                     t => t.Airport_To,
+                    t => t.Airport_To.GovernerateState,
                     t => t.Airplane
                 });
             
-            // Apply search filter based on search type
-            if (!string.IsNullOrEmpty(searchTerm))
+            // Apply search filter
+            if (!string.IsNullOrEmpty(fromSearch))
             {
-                searchTerm = searchTerm.ToLower().Trim();
-                
-                switch (searchBy.ToLower())
-                {
-                    case "from":
-                        query = query.Where(t => t.Airport_From != null && 
-                                               t.Airport_From.Name.ToLower().Contains(searchTerm));
-                        break;
-                    case "to":
-                        query = query.Where(t => t.Airport_To != null && 
-                                               t.Airport_To.Name.ToLower().Contains(searchTerm));
-                        break;
-                    case "airplane":
-                        query = query.Where(t => t.Airplane != null && 
-                                               t.Airplane.Model.ToLower().Contains(searchTerm));
-                        break;
-                    case "price":
-                        if (float.TryParse(searchTerm, out float price))
-                        {
-                            query = query.Where(t => t.Price <= price);
-                        }
-                        break;
-                    case "route":
-                        query = query.Where(t => 
-                            (t.Airport_From != null && t.Airport_From.Name.ToLower().Contains(searchTerm)) ||
-                            (t.Airport_To != null && t.Airport_To.Name.ToLower().Contains(searchTerm)));
-                        break;
-                    default: // "all"
-                        query = query.Where(t => 
-                            (t.Airport_From != null && t.Airport_From.Name.ToLower().Contains(searchTerm)) ||
-                            (t.Airport_To != null && t.Airport_To.Name.ToLower().Contains(searchTerm)) ||
-                            (t.Airplane != null && t.Airplane.Model.ToLower().Contains(searchTerm)) ||
-                            t.Price.ToString().Contains(searchTerm) ||
-                            t.Id.ToString().Contains(searchTerm));
-                        break;
-                }
+                var q = fromSearch.ToLower().Trim();
+                query = query.Where(t => t.Airport_From != null && 
+                                      (t.Airport_From.Name.ToLower().Contains(q) || 
+                                      (t.Airport_From.GovernerateState != null && t.Airport_From.GovernerateState.Name.ToLower().Contains(q))));
+            }
+
+            if (!string.IsNullOrEmpty(toSearch))
+            {
+                var q = toSearch.ToLower().Trim();
+                query = query.Where(t => t.Airport_To != null && 
+                                      (t.Airport_To.Name.ToLower().Contains(q) || 
+                                      (t.Airport_To.GovernerateState != null && t.Airport_To.GovernerateState.Name.ToLower().Contains(q))));
+            }
+
+            if (dateSearch.HasValue)
+            {
+                query = query.Where(t => t.DateTime.Date == dateSearch.Value.Date);
             }
             
             // Apply sorting for better performance
@@ -92,8 +75,9 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             ViewBag.PageSize = pageSize;
             ViewBag.TotalItems = totalItems;
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
-            ViewBag.SearchTerm = searchTerm;
-            ViewBag.SearchBy = searchBy;
+            ViewBag.FromSearch = fromSearch;
+            ViewBag.ToSearch = toSearch;
+            ViewBag.DateSearch = dateSearch;
 
             return View(trips);
         }

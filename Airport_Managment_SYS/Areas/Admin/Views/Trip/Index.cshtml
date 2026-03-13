@@ -1,241 +1,167 @@
-@model IEnumerable<Trip>
+@model IEnumerable<Airport_Managment_SYS.Models.Trip>
 @{
     var currentPage = ViewBag.CurrentPage as int? ?? 1;
     var pageSize = ViewBag.PageSize as int? ?? 10;
     var totalPages = ViewBag.TotalPages as int? ?? 1;
-    var searchTerm = ViewBag.SearchTerm as string ?? "";
-    var searchBy = ViewBag.SearchBy as string ?? "all";
     var totalItems = ViewBag.TotalItems as int? ?? 0;
+    
+    var fromSearch = ViewBag.FromSearch as string ?? "";
+    var toSearch = ViewBag.ToSearch as string ?? "";
+    var dateSearch = ViewBag.DateSearch as DateTime?;
 }
 
 <div class="container py-4">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1">Trips</h1>
-            <p class="text-secondary small mb-0">@totalItems trips</p>
-        </div>
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-2"></i>Create trip
+        <h2 class="fw-bold mb-0">Trips Management</h2>
+        <a asp-action="Create" class="btn btn-primary fw-semi-bold rounded-pill px-4" style="background-color: #137fec; border-color: #137fec;">
+            + Add New Trip
         </a>
     </div>
 
-    <!-- Active Search Bar -->
-    <div class="border rounded p-3 mb-4 bg-light">
-        <div class="row g-3">
-            <div class="col-lg-8">
-                <div class="input-group">
-                    <input type="text" id="searchInput" name="searchTerm" value="@searchTerm" 
-                           class="form-control border-end-0" 
-                           placeholder="Search trips by airport, airplane, or route..." />
-                    <button type="button" id="searchBtn" class="btn btn-secondary border-start-0">
-                        <i class="bi bi-search"></i>
-                    </button>
+    <!-- Modern Search Bar (like screenshot) -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4" style="border-radius: 1rem !important;">
+        <div class="card-body p-3">
+            <form method="get" action="/Admin/Trip/Index" id="searchForm" class="row gx-2 gy-2 align-items-center">
+                <!-- From -->
+                <div class="col-12 col-md-3">
+                    <div class="form-floating shadow-sm rounded-3">
+                        <input type="text" class="form-control rounded-3 border-200" id="fromInput" name="fromSearch" value="@fromSearch" placeholder="From City or Airport">
+                        <label for="fromInput" class="text-600 fw-semi-bold"><i class="fas fa-plane-departure text-400 me-2"></i>From</label>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-2">
-                <select id="searchBySelect" name="searchBy" class="form-select">
-                    @if (searchBy == "all")
-                    {
-                        <option value="all" selected>All fields</option>
-                    }
-                    else
-                    {
-                        <option value="all">All fields</option>
-                    }
-                    @if (searchBy == "from")
-                    {
-                        <option value="from" selected>From airport</option>
-                    }
-                    else
-                    {
-                        <option value="from">From airport</option>
-                    }
-                    @if (searchBy == "to")
-                    {
-                        <option value="to" selected>To airport</option>
-                    }
-                    else
-                    {
-                        <option value="to">To airport</option>
-                    }
-                    @if (searchBy == "airplane")
-                    {
-                        <option value="airplane" selected>Airplane</option>
-                    }
-                    else
-                    {
-                        <option value="airplane">Airplane</option>
-                    }
-                    @if (searchBy == "price")
-                    {
-                        <option value="price" selected>Max price</option>
-                    }
-                    else
-                    {
-                        <option value="price">Max price</option>
-                    }
-                </select>
-            </div>
-            <div class="col-lg-2">
-                <select id="pageSizeSelect" name="pageSize" class="form-select">
-                    @if (pageSize == 10)
-                    {
-                        <option value="10" selected>10 per page</option>
-                    }
-                    else
-                    {
-                        <option value="10">10 per page</option>
-                    }
-                    @if (pageSize == 25)
-                    {
-                        <option value="25" selected>25 per page</option>
-                    }
-                    else
-                    {
-                        <option value="25">25 per page</option>
-                    }
-                    @if (pageSize == 50)
-                    {
-                        <option value="50" selected>50 per page</option>
-                    }
-                    else
-                    {
-                        <option value="50">50 per page</option>
-                    }
-                </select>
-            </div>
+                <!-- To -->
+                <div class="col-12 col-md-3">
+                    <div class="form-floating shadow-sm rounded-3">
+                        <input type="text" class="form-control rounded-3 border-200" id="toInput" name="toSearch" value="@toSearch" placeholder="To City or Airport">
+                        <label for="toInput" class="text-600 fw-semi-bold"><i class="fas fa-plane-arrival text-400 me-2"></i>To</label>
+                    </div>
+                </div>
+                <!-- Date -->
+                <div class="col-12 col-md-3">
+                    <div class="form-floating shadow-sm rounded-3">
+                        <input type="date" class="form-control rounded-3 border-200" id="dateInput" name="dateSearch" value="@(dateSearch?.ToString("yyyy-MM-dd"))">
+                        <label for="dateInput" class="text-600 fw-semi-bold"><i class="fas fa-calendar-alt text-400 me-2"></i>Date</label>
+                    </div>
+                </div>
+                <!-- Search Button -->
+                <div class="col-12 col-md-3">
+                    <button type="submit" class="btn btn-primary w-100 h-100 rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="min-height: 58px; font-weight: 600; background-color: #137fec; border-color: #137fec;">
+                        <span>Search again</span> <i class="fas fa-chevron-right ms-2 fs--2"></i>
+                    </button>
+                    <!-- Hidden page size param -->
+                    <input type="hidden" name="pageSize" value="@pageSize" />
+                </div>
+            </form>
         </div>
-        
-        @if (!string.IsNullOrEmpty(searchTerm))
-        {
-            <div class="mt-2">
-                <small class="text-secondary">
-                    Search results for "<strong>@searchTerm</strong>" 
-                    <a href="/Admin/Trip" class="text-decoration-none ms-2">Clear search</a>
-                </small>
-            </div>
-        }
     </div>
 
-    <!-- Results Count -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="small text-secondary">
-            @if (!string.IsNullOrEmpty(searchTerm))
+    <!-- Results Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+        <h5 class="mb-0 text-700 fw-bold">
+            @if(!string.IsNullOrEmpty(fromSearch) || !string.IsNullOrEmpty(toSearch))
             {
-                <text>@totalItems results</text>
+                <text>Select your departure flight </text>
+                @if(!string.IsNullOrEmpty(fromSearch)) { <span class="text-900 ms-2">@fromSearch</span> }
+                @if(!string.IsNullOrEmpty(fromSearch) && !string.IsNullOrEmpty(toSearch)) { <i class="fas fa-arrow-right mx-2 text-400 fs--1"></i> }
+                @if(!string.IsNullOrEmpty(toSearch)) { <span class="text-900">@toSearch</span> }
             }
-            else
-            {
-                <text>1-@Math.Min(pageSize, totalItems) of @totalItems results</text>
-            }
-        </div>
+        </h5>
+        
+        <!-- Sorting Criteria Tab mimicking image -->
         <div class="dropdown">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                Sort by: Date
+            <button class="btn btn-sm btn-light border dropdown-toggle fw-semi-bold shadow-sm" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-sort-amount-down me-2"></i>Other Sorting criteria
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Date</a></li>
-                <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
-                <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
+                <li><a class="dropdown-item" href="#">Cheapest</a></li>
+                <li><a class="dropdown-item" href="#">Fastest</a></li>
+                <li><a class="dropdown-item" href="#">Departure Time</a></li>
             </ul>
         </div>
     </div>
 
-    <!-- Loading Indicator -->
-    <div id="loadingIndicator" class="text-center py-4" style="display: none;">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <p class="mt-2 text-muted">Searching trips...</p>
-    </div>
-
-    <!-- Trip Cards Grid -->
-    <div id="tripsGrid" class="row">
-        @if (Model.Any())
+    <!-- Trips List -->
+    <div class="d-flex flex-column gap-3 mb-4">
+        @if (Model != null && Model.Any())
         {
-            @foreach (var item in Model)
+            foreach (var item in Model)
             {
-                <div class="col-lg-6 col-xl-4 mb-4 trip-card">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body">
-                            <!-- Trip Header -->
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <span class="badge bg-secondary small">Trip #@item.Id</span>
+                <div class="card border border-200 shadow-sm hover-shadow transition-base flight-card" style="border-radius: 1rem !important;">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center g-3">
+                            
+                            <!-- Airline Info -->
+                            <div class="col-12 col-md-3 d-flex align-items-center">
+                                <div class="avatar avatar-3xl me-3 bg-soft-primary d-flex justify-content-center align-items-center" style="border-radius: 0.75rem;">
+                                    <span class="fas fa-plane text-primary fs-2"></span>
                                 </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
-                                        <i class="bi bi-three-dots"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a asp-action="Edit"
-                                               asp-route-id="@item.Id"
-                                               asp-route-page="@currentPage"
-                                               asp-route-searchTerm="@searchTerm"
-                                               asp-route-searchBy="@searchBy"
-                                               class="dropdown-item">
-                                                <i class="bi bi-pencil me-2"></i>Edit
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <form asp-action="Delete"
-                                                  asp-route-id="@item.Id"
-                                                  asp-route-page="@currentPage"
-                                                  asp-route-searchTerm="@searchTerm"
-                                                  asp-route-searchBy="@searchBy"
-                                                  method="post"
-                                                  class="d-inline">
-                                                <button type="submit" class="dropdown-item text-danger"
-                                                        onsubmit="return confirm('Delete this trip?');">
-                                                    <i class="bi bi-trash me-2"></i>Delete
-                                                </button>
-                                            </form>
-                                        </li>
-                                    </ul>
+                                <div>
+                                    <h5 class="mb-0 fw-bold text-800">@(item.Airplane?.Name ?? "Egyptair")</h5>
+                                    <div class="fs--1 text-500 mt-1">ID: #@item.Id • @(item.Airplane?.Model ?? "")</div>
                                 </div>
                             </div>
-
-                            <!-- Route -->
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="text-center">
-                                        <div class="fw-bold">@item.DateTime.ToString("HH:mm")</div>
-                                        <div class="small text-secondary">@item.DateTime.ToString("MMM dd")</div>
-                                        <div class="small fw-bold mt-1">@(item.Airport_From?.Name ?? "Unknown")</div>
-                                    </div>
-                                    <div class="flex-grow-1 px-3">
-                                        <div class="text-center">
-                                            <i class="bi bi-airplane text-primary"></i>
-                                            <div class="small text-secondary">@item.Airplane?.Model</div>
+                            
+                            <!-- Route & Time Info -->
+                            <div class="col-12 col-md-6 px-lg-4">
+                                <div class="row align-items-center text-center">
+                                    <!-- Departure -->
+                                    <div class="col-4 text-end pe-0 pe-md-3">
+                                        <h3 class="mb-0 fw-bolder text-black">@item.DateTime.ToString("HH:mm")</h3>
+                                        <div class="fs--1 text-700 fw-bold mt-1 text-truncate" title="@(item.Airport_From?.Name)">
+                                            @(item.Airport_From?.GovernerateState?.Name ?? "LXR")
                                         </div>
                                     </div>
-                                    <div class="text-center">
-                                        <div class="fw-bold">@item.ArrivalDateTime.ToString("HH:mm")</div>
-                                        <div class="small text-secondary">@item.ArrivalDateTime.ToString("MMM dd")</div>
-                                        <div class="small fw-bold mt-1">@(item.Airport_To?.Name ?? "Unknown")</div>
+                                    
+                                    <!-- Flight duration / stops -->
+                                    <div class="col-4 px-0 position-relative">
+                                        @{
+                                            var duration = item.ArrivalDateTime - item.DateTime;
+                                            var hours = (int)Math.Max(0, duration.TotalHours);
+                                            var mins = Math.Max(0, duration.Minutes);
+                                            var durationStr = hours > 0 ? $"{hours}h " : "";
+                                            durationStr += mins > 0 || hours == 0 ? $"{mins}m" : "";
+                                        }
+                                        <div class="position-relative w-100 d-flex align-items-center justify-content-center my-3">
+                                            <div style="height: 2px; background-color: #cbd0d6; width: 100%;"></div>
+                                            <i class="fas fa-plane text-400 position-absolute bg-white px-2" style="left: 50%; transform: translateX(-50%); top: -7px;"></i>
+                                            <!-- Dots on ends -->
+                                            <div class="position-absolute bg-white border border-400 rounded-circle" style="width: 8px; height: 8px; left: 0; top: -3px;"></div>
+                                            <div class="position-absolute bg-white border border-400 rounded-circle" style="width: 8px; height: 8px; right: 0; top: -3px;"></div>
+                                        </div>
+                                        <div class="fs--2 text-600 fw-semi-bold">
+                                            <i class="far fa-clock me-1 d-none d-md-inline"></i>@durationStr • <span class="text-danger fw-bold">Direct</span>
+                                        </div>
+                                        <div class="fs--2 text-500 mt-1 d-none d-md-block"><i class="fas fa-suitcase-rolling me-1"></i>1x23 kg</div>
+                                    </div>
+                                    
+                                    <!-- Arrival -->
+                                    <div class="col-4 text-start ps-0 ps-md-3">
+                                        <h3 class="mb-0 fw-bolder text-black">@item.ArrivalDateTime.ToString("HH:mm")</h3>
+                                        <div class="fs--1 text-700 fw-bold mt-1 text-truncate" title="@(item.Airport_To?.Name)">
+                                            @(item.Airport_To?.GovernerateState?.Name ?? "CAI")
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Price and Actions -->
-                            <div class="d-flex justify-content-between align-items-end">
-                                <div>
-                                    <div class="text-success fw-bold fs-5">@item.Price.ToString("C")</div>
-                                    <div class="small text-secondary">per seat</div>
-                                </div>
-                                <div>
+                            
+                            <!-- Price & Actions -->
+                            <div class="col-12 col-md-3 text-md-end border-start-md border-200 ps-md-4 mt-4 mt-md-0 d-flex flex-column justify-content-center">
+                                <h3 class="mb-3 text-black fw-bolder">EGP @item.Price.ToString("N0")</h3>
+                                
+                                <div class="d-flex justify-content-md-end gap-2 mt-auto">
                                     <a asp-action="Edit"
                                        asp-route-id="@item.Id"
-                                       asp-route-page="@currentPage"
-                                       asp-route-searchTerm="@searchTerm"
-                                       asp-route-searchBy="@searchBy"
-                                       class="btn btn-warning btn-sm">
-                                        Edit
+                                       class="btn btn-warning flex-grow-1 fw-bold text-black" style="background-color: #ffc107; border: none; flex-basis: 0;">
+                                         Edit
                                     </a>
+                                    
+                                    <button type="button" class="btn btn-danger flex-grow-1 fw-bold text-white btn-delete-flight" data-url="/Admin/Trip/Delete/@item.Id" style="background-color: #e63757; border: none; flex-basis: 0;">
+                                         Delete
+                                    </button>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -243,156 +169,71 @@
         }
         else
         {
-            <div class="col-12">
-                <div class="text-center py-5">
-                    <i class="bi bi-search fs-1 text-muted"></i>
-                    <h5 class="mt-3">No trips found</h5>
-                    <p class="text-secondary">Try adjusting your search or filters</p>
-                    <a href="/Admin/Trip" class="btn btn-outline-primary">Clear search</a>
+            <div class="card border-0 shadow-sm py-5 text-center" style="border-radius: 1rem !important; background-color: #f8f9fa;">
+                <div class="card-body">
+                    <div class="display-3 text-300 mb-3"><i class="fas fa-plane-slash"></i></div>
+                    <h4 class="text-700 fw-bold">No flights found</h4>
+                    <p class="text-500 mb-4">Try adjusting your search filters to find available trips.</p>
+                    <a href="/Admin/Trip" class="btn btn-outline-primary rounded-pill px-4 fw-semi-bold">Clear all filters</a>
                 </div>
             </div>
         }
     </div>
 
     <!-- Pagination -->
-    <partial name="_AdminPaginationPartial" />
+    @if(totalPages > 1) {
+        <partial name="_AdminPaginationPartial" />
+    }
 </div>
 
 <style>
-    .card {
-        transition: all 0.2s ease-in-out;
+    .hover-shadow {
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
-    
-    .card:hover {
+    .hover-shadow:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,.08) !important;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    
-    .btn-warning {
-        background-color: #f0c14b;
-        border-color: #a88734;
-        color: #111;
+    .flight-card {
+        background-color: #fff;
     }
-    
-    .btn-warning:hover {
-        background-color: #e3b347;
-        border-color: #9c7e31;
-        color: #111;
+    .border-start-md {
+        border-left: 1px solid #e3e6ed;
     }
-    
-    .dropdown-toggle::after {
-        display: none;
-    }
-    
-    .badge {
-        font-weight: 500;
-    }
-    
-    .input-group .btn {
-        border-color: #ced4da;
-    }
-    
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    @@media (max-width: 767.98px) {
+        .border-start-md {
+            border-left: none;
+            border-top: 1px solid #e3e6ed;
+            padding-top: 1rem;
+        }
     }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const searchBySelect = document.getElementById('searchBySelect');
-    const pageSizeSelect = document.getElementById('pageSizeSelect');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const tripsGrid = document.getElementById('tripsGrid');
-    
-    let searchTimeout;
-    
-    // Active search on input
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const searchTerm = this.value.trim();
-        
-        if (searchTerm.length >= 2 || searchTerm.length === 0) {
-            searchTimeout = setTimeout(() => {
-                performSearch();
-            }, 500); // Wait 500ms after user stops typing
-        }
-    });
-    
-    // Search on button click
-    searchBtn.addEventListener('click', performSearch);
-    
-    // Search on Enter key
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            performSearch();
-        }
-    });
-    
-    // Search on filter change
-    searchBySelect.addEventListener('change', performSearch);
-    pageSizeSelect.addEventListener('change', performSearch);
-    
-    function performSearch() {
-        const searchTerm = searchInput.value.trim();
-        const searchBy = searchBySelect.value;
-        const pageSize = pageSizeSelect.value;
-        
-        // Show loading
-        loadingIndicator.style.display = 'block';
-        tripsGrid.style.opacity = '0.5';
-        
-        // Build URL
-        const params = new URLSearchParams();
-        if (searchTerm) params.append('searchTerm', searchTerm);
-        if (searchBy !== 'all') params.append('searchBy', searchBy);
-        if (pageSize !== '10') params.append('pageSize', pageSize);
-        params.append('page', '1'); // Reset to first page on new search
-        
-        // Navigate to search results
-        const url = '/Admin/Trip' + (params.toString() ? '?' + params.toString() : '');
-        window.location.href = url;
-    }
-    
-    // Highlight search term in results
-    function highlightSearchTerm() {
-        const searchTerm = searchInput.value.trim();
-        if (searchTerm && searchTerm.length >= 2) {
-            // Add highlighting logic here if needed
-            console.log('Highlighting:', searchTerm);
-        }
-    }
-    
-    // Initialize highlighting on page load
-    if (searchTerm) {
-        highlightSearchTerm();
-    }
-});
-</script>
-
-<script>
     document.addEventListener("DOMContentLoaded", function () {
-        const deleteButtons = document.querySelectorAll(".btn-delete");
+        const deleteButtons = document.querySelectorAll(".btn-delete-flight");
 
         deleteButtons.forEach(button => {
             button.addEventListener("click", function (e) {
                 e.preventDefault();
-                const url = this.getAttribute("href");
+                const url = this.getAttribute("data-url");
 
                 Swal.fire({
-                    title: "Delete Trip?",
+                    title: "Delete Flight?",
                     text: "This will permanently remove this flight schedule!",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Yes, delete it!"
+                    confirmButtonColor: "#e63757",
+                    cancelButtonColor: "#2c7be5",
+                    confirmButtonText: "Yes, delete it"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = url;
+                        // Create a form dynamically to POST the request as required by AntiForgery setup (if any)
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = url;
+                        document.body.appendChild(form);
+                        form.submit();
                     }
                 });
             });
