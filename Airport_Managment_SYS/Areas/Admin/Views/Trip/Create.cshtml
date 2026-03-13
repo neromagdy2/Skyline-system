@@ -124,7 +124,7 @@
                             <div class="col-md-6">
                                 <label asp-for="DateTime" class="form-label fw-semi-bold text-700">Departure Time</label>
                                 <div class="form-floating shadow-sm rounded-3">
-                                    <input type="datetime-local" class="form-control rounded-3 border-200" asp-for="DateTime" id="departureTime" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")">
+                                    <input type="datetime-local" class="form-control rounded-3 border-200" asp-for="DateTime" id="departureTime">
                                     <label for="departureTime">Takeoff</label>
                                 </div>
                                 <span class="text-danger fs--1 fw-semi-bold mt-1 d-block" asp-validation-for="DateTime"></span>
@@ -134,7 +134,7 @@
                             <div class="col-md-6">
                                 <label asp-for="ArrivalDateTime" class="form-label fw-semi-bold text-700">Arrival Time</label>
                                 <div class="form-floating shadow-sm rounded-3">
-                                    <input type="datetime-local" class="form-control rounded-3 border-200" asp-for="ArrivalDateTime" id="arrivalTime" min="@DateTime.Now.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm")">
+                                    <input type="datetime-local" class="form-control rounded-3 border-200" asp-for="ArrivalDateTime" id="arrivalTime">
                                     <label for="arrivalTime">Landing</label>
                                 </div>
                                 <span class="text-danger fs--1 fw-semi-bold mt-1 d-block" asp-validation-for="ArrivalDateTime"></span>
