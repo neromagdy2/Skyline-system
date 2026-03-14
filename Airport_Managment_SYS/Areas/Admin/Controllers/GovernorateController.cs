@@ -1,4 +1,4 @@
-﻿using Airport_Managment_SYS.Areas.Admin.ViewModels;
+using Airport_Managment_SYS.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Tasks;
@@ -18,11 +18,22 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             _governerateState = governerateState;
             _countryRepository = countryRepository;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
 
             var governerateStates = await _governerateState.GetAsync();
-            return View(governerateStates.AsEnumerable());
+            
+            int totalItems = governerateStates.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            
+            var pagedGovernerateStates = governerateStates.Skip((page - 1) * pageSize).Take(pageSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = totalPages;
+
+            return View(pagedGovernerateStates.AsEnumerable());
         }
  
         public async Task<IActionResult> Create()

@@ -1,4 +1,4 @@
-﻿using Airport_Managment_SYS.Areas.Customer.ViewModels;
+using Airport_Managment_SYS.Areas.Customer.ViewModels;
 using Airport_Managment_SYS.Repositories;
 using Airport_Managment_SYS.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +37,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchTrips(SearchTripsVM searchTripsVM)
+        public async Task<IActionResult> SearchTrips(SearchTripsVM searchTripsVM, int page = 1, int pageSize = 10)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,18 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                         searchTripsVM.SeatClassIds.Contains(ts.Seat.seatClassId)
                     ));
             }
+            
+            // Pagination
+            int totalItems = trips.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            
+            trips = trips.Skip((page - 1) * pageSize).Take(pageSize);
+            
             searchTripsVM.trips = trips;
+            searchTripsVM.CurrentPage = page;
+            searchTripsVM.PageSize = pageSize;
+            searchTripsVM.TotalItems = totalItems;
+            searchTripsVM.TotalPages = totalPages;
 
             return View(searchTripsVM);
         }

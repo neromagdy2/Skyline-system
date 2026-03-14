@@ -1,4 +1,4 @@
-﻿@*
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -36,7 +36,9 @@
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        int counter = 1;
+                        int currentPage = ViewBag.CurrentPage ?? 1;
+                        int pageSize = ViewBag.PageSize ?? 10;
+                        int counter = (currentPage - 1) * pageSize + 1;
                         foreach (var airport in Model)
                         {
                             <tr>
@@ -78,6 +80,8 @@
                 </tbody>
 
             </table>
+            
+            <partial name="_AdminPaginationPartial" />
 
         </div>
     </div>

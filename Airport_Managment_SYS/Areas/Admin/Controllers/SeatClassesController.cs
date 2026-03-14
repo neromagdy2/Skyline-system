@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -16,11 +16,22 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             this._seatClassRepository = seatClassRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
 
            var seatClasses =await _seatClassRepository.GetAsync();
-            return View(seatClasses.AsEnumerable());
+            
+            int totalItems = seatClasses.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            
+            var pagedSeatClasses = seatClasses.Skip((page - 1) * pageSize).Take(pageSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = totalPages;
+
+            return View(pagedSeatClasses.AsEnumerable());
         }
 
         [HttpGet]

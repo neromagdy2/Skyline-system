@@ -27,11 +27,75 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, string fromSearch = "", string toSearch = "", DateTime? dateSearch = null, string sortOrder = "", int pageSize = 10)
         {
-            var Trips = (await _TripRepo.GetAsync(t=>t.IsDeleted != true)).ToList();
+            // Get trips with includes
+            var query = await _TripRepo.GetAsync(
+                t => t.IsDeleted != true,
+                includes: new Expression<Func<Trip, object>>[]
+                {
+                    t => t.Airport_From,
+                    t => t.Airport_From.GovernerateState,
+                    t => t.Airport_To,
+                    t => t.Airport_To.GovernerateState,
+                    t => t.Airplane
+                });
+            
+            // Apply search filter
+            if (!string.IsNullOrEmpty(fromSearch))
+            {
+                var q = fromSearch.ToLower().Trim();
+                query = query.Where(t => t.Airport_From != null && 
+                                      (t.Airport_From.Name.ToLower().Contains(q) || 
+                                      (t.Airport_From.GovernerateState != null && t.Airport_From.GovernerateState.Name.ToLower().Contains(q))));
+            }
 
-            return View(Trips);
+            if (!string.IsNullOrEmpty(toSearch))
+            {
+                var q = toSearch.ToLower().Trim();
+                query = query.Where(t => t.Airport_To != null && 
+                                      (t.Airport_To.Name.ToLower().Contains(q) || 
+                                      (t.Airport_To.GovernerateState != null && t.Airport_To.GovernerateState.Name.ToLower().Contains(q))));
+            }
+
+            if (dateSearch.HasValue)
+            {
+                query = query.Where(t => t.DateTime.Date == dateSearch.Value.Date);
+            }
+            
+            // Apply sorting
+            switch (sortOrder)
+            {
+                case "price_asc":
+                    query = query.OrderBy(t => t.Price);
+                    break;
+                case "duration_asc":
+                    query = query.OrderBy(t => t.ArrivalDateTime - t.DateTime);
+                    break;
+                case "time_asc":
+                    query = query.OrderBy(t => t.DateTime);
+                    break;
+                default:
+                    // Default to latest flights first or whichever makes sense
+                    query = query.OrderByDescending(t => t.DateTime);
+                    break;
+            }
+            
+            // Apply pagination
+            var totalItems = query.Count();
+            var trips = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            
+            // Pass pagination info to view
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            ViewBag.FromSearch = fromSearch;
+            ViewBag.ToSearch = toSearch;
+            ViewBag.DateSearch = dateSearch;
+            ViewBag.SortOrder = sortOrder;
+
+            return View(trips);
         }
         [HttpGet]
         public async Task<IActionResult> Details(int id)

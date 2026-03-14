@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Airport_Managment_SYS.Areas.Customer.ViewModels
 {
@@ -13,6 +13,12 @@ namespace Airport_Managment_SYS.Areas.Customer.ViewModels
         public IEnumerable<Trip> ?trips { get; set; }
         public IEnumerable<GovernerateState>? States { get; set; }
         public IEnumerable<SeatClass>? seatClasses { get; set; }
+        
+        // Pagination properties
+        public int CurrentPage { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
+        public int TotalPages { get; set; }
+        public int TotalItems { get; set; }
     }
 
     public class DetailsTripVM

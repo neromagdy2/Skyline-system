@@ -21,11 +21,22 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             _seatClassesRepository = seatClassesRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
 
             var airplanes = await _airplaneRepository.GetAsync();
-            return View(airplanes.AsEnumerable());
+            
+            int totalItems = airplanes.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            
+            var pagedAirplanes = airplanes.Skip((page - 1) * pageSize).Take(pageSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = totalPages;
+
+            return View(pagedAirplanes.AsEnumerable());
         }
         [HttpGet]
         public async Task<IActionResult> Create()

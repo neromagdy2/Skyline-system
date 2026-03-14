@@ -1,4 +1,4 @@
-﻿
+
 @model IEnumerable<Airport_Managment_SYS.Models.SeatClass>
 
 @{
@@ -32,7 +32,9 @@
                 <tbody>
                     @if (Model != null && Model.Any())
                     {
-                        int counter = 1;
+                        int currentPage = ViewBag.CurrentPage ?? 1;
+                        int pageSize = ViewBag.PageSize ?? 10;
+                        int counter = (currentPage - 1) * pageSize + 1;
                         foreach (var seatClass in Model)
                         {
                             <tr>
@@ -74,6 +76,8 @@
                 </tbody>
 
             </table>
+            
+            <partial name="_AdminPaginationPartial" />
 
         </div>
     </div>
