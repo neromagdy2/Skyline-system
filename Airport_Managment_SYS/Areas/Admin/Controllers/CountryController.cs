@@ -31,7 +31,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             return View(pagedCountries.AsEnumerable());
         }
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }

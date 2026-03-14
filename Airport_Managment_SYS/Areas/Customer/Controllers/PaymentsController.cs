@@ -30,14 +30,14 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             var reservation = _ReservationRepository.GetOneAsync(r => r.ApplicationUser.UserName == username).Result;
             return View(reservation);
         }
-        public async Task<IActionResult> pay()
+        public async Task<IActionResult> pay(int id)
         {
            var options= new SessionCreateOptions
            {
                PaymentMethodTypes = new List<string> {"card" },
                LineItems = new List<SessionLineItemOptions>(),
                Mode = "payment",
-               SuccessUrl = $"{Request.Scheme}://{Request.Host}/Customer/Payments/success",
+               SuccessUrl = $"{Request.Scheme}://{Request.Host}/Customer/Payments/success?reservationId={id}",
                CancelUrl = $"{Request.Scheme}://{Request.Host}/Customer/Payments/cancel"
 
            };
@@ -48,73 +48,105 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             }
 
             var reservation = await _ReservationRepository.GetOneAsync(
-                    r => r.ApplicationUserId == user.Id,
-                    includeFunc: q => q
-                        .Include(r => r.Trip)
-                            .ThenInclude(t => t.Airport_From)
-                        .Include(r => r.Trip)
-                            .ThenInclude(t => t.Airport_To)
+                    r => r.Id == id && r.ApplicationUserId == user.Id,
+                includeFunc: q => q
+                    .Include(r => r.ReservationSeats)
+                        .ThenInclude(rs => rs.Seat)
+                    .Include(r => r.Trip)
+                        .ThenInclude(t => t.Airport_From)
+                    .Include(r => r.Trip)
+                        .ThenInclude(t => t.Airport_To)
                 );
 
             if (reservation==null)
             {
-                return RedirectToAction("Index", "Reservations", new { area = "Customer" });
+                return RedirectToAction("Index", "Home", new { area = "Customer" });
             }
+
+            if (reservation.IsPaid)
+            {
+                TempData["info"] = "already paid";
+                return RedirectToAction("Index", "Home", new { area = "Customer" });
+            }
+
+            // Check if reserved seats are still available
+            var trip = await _tripRepository.GetOneAsync(t => t.Id == reservation.TripId,
+                includeFunc: q => q
+                    .Include(t => t.TripSeats)
+                        .ThenInclude(ts => ts.Seat));
+
+            if (trip != null)
+            {
+                var reservedSeatIds = reservation.ReservationSeats.Select(rs => rs.SeatId).ToList();
+                var bookedSeats = trip.TripSeats
+                    .Where(ts => reservedSeatIds.Contains(ts.SeatId) && ts.IsBooked)
+                    .ToList();
+
+                if (bookedSeats.Any())
+                {
+                    // Some seats are no longer available, redirect to booking page with message
+                    TempData["Warning"] = "Oh no! Some of your selected seats have been taken by other travelers. Please choose different seats for your journey.";
+                    return RedirectToAction("Details", "Home", new { area = "Customer", id = reservation.TripId });
+                }
+            }
+
             var payment = new Payment
             {
-                Total = reservation.Trip.Price,
+                Total = (float)reservation.TotalPrice,
                 ApplicationUserId = user.Id
             };
             await _paymentRepository.AddAsync(payment);
             await _paymentRepository.CommitAsync();
-            var trip = await _tripRepository.GetOneAsync(t=> t.Id == reservation.TripId);
               
-
             options.LineItems.Add(new SessionLineItemOptions
             {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = (long)(reservation.Trip.Price * 100),
+                        UnitAmount = (long)(reservation.TotalPrice * 100),
                         Currency = "EGP",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
-                            Name = $"Trip from {trip.Airport_From.Name} to {trip.Airport_To.Name}"
+                            Name = $"Trip from {trip.Airport_From.Name} to {trip.Airport_To.Name} - {reservation.NumSeats} seat(s)"
                         }
                     },
                     Quantity = 1
-            }
+            });
 
-               
-                
-            );
             var service = new SessionService();
             var session = service.Create(options);
             return Redirect(session.Url);
         }
-        public IActionResult success()
+        public IActionResult success(int reservationId)
         {
-                       // Payment was successful — mark reservation paid and book seats
-                       var userName = User.Identity?.Name;
-                       var userTask = _userManager.GetUserAsync(User);
-                       userTask.Wait();
-                       var user = userTask.Result;
+                       // Payment was successful — mark reservation paid and book specific seats
+                       var user = _userManager.GetUserAsync(User).Result;
                        if (user == null) return View();
 
-                       var reservation = _ReservationRepository.GetOneAsync(r => r.ApplicationUserId == user.Id&&r.IsPaid==false).Result;
+                       var reservation = _ReservationRepository.GetOneAsync(r => r.Id == reservationId, 
+                           includeFunc: q => q
+                               .Include(r => r.ReservationSeats)
+                                   .ThenInclude(rs => rs.Seat)).Result;
+                       
                        if (reservation == null) return View();
 
                        // mark reservation paid
                        reservation.IsPaid = true;
 
                        // load trip with seats
-                       var trip = _tripRepository.GetOneAsync(t => t.Id == reservation.TripId, includeFunc: q => q
-                            .Include(t => t.TripSeats)
-                                .ThenInclude(ts => ts.Seat)).Result;
+                       var trip = _tripRepository.GetOneAsync(t => t.Id == reservation.TripId, 
+                           includeFunc: q => q
+                               .Include(t => t.TripSeats)
+                                   .ThenInclude(ts => ts.Seat)).Result;
 
                        if (trip != null)
                        {
-                           var availableSeats = trip.TripSeats.Where(ts => !ts.IsBooked && ts.Seat != null && ts.Seat.seatClassId == reservation.SeatClassId).Take(reservation.NumSeats).ToList();
-                           foreach (var ts in availableSeats)
+                           // Book the specific seats from the reservation
+                           var reservedSeatIds = reservation.ReservationSeats.Select(rs => rs.SeatId).ToList();
+                           var tripSeatsToBook = trip.TripSeats
+                               .Where(ts => reservedSeatIds.Contains(ts.SeatId))
+                               .ToList();
+
+                           foreach (var ts in tripSeatsToBook)
                            {
                                ts.IsBooked = true;
                            }

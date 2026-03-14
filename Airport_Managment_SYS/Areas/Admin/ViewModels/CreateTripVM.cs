@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using Airport_Managment_SYS.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
@@ -8,6 +9,7 @@ namespace Airport_Managment_SYS.Areas.Admin.ViewModels
 {
     public class CreateTripVM
     {
+        [Range(25.00, float.MaxValue, ErrorMessage = "Minimum trip price is 25.00 EGP to meet payment processing requirements.")]
         public float Price { get; set; }
         public DateTime DateTime { get; set; }
         [DateGreaterThan(nameof(DateTime))]

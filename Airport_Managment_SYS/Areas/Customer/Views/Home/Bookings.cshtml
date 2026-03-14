@@ -90,7 +90,7 @@
                                     </a>
                                     @if (!r.IsPaid)
                                     {
-                                        <a href="@Url.Action("pay", "Payments", new { area = "Customer" })"
+                                        <a href="@Url.Action("pay", "Payments", new { area = "Customer", id = r.Id })"
                                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
                                             <span class="material-symbols-outlined text-lg">payments</span>
                                             Pay now

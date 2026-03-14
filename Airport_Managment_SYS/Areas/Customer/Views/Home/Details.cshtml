@@ -132,12 +132,16 @@
             {
                 <div class="mb-2 p-3 bg-red-500/10 text-red-200 rounded-xl border border-red-500/40 text-sm">@TempData["Error"]</div>
             }
+            @if (TempData["Warning"] != null)
+            {
+                <div class="mb-2 p-3 bg-amber-500/10 text-amber-200 rounded-xl border border-amber-500/40 text-sm">@TempData["Warning"]</div>
+            }
 
             <form asp-controller="Home" asp-action="Reserve" method="post" id="reserveForm" class="space-y-4">
                 <input type="hidden" name="TripId" value="@Model.Trip?.Id" />
-                <input type="hidden" id="seatClassHidden" name="seatClassId" value="0" />
+                <input type="hidden" id="seatClassHidden" name="SeatClassId" value="0" />
                 <input type="hidden" id="totalPriceHidden" name="TotalPrice" value="0" />
-                <input type="hidden" id="seatCountHidden" name="SeatsToReserve" value="0" />
+                <div id="seatIdsContainer"></div>
 
                 <div id="seatCountContainer" class="hidden">
                     <p class="text-sm text-slate-100">
@@ -168,7 +172,7 @@
             const totalPriceHidden = document.getElementById('totalPriceHidden');
             const reserveBtn = document.getElementById('reserveBtn');
             const seatButtons = Array.from(document.querySelectorAll('.seat-button'));
-            const seatCountHidden = document.getElementById('seatCountHidden');
+            const seatIdsHidden = document.getElementById('seatIdsHidden');
             const seatCountContainer = document.getElementById('seatCountContainer');
             const seatCountDisplay = document.getElementById('seatCountDisplay');
 
@@ -183,10 +187,23 @@
                 });
             }
 
-            function syncSeatCountFromSelection() {
+            function syncSeatIdsFromSelection() {
                 const selected = seatButtons.filter(b => b.dataset.selected === 'true');
+                const seatIds = selected.map(b => b.dataset.seatId);
                 const count = selected.length;
-                seatCountHidden.value = count.toString();
+                
+                // Clear existing seat ID inputs
+                const container = document.getElementById('seatIdsContainer');
+                container.innerHTML = '';
+                
+                // Create individual hidden inputs for each seat ID
+                seatIds.forEach(seatId => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'SeatIds';
+                    input.value = seatId;
+                    container.appendChild(input);
+                });
 
                 if (count > 0) {
                     seatCountDisplay.textContent = count.toString();
@@ -203,7 +220,10 @@
                 const opt = select.options[select.selectedIndex] || select.options[0];
                 const mult = parseFloat(opt.dataset.mult || '0') || 1;
                 let per = basePrice * mult;
-                let count = parseInt(seatCountHidden.value || '0') || 0;
+                
+                // Count selected seats from the container inputs
+                const container = document.getElementById('seatIdsContainer');
+                const count = container.querySelectorAll('input[name="SeatIds"]').length;
 
                 if (parseInt(select.value || '0') === 0 || count === 0) {
                     reserveBtn.disabled = true;
@@ -238,7 +258,7 @@
                         }
                     }
 
-                    // Only allow selecting seats from the currently selected class
+                    // Only allow selecting seats from currently selected class
                     if (select.value !== seatClassId) {
                         // Switch class: clear selection and change class
                         clearSeatSelection();
@@ -257,18 +277,18 @@
                         btn.classList.add('ring-2', 'ring-primary', 'bg-primary');
                     }
 
-                    syncSeatCountFromSelection();
+                    syncSeatIdsFromSelection();
                     updatePrice();
                 });
             });
 
             select.addEventListener('change', () => {
                 clearSeatSelection();
-                syncSeatCountFromSelection();
+                syncSeatIdsFromSelection();
                 updatePrice();
             });
 
-            syncSeatCountFromSelection();
+            syncSeatIdsFromSelection();
             updatePrice();
         });
     </script>

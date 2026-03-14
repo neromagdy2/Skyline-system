@@ -138,6 +138,15 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
                 TripVM.Airplanes = await _AirplaneRepo.GetAsync();
                 return View(TripVM);
             }
+            // Validate minimum price for Stripe (must convert to at least $0.50 USD = 25 EGP)
+            if (TripVM.Price < 25.00m) // 25.00 EGP minimum to ensure Stripe compatibility
+            {
+                ModelState.AddModelError("TripVM.Price", "Minimum trip price is 25.00 EGP to meet payment processing requirements.");
+
+                TripVM.Airports = await _AirportRepo.GetAsync();
+                TripVM.Airplanes = await _AirplaneRepo.GetAsync();
+                return View(TripVM);
+            }
             var Trip = new Trip
             {
                 Price = TripVM.Price,
@@ -203,6 +212,16 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             if (TripVM.Trip.DateTime < DateTime.Now && !User.IsInRole("SuperAdmin"))
             {
                 ModelState.AddModelError("Trip.DateTime", "You don't have acces to make the date in the past.");
+
+                TripVM.Airports = await _AirportRepo.GetAsync();
+                TripVM.Airplanes = await _AirplaneRepo.GetAsync();
+                return View(TripVM);
+            }
+
+            // Validate minimum price for Stripe (must convert to at least $0.50 USD)
+            if (TripVM.Trip.Price < 25.00m) // 25.00 EGP minimum to ensure Stripe compatibility
+            {
+                ModelState.AddModelError("Trip.Price", "Minimum trip price is 25.00 EGP to meet payment processing requirements.");
 
                 TripVM.Airports = await _AirportRepo.GetAsync();
                 TripVM.Airplanes = await _AirplaneRepo.GetAsync();

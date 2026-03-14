@@ -5,7 +5,10 @@ namespace Airport_Managment_SYS.Models
     public class Trip
     {
         public int Id { get; set; }
+        
+        [Range(25.00, float.MaxValue, ErrorMessage = "Minimum trip price is 25.00 EGP to meet payment processing requirements.")]
         public float Price { get; set; }
+        
         public DateTime DateTime { get; set; }
 
         [DateGreaterThan(nameof(DateTime))]
