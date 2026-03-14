@@ -9,7 +9,7 @@ namespace Airport_Managment_SYS.Areas.Customer.ViewModels
         public DateTime DepartureTime { get; set; }
 
         public float MaxPrice { get; set; }
-        public int SeatClassId { get; set; }
+        public List<int >?SeatClassIds { get; set; }
         public IEnumerable<Trip> ?trips { get; set; }
         public IEnumerable<GovernerateState>? States { get; set; }
         public IEnumerable<SeatClass>? seatClasses { get; set; }

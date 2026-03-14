@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Airport_Managment_SYS.Areas.Customer.Controllers
 {
     [Area("Customer")]
-    [Authorize(Roles = StaticVariables.SUPER_ADMIN + "," + StaticVariables.ADMIN + "," + StaticVariables.USER + ",Customer")]
+    //[Authorize(Roles = StaticVariables.SUPER_ADMIN + "," + StaticVariables.ADMIN + "," + StaticVariables.USER + ",Customer")]
     public class ProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

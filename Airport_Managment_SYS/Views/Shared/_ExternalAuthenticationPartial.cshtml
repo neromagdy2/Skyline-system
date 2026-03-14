@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+    <div class="text-center mt-4">
+        <p  >Or login in with:</p>
+        <hr />
+        @{
+            var providers = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            if (!providers.Any())
+            {
+                <div>
+                    <p>
+                        We couldn't find any external provider
+                    </p>
+                </div>
+            }
+            else
+            {
+                <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                    <div>
+                       
+                            @foreach (var provider in providers)
+                            {
+                                
+                                <input type="submit" class="w-100 btn btn-outline-danger w-50" value="@provider.Name" name="provider" />
+                            }
+                       
+                    </div>
+                </form>
+            }
+        }
+    </div>

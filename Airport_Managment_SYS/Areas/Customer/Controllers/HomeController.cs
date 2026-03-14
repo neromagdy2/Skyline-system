@@ -48,24 +48,34 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             searchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
            searchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
 
+            var startDate = searchTripsVM.DepartureTime.Date;
+            var endDate = startDate.AddDays(1);
+
             var trips = await _tripRepository.GetAsync(
                 t => t.Airport_FromId == searchTripsVM.DepartureCity &&
-                     t.Airport_ToId == searchTripsVM.ArrivalCity
-                     &&t.DateTime.Day==searchTripsVM.DepartureTime.Day
-                     &&t.ArrivalDateTime.Year==searchTripsVM.DepartureTime.Year&& t.DateTime.Month==searchTripsVM.DepartureTime.Month,
-                includes: new System.Linq.Expressions.Expression<Func<Trip, object>>[]
-                {
-                    t => t.Airport_From,
-                    t => t.Airport_To
-                });
+                     t.Airport_ToId == searchTripsVM.ArrivalCity &&
+                     t.DateTime >= startDate &&
+                     t.DateTime < endDate,
+                includeFunc: q => q
+                    .Include(t => t.Airport_From)
+                    .Include(t => t.Airport_To)
+                    .Include(t => t.TripSeats)
+                    .ThenInclude(ts => ts.Seat)
+            );
             if (searchTripsVM.MaxPrice >0)
             {
                 trips = trips.Where(t => t.Price < searchTripsVM.MaxPrice);
 
             }
-            if (searchTripsVM.SeatClassId>0)
+            if (searchTripsVM.SeatClassIds != null && searchTripsVM.SeatClassIds.Any())
             {
-                trips = trips.Where(t => t.TripSeats.Any(ts => !ts.IsBooked && ts.Seat != null && ts.Seat.seatClassId == searchTripsVM.SeatClassId));
+                trips = trips.Where(t =>
+                    t.TripSeats != null &&
+                    t.TripSeats.Any(ts =>
+                      
+                        ts.Seat != null &&
+                        searchTripsVM.SeatClassIds.Contains(ts.Seat.seatClassId)
+                    ));
             }
             searchTripsVM.trips = trips;
 

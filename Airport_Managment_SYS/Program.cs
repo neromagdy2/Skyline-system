@@ -1,6 +1,7 @@
 using Airport_Managment_SYS.Utilities;
-using Stripe;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Stripe;
 
 
 namespace Airport_Managment_SYS
@@ -35,7 +36,16 @@ namespace Airport_Managment_SYS
                 options.AccessDeniedPath = "/YourNewAccessDeniedPath"; // Optional: for 403 Forbidden cases
             });
 
+            builder.Services.AddAuthentication()
+.AddGoogle("google", opt =>
+{
+    var googleAuth = builder.Configuration.GetSection("Authentication:Google");
 
+    opt.ClientId = googleAuth["ClientId"];
+    opt.ClientSecret = googleAuth["ClientSecret"];
+
+    opt.SignInScheme = IdentityConstants.ExternalScheme;
+});
             var app = builder.Build();
 
             // Run DB initializer (migrations + seeding) at startup

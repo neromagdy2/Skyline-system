@@ -39,7 +39,6 @@ namespace Airport_Managment_SYS
             });
 
 
-
             services.AddScoped<IRepository<Nationalities>, Repository<Nationalities>>();
             services.AddScoped<IRepository<Airport>, Repository<Airport>>();
             services.AddScoped<IRepository<GovernerateState>, Repository<GovernerateState>>();

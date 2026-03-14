@@ -98,20 +98,20 @@
                                         Seat Class
                                     </label>
 
-                                    <select name="SeatClassId"
-                                            class="w-full h-12 rounded-xl border border-white/10 bg-white/10 text-white px-4 focus:ring-2 focus:ring-primary">
+                                    @foreach (var seatClass in Model.seatClasses ?? Enumerable.Empty<SeatClass>())
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   name="SeatClassIds"
+                                                   value="@seatClass.Id"
+                                                   @(Model.SeatClassIds != null && Model.SeatClassIds.Contains(seatClass.Id) ? "checked" : "")>
 
-                                        <option value="0">All Classes</option>
-
-                                        @foreach (var seatClass in Model.seatClasses)
-                                        {
-                                            <option value="@seatClass.Id"
-                                                    selected="@(Model.SeatClassId == seatClass.Id)">
+                                            <label class="form-check-label">
                                                 @seatClass.Name
-                                            </option>
-                                        }
-
-                                    </select>
+                                            </label>
+                                        </div>
+                                    }
 
                                 </div>
 

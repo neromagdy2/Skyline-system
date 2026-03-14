@@ -169,16 +169,16 @@
 
                                         </form>
 
-
+                                        <partial name="_ExternalAuthenticationPartial" />
                                         <div class="position-relative mt-4">
                                             <hr>
                                             <div class="divider-content-center">or register with</div>
                                         </div>
 
-                                        <div class="row g-2 mt-2">
+                                        @* <div class="row g-2 mt-2">
 
                                             <div class="col-sm-6">
-                                                <a class="btn btn-outline-google-plus btn-sm d-block w-100">
+                                                <a asp-area="Identity" asp-controller="Authentication" asp-action="ExternalLogin" class="btn btn-outline-google-plus btn-sm d-block w-100">
                                                     <span class="fab fa-google-plus-g me-2"></span> google
                                                 </a>
                                             </div>
@@ -189,7 +189,7 @@
                                                 </a>
                                             </div>
 
-                                        </div>
+                                        </div> *@
 
                                     </div>
                                 </div>
