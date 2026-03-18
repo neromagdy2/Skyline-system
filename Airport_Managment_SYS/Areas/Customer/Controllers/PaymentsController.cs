@@ -89,7 +89,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                     return RedirectToAction("Details", "Home", new { area = "Customer", id = reservation.TripId });
                 }
             }
-
+           
             options.LineItems.Add(new SessionLineItemOptions
             {
                     PriceData = new SessionLineItemPriceDataOptions
@@ -108,7 +108,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             var session = service.Create(options);
             return Redirect(session.Url);
         }
-        public IActionResult success(int reservationId)
+        public async Task<IActionResult> success(int reservationId)
         {
                        // Payment was successful — mark reservation paid and book specific seats
                        var user = _userManager.GetUserAsync(User).Result;
@@ -147,8 +147,21 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
 
                        _ReservationRepository.Update(reservation);
                        _ReservationRepository.CommitAsync().Wait();
+                            var payment = new Payment
+                            {
+                               Total = (float)reservation.TotalPrice,
+                                ApplicationUserId = user.Id
+                            };
+                            await _paymentRepository.AddAsync(payment);
+                            await _paymentRepository.CommitAsync();
 
-                       return View();   
+            return View();   
+        }
+        public IActionResult cancel()
+        {
+         
+            TempData["Warning"] = "Payment was cancelled ";
+            return RedirectToAction("Index", "Home", new { area = "Customer" });
         }
     }
 }

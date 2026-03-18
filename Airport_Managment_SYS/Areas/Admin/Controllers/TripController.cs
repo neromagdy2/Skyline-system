@@ -139,7 +139,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
                 return View(TripVM);
             }
             // Validate minimum price for Stripe (must convert to at least $0.50 USD = 25 EGP)
-            if (TripVM.Price < 25.00m) // 25.00 EGP minimum to ensure Stripe compatibility
+            if (TripVM.Price < 25.00f) // 25.00 EGP minimum to ensure Stripe compatibility
             {
                 ModelState.AddModelError("TripVM.Price", "Minimum trip price is 25.00 EGP to meet payment processing requirements.");
 
@@ -219,7 +219,7 @@ namespace Airport_Managment_SYS.Areas.Admin.Controllers
             }
 
             // Validate minimum price for Stripe (must convert to at least $0.50 USD)
-            if (TripVM.Trip.Price < 25.00m) // 25.00 EGP minimum to ensure Stripe compatibility
+            if (TripVM.Trip.Price < 25.00f) // 25.00 EGP minimum to ensure Stripe compatibility
             {
                 ModelState.AddModelError("Trip.Price", "Minimum trip price is 25.00 EGP to meet payment processing requirements.");
 
