@@ -90,14 +90,6 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                 }
             }
 
-            var payment = new Payment
-            {
-                Total = (float)reservation.TotalPrice,
-                ApplicationUserId = user.Id
-            };
-            await _paymentRepository.AddAsync(payment);
-            await _paymentRepository.CommitAsync();
-              
             options.LineItems.Add(new SessionLineItemOptions
             {
                     PriceData = new SessionLineItemPriceDataOptions
