@@ -88,6 +88,34 @@
         <div class="max-w-7xl mx-auto px-6  lg:px-20">
             @RenderBody()
         </div>
+        <!-- 💬 Floating Button -->
+        <button id="chatToggle"
+            style="background-color:black"
+                class="fixed bottom-6 right-6 z-50  text-white rounded-full p-3 shadow-lg hover:scale-110 transition border border-white">
+            <img class="d-inline-block" style="width:50px" src="~/assets/logos/chatot.png" />
+            ask chat
+        </button>
+        <!-- 🤖 Chatbot Container -->
+        <div id="chatbot"
+             class="fixed bottom-24 right-6 w-80 glass-card rounded-2xl shadow-xl hidden z-50 flex flex-col">
+
+            <!-- Header -->
+            <div class="p-3 border-b border-white/10 flex justify-between items-center">
+                <div>
+                    <img class="d-inline-block" style="width:50px" src="~/assets/logos/chatot.png" />
+
+                    <span class="fw-bold">Chatbot</span>
+                </div>
+              
+                <button id="closeChat" class="text-white">✖</button>
+            </div>
+
+            <!-- Body -->
+            <div id="chatBody" class="p-3 space-y-2 max-h-96 overflow-y-auto">
+                <!-- Questions هنا -->
+            </div>
+
+        </div>
         <footer class="bg-background-dark border-t border-white/5 px-6 py-20 lg:px-20 relative overflow-hidden">
             <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
             <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between gap-20 relative z-10">
@@ -155,7 +183,93 @@
         </footer>
     </div>    <!-- REQUIRED FOR SCRIPTS TO WORK -->
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        const chatToggle = document.getElementById("chatToggle");
+        const chatbot = document.getElementById("chatbot");
+        const closeChat = document.getElementById("closeChat");
 
+        chatToggle.onclick = () => {
+            chatbot.classList.toggle("hidden");
+            loadQuestions(null); // أول مرة
+        };
+
+        closeChat.onclick = () => {
+            chatbot.classList.add("hidden");
+        };
+    </script>
+    <script>
+        async function loadQuestions(parentId) {
+
+            const res = await fetch(`/Customer/Home/GetQuestions?parentId=${parentId ?? ''}`);
+            const data = await res.json();
+
+            const chatBody = document.getElementById("chatBody");
+            chatBody.innerHTML = "";
+
+            data.forEach(q => {
+                const btn = document.createElement("button");
+
+                btn.className = "w-full text-start p-2 rounded bg-white/5 hover:bg-primary/30 border   border-primary";
+                btn.innerText = q.question;
+
+                btn.onclick = () => handleQuestionClick(q.id);
+
+                chatBody.appendChild(btn);
+            });
+        }
+    </script>
+    <script>
+        async function handleQuestionClick(id) {
+
+            const res = await fetch(`/Customer/Home/GetQuestionWithChildren?id=${id}`);
+            const data = await res.json();
+
+            const chatBody = document.getElementById("chatBody");
+
+       
+            // 🟩 عرض الإجابة
+            if (data.answer) {
+                const aDiv = document.createElement("div");
+                aDiv.className = "p-2 bg-white rounded text-black";
+                                const aDivSpan = document.createElement("span");
+        aDivSpan.className = "text-sm text-slate-500 block mt-1";
+        aDivSpan.innerText = "Answer is" ;
+        aDiv.appendChild(aDivSpan);
+        const aDivAnswer = document.createElement("p");
+        aDivAnswer.className = "text-base text-slate-800 mt-1";
+        aDivAnswer.innerText = data.answer;
+        aDiv.appendChild(aDivAnswer);
+                chatBody.appendChild(aDiv);
+            }
+
+            // 🟨 عرض الأطفال
+            data.children.forEach(child => {
+                const btn = document.createElement("button");
+
+                btn.className = "w-full text-start p-2 rounded bg-white/5 hover:bg-primary/30 mt-1 border  border-success";
+                btn.innerText = child.question;
+
+                btn.onclick = () => handleQuestionClick(child.id);
+
+                chatBody.appendChild(btn);
+            });
+
+            // scroll لآخر الشات
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    </script>
+    <script>
+        function showAnswer(answer) {
+            const chatBody = document.getElementById("chatBody");
+
+            const div = document.createElement("div");
+            div.className = "p-2 bg-primary/20 rounded";
+
+            div.innerText = answer;
+
+            chatBody.appendChild(div);
+        }
+    </script>
 </body>
 </html>
 

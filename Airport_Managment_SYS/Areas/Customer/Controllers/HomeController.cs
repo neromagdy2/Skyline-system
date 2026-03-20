@@ -21,7 +21,8 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
         private readonly IRepository<Reservation> _reservationRepository;
         private readonly IRepository<ReservationSeat> _reservationSeatRepository;
         private readonly UserManager<ApplicationUser> _userManager;
-        public HomeController(IRepository<GovernerateState> governerateStateRepository, IRepository<Trip> tripRepository, IRepository<SeatClass> seatClassesRepository, IRepository<Reservation> reservationRepository, IRepository<ReservationSeat> reservationSeatRepository, UserManager<ApplicationUser> userManager)
+        private readonly ApplicationDbcontext _context;
+        public HomeController(IRepository<GovernerateState> governerateStateRepository, IRepository<Trip> tripRepository, IRepository<SeatClass> seatClassesRepository, IRepository<Reservation> reservationRepository, IRepository<ReservationSeat> reservationSeatRepository, UserManager<ApplicationUser> userManager, ApplicationDbcontext context)
         {
             _governerateStateRepository = governerateStateRepository;
             _tripRepository = tripRepository;
@@ -29,6 +30,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             _reservationRepository = reservationRepository;
             _reservationSeatRepository = reservationSeatRepository;
             _userManager = userManager;
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
@@ -241,6 +243,43 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             )).ToList();
 
             return View(reservations);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetQuestions(int? parentId)
+        {
+            var questions = await _context.ChatbotQuestions
+                .Where(q => q.ChatbotQuestionId == parentId)
+                .Select(q => new {
+                    q.Id,
+                    q.Question,
+                    q.Answer
+                })
+                .ToListAsync();
+
+            return Json(questions);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetQuestionWithChildren(int id)
+        {
+            var question = await _context.ChatbotQuestions
+                .Where(q => q.Id == id)
+                .Select(q => new
+                {
+                    q.Id,
+                    q.Question,
+                    q.Answer,
+                    Children = _context.ChatbotQuestions
+                        .Where(c => c.ChatbotQuestionId == q.Id)
+                        .Select(c => new {
+                            c.Id,
+                            c.Question
+                        }).ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            return Json(question);
         }
     }
 }

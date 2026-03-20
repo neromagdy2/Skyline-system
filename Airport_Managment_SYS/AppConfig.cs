@@ -44,6 +44,7 @@ namespace Airport_Managment_SYS
             services.AddScoped<IRepository<GovernerateState>, Repository<GovernerateState>>();
             services.AddScoped<IRepository<Country>, Repository<Country>>();
             services.AddScoped<IRepository<SeatClass>, Repository<SeatClass>>();
+            services.AddScoped<IRepository<ChatbotQuestion>, Repository<ChatbotQuestion>>();
             //services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

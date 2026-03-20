@@ -1,0 +1,84 @@
+﻿@model Airport_Managment_SYS.Areas.Admin.ViewModels.CreateChatBotQuestionVM
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0 text-white">Add New Question</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Create">
+
+                <!-- Question -->
+                <div class="mb-3">
+                    <label class="form-label">Question</label>
+                    <input asp-for="Question" class="form-control" />
+                    <span asp-validation-for="Question" class="text-danger"></span>
+                </div>
+
+                <!-- Answer -->
+                <div class="mb-3">
+                    <label class="form-label">Answer</label>
+                    <textarea asp-for="Answer" class="form-control"></textarea>
+                </div>
+
+                <!-- Type -->
+                <div class="mb-3">
+                    <label class="form-label">Type</label>
+                    <select asp-for="Type" class="form-select" id="typeSelect">
+                        <option value="Main">Main</option>
+                        <option value="Sub">Sub</option>
+                    </select>
+                </div>
+
+                <!-- Parent -->
+                <div class="mb-3" id="parentContainer">
+                    <label class="form-label">Parent Question</label>
+                    <select asp-for="ParentId" class="form-select">
+                        <option value="">-- Select Parent --</option>
+
+                        @foreach (var q in Model.Questions)
+                        {
+                            <option value="@q.Id">@q.Question</option>
+                        }
+                    </select>
+
+                    <span asp-validation-for="ParentId" class="text-danger"></span>
+                </div>
+
+                <!-- Submit -->
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<script>
+    const typeSelect = document.getElementById("typeSelect");
+    const parentContainer = document.getElementById("parentContainer");
+    const parentSelect = parentContainer.querySelector("select");
+
+    function toggleParent() {
+        if (typeSelect.value === "Main") {
+            parentContainer.style.display = "none";
+            parentSelect.value = "";
+        } else {
+            parentContainer.style.display = "block";
+        }
+    }
+
+    typeSelect.addEventListener("change", toggleParent);
+    window.onload = toggleParent;
+</script>

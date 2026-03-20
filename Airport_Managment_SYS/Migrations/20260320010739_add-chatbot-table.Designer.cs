@@ -4,6 +4,7 @@ using Airport_Managment_SYS.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Airport_Managment_SYS.Migrations
 {
     [DbContext(typeof(ApplicationDbcontext))]
-    partial class ApplicationDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20260320010739_add-chatbot-table")]
+    partial class addchatbottable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +83,7 @@ namespace Airport_Managment_SYS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ChatbotQuestionId")
+                    b.Property<int>("ChatbotQuestionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Question")
@@ -581,7 +584,8 @@ namespace Airport_Managment_SYS.Migrations
                     b.HasOne("Airport_Managment_SYS.Models.ChatbotQuestion", "ChatbotQuestionNav")
                         .WithMany()
                         .HasForeignKey("ChatbotQuestionId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("ChatbotQuestionNav");
                 });
