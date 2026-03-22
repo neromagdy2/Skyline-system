@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe.Checkout;
+using Airport_Managment_SYS.Utilities;
 
 namespace Airport_Managment_SYS.Areas.Customer.Controllers
 {
@@ -15,14 +16,18 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
         private readonly IRepository<Trip> _tripRepository;
         private readonly IRepository<Payment> _paymentRepository;
         private readonly IRepository<Seat> _seatRepository;
+        private readonly ITicketService _ticketService;
+        private readonly ISkyStreamEmailSender _emailSender;
 
-        public PaymentsController(UserManager<ApplicationUser> userManager, IRepository<Reservation> reservationRepository, IRepository<Trip> tripRepository, IRepository<Payment> paymentRepository, IRepository<Seat> seatRepository)
+        public PaymentsController(UserManager<ApplicationUser> userManager, IRepository<Reservation> reservationRepository, IRepository<Trip> tripRepository, IRepository<Payment> paymentRepository, IRepository<Seat> seatRepository, ITicketService ticketService, ISkyStreamEmailSender emailSender)
         {
             _userManager = userManager;
             _ReservationRepository = reservationRepository;
             _tripRepository = tripRepository;
             _paymentRepository = paymentRepository;
             _seatRepository = seatRepository;
+            _ticketService = ticketService;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -116,47 +121,99 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             var session = service.Create(options);
             return Redirect(session.Url);
         }
-        public IActionResult success(int reservationId)
+        public async Task<IActionResult> success(int reservationId)
         {
-                       // Payment was successful — mark reservation paid and book specific seats
-                       var user = _userManager.GetUserAsync(User).Result;
-                       if (user == null) return View();
+            // Payment was successful — mark reservation paid and book specific seats
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return View();
 
-                       var reservation = _ReservationRepository.GetOneAsync(r => r.Id == reservationId, 
-                           includeFunc: q => q
-                               .Include(r => r.ReservationSeats)
-                                   .ThenInclude(rs => rs.Seat)).Result;
-                       
-                       if (reservation == null) return View();
+            var reservation = await _ReservationRepository.GetOneAsync(r => r.Id == reservationId, 
+                includeFunc: q => q
+                    .Include(r => r.ReservationSeats)
+                        .ThenInclude(rs => rs.Seat)
+                    .Include(r => r.ApplicationUser)
+                    .Include(r => r.Trip)
+                        .ThenInclude(t => t.Airport_From)
+                    .Include(r => r.Trip)
+                        .ThenInclude(t => t.Airport_To));
+            
+            if (reservation == null) return View();
 
-                       // mark reservation paid
-                       reservation.IsPaid = true;
+            // mark reservation paid
+            reservation.IsPaid = true;
 
-                       // load trip with seats
-                       var trip = _tripRepository.GetOneAsync(t => t.Id == reservation.TripId, 
-                           includeFunc: q => q
-                               .Include(t => t.TripSeats)
-                                   .ThenInclude(ts => ts.Seat)).Result;
+            // load trip with seats
+            var trip = await _tripRepository.GetOneAsync(t => t.Id == reservation.TripId, 
+                includeFunc: q => q
+                    .Include(t => t.TripSeats)
+                        .ThenInclude(ts => ts.Seat));
 
-                       if (trip != null)
-                       {
-                           // Book the specific seats from the reservation
-                           var reservedSeatIds = reservation.ReservationSeats.Select(rs => rs.SeatId).ToList();
-                           var tripSeatsToBook = trip.TripSeats
-                               .Where(ts => reservedSeatIds.Contains(ts.SeatId))
-                               .ToList();
+            if (trip != null)
+            {
+                // Book the specific seats from the reservation
+                var reservedSeatIds = reservation.ReservationSeats.Select(rs => rs.SeatId).ToList();
+                var tripSeatsToBook = trip.TripSeats
+                    .Where(ts => reservedSeatIds.Contains(ts.SeatId))
+                    .ToList();
 
-                           foreach (var ts in tripSeatsToBook)
-                           {
-                               ts.IsBooked = true;
-                           }
-                           _tripRepository.Update(trip);
-                       }
+                foreach (var ts in tripSeatsToBook)
+                {
+                    ts.IsBooked = true;
+                }
+                _tripRepository.Update(trip);
+            }
 
-                       _ReservationRepository.Update(reservation);
-                       _ReservationRepository.CommitAsync().Wait();
+            _ReservationRepository.Update(reservation);
+            await _ReservationRepository.CommitAsync();
 
-                       return View();   
+            // Generate PDF ticket and send email
+            try
+            {
+                var ticketPdf = _ticketService.GenerateTicketPdf(reservation);
+                var ticketFileName = $"SKYSTREAM_Ticket_{reservation.Id:D6}.pdf";
+                
+                var emailBody = $@"
+                    <html>
+                    <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+                        <div style='background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;'>
+                            <h1 style='margin: 0; font-size: 28px;'>SKYSTREAM</h1>
+                            <h2 style='margin: 10px 0; font-size: 18px; font-weight: normal;'>Flight Ticket Confirmation</h2>
+                        </div>
+                        
+                        <div style='background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;'>
+                            <h3 style='color: #333; margin-bottom: 15px;'>Reservation Details</h3>
+                            <p><strong>Reservation ID:</strong> #{reservation.Id:D6}</p>
+                            <p><strong>From:</strong> {reservation.Trip?.Airport_From?.Name}</p>
+                            <p><strong>To:</strong> {reservation.Trip?.Airport_To?.Name}</p>
+                            <p><strong>Departure:</strong> {reservation.Trip?.DateTime:MMM dd, yyyy HH:mm}</p>
+                            <p><strong>Arrival:</strong> {reservation.Trip?.ArrivalDateTime:MMM dd, yyyy HH:mm}</p>
+                            <p><strong>Total Amount:</strong> {reservation.TotalPrice:C} EGP</p>
+                            <p><strong>Status:</strong> <span style='color: #10b981; font-weight: bold;'>PAID</span></p>
+                        </div>
+                        
+                        <div style='text-align: center; margin-top: 30px;'>
+                            <p style='color: #666; font-size: 14px;'>Your flight ticket is attached to this email.</p>
+                            <p style='color: #666; font-size: 14px;'>Thank you for choosing SKYSTREAM!</p>
+                        </div>
+                    </body>
+                    </html>";
+
+                await _emailSender.SendEmailWithAttachmentAsync(
+                    user.Email,
+                    $"SKYSTREAM Flight Ticket - Reservation #{reservation.Id:D6}",
+                    emailBody,
+                    ticketPdf,
+                    ticketFileName
+                );
+
+                TempData["Success"] = "Payment successful! Your ticket has been sent to your email.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Warning"] = "Payment successful, but there was an issue sending your ticket email. Please contact support.";
+            }
+
+            return View(reservation);   
         }
     }
 }

@@ -30,7 +30,9 @@ namespace Airport_Managment_SYS
                 options.LoginPath = "/Identity/Authentication/Login";
                 options.AccessDeniedPath = "/Identity/Authentication/AccessDenied";
             });
+            services.AddTransient<ISkyStreamEmailSender, EmailSender>();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<ITicketService, TicketService>();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -44,7 +46,6 @@ namespace Airport_Managment_SYS
             services.AddScoped<IRepository<GovernerateState>, Repository<GovernerateState>>();
             services.AddScoped<IRepository<Country>, Repository<Country>>();
             services.AddScoped<IRepository<SeatClass>, Repository<SeatClass>>();
-            //services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddScoped<IDbInitializer, DbInitializer>();

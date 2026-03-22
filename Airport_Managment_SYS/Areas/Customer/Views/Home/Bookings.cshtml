@@ -83,11 +83,21 @@
                                     </span>
                                 }
                                 <div class="flex flex-wrap gap-2">
-                                    <a href="@Url.Action("Index", "Reservations", new { area = "Customer" })"
-                                       class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border border-white/20 text-white/80 hover:bg-white/10 transition-colors">
-                                        <span class="material-symbols-outlined text-lg">list_alt</span>
-                                        Manage
-                                    </a>
+                                    <div class="flex flex-wrap gap-2 flex-column">
+                                        @if (r.IsPaid)
+                                        {
+                                            <a href="@Url.Action("Index", "Reservations", new { area = "Customer" })"
+                                               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border border-white/20 text-white/80 hover:bg-white/10 transition-colors">
+                                                <span class="material-symbols-outlined text-lg">list_alt</span>
+                                                Manage
+                                            </a>
+                                            <a href="@Url.Action("DownloadTicket", "Reservations", new { area = "Customer" , id = r.Id })"
+                                               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border border-white/20 text-white/80 hover:bg-white/10 transition-colors">
+                                                <span class="material-symbols-outlined text-lg">download</span>
+                                                Download Ticket
+                                            </a>
+                                        }
+                                    </div>
                                     @if (!r.IsPaid)
                                     {
                                         <a href="@Url.Action("pay", "Payments", new { area = "Customer", id = r.Id })"
