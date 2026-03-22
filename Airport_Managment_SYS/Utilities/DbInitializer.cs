@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Airport_Managment_SYS.DataAccess;
@@ -28,6 +28,7 @@ namespace Airport_Managment_SYS.Utilities
         private readonly IRepository<Trip> _tripRepository;
         private readonly IRepository<TripSeat> _tripSeatRepository;
         private readonly IRepository<SeatClass> _seatClassRepository;
+        private readonly IRepository<ChatbotQuestion> _chatbotQuestionsRepository;
 
         public DbInitializer(
             ApplicationDbcontext dbContext,
@@ -42,7 +43,8 @@ namespace Airport_Managment_SYS.Utilities
             IRepository<Seat> seatRepository,
             IRepository<Trip> tripRepository,
             IRepository<TripSeat> tripSeatRepository,
-            IRepository<SeatClass> seatClassRepository)
+            IRepository<SeatClass> seatClassRepository,
+            IRepository<ChatbotQuestion> chatbotQuestionsRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -57,6 +59,7 @@ namespace Airport_Managment_SYS.Utilities
             _tripRepository = tripRepository;
             _tripSeatRepository = tripSeatRepository;
             _seatClassRepository = seatClassRepository;
+            _chatbotQuestionsRepository = chatbotQuestionsRepository;
         }
 
         public async Task InitializeAsync()
@@ -212,7 +215,158 @@ namespace Airport_Managment_SYS.Utilities
                         await _nationalitiesRepository.CommitAsync();
                     }
                 }
+                // Seed chatbot questions if not exists
+                var existingQuestions = (await _chatbotQuestionsRepository.GetAsync()).ToList();
 
+                if (existingQuestions.Count == 0)
+                {
+                    // 🔵 Main Questions
+                    var booking = new ChatbotQuestion
+                    {
+                        Question = "عايز تحجز رحلة؟",
+                        Answer = "تمام 👌 اقدر اساعدك في حجز رحلتك بسهولة",
+                        type = "Main"
+                    };
+
+                    var baggage = new ChatbotQuestion
+                    {
+                        Question = "معلومات عن الأمتعة",
+                        Answer = "تقدر تعرف كل تفاصيل الأمتعة من هنا ✈️",
+                        type = "Main"
+                    };
+
+                    var payment = new ChatbotQuestion
+                    {
+                        Question = "طرق الدفع",
+                        Answer = "نوفر طرق دفع متعددة وآمنة 💳",
+                        type = "Main"
+                    };
+
+                    var bookingIssues = new ChatbotQuestion
+                    {
+                        Question = "عندي مشكلة في الحجز",
+                        Answer = "قولّي مشكلتك وأنا أساعدك 👍",
+                        type = "Main"
+                    };
+
+                    // 🔥 Save Main First
+                    await _chatbotQuestionsRepository.AddAsync(booking);
+                    await _chatbotQuestionsRepository.AddAsync(baggage);
+                    await _chatbotQuestionsRepository.AddAsync(payment);
+                    await _chatbotQuestionsRepository.AddAsync(bookingIssues);
+
+                    await _chatbotQuestionsRepository.CommitAsync();
+
+                    // 🟡 Sub Questions - Booking
+                    var domesticOrInternational = new ChatbotQuestion
+                    {
+                        Question = "رحلة داخلية ولا دولية؟",
+                        Answer = "حدد نوع الرحلة عشان نكمل 👇",
+                        ChatbotQuestionId = booking.Id,
+                        type = "Sub"
+                    };
+
+                    var modifyBooking = new ChatbotQuestion
+                    {
+                        Question = "تعديل الحجز",
+                        Answer = "تقدر تعدل الحجز من صفحة My Bookings",
+                        ChatbotQuestionId = booking.Id,
+                        type = "Sub"
+                    };
+
+                    await _chatbotQuestionsRepository.AddAsync(domesticOrInternational);
+                    await _chatbotQuestionsRepository.AddAsync(modifyBooking);
+
+                    await _chatbotQuestionsRepository.CommitAsync();
+
+                    // 🟠 Sub-Sub Questions
+                    var domestic = new ChatbotQuestion
+                    {
+                        Question = "رحلات داخل مصر",
+                        Answer = "متاح رحلات داخلية بين القاهرة، الغردقة، شرم الشيخ ✈️",
+                        ChatbotQuestionId = domesticOrInternational.Id,
+                        type = "Sub"
+                    };
+
+                    var international = new ChatbotQuestion
+                    {
+                        Question = "رحلات دولية",
+                        Answer = "نقدم رحلات لأكثر من 50 دولة حول العالم 🌍",
+                        ChatbotQuestionId = domesticOrInternational.Id,
+                        type = "Sub"
+                    };
+
+                    await _chatbotQuestionsRepository.AddAsync(domestic);
+                    await _chatbotQuestionsRepository.AddAsync(international);
+
+                    await _chatbotQuestionsRepository.CommitAsync();
+
+                    // 🟡 Sub Questions - Baggage
+                    var baggageWeight = new ChatbotQuestion
+                    {
+                        Question = "وزن الأمتعة المسموح",
+                        Answer = "الوزن بيختلف حسب شركة الطيران (من 20 لـ 30 كجم)",
+                        ChatbotQuestionId = baggage.Id,
+                        type = "Sub"
+                    };
+
+                    var extraBaggage = new ChatbotQuestion
+                    {
+                        Question = "شراء وزن إضافي",
+                        Answer = "تقدر تضيف وزن إضافي من صفحة الحجز مقابل رسوم 💰",
+                        ChatbotQuestionId = baggage.Id,
+                        type = "Sub"
+                    };
+
+                    await _chatbotQuestionsRepository.AddAsync(baggageWeight);
+                    await _chatbotQuestionsRepository.AddAsync(extraBaggage);
+
+                    await _chatbotQuestionsRepository.CommitAsync();
+
+                    // 🟡 Sub Questions - Payment
+                    var visa = new ChatbotQuestion
+                    {
+                        Question = "الدفع بالفيزا",
+                        Answer = "نقبل جميع بطاقات Visa و MasterCard",
+                        ChatbotQuestionId = payment.Id,
+                        type = "Sub"
+                    };
+
+                    var vodafoneCash = new ChatbotQuestion
+                    {
+                        Question = "Vodafone Cash",
+                        Answer = "تقدر تدفع بسهولة عن طريق Vodafone Cash 📱",
+                        ChatbotQuestionId = payment.Id,
+                        type = "Sub"
+                    };
+
+                    await _chatbotQuestionsRepository.AddAsync(visa);
+                    await _chatbotQuestionsRepository.AddAsync(vodafoneCash);
+
+                    await _chatbotQuestionsRepository.CommitAsync();
+
+                    // 🟡 Sub Questions - مشاكل
+                    var cancelBooking = new ChatbotQuestion
+                    {
+                        Question = "إلغاء الحجز",
+                        Answer = "تقدر تلغي الحجز من حسابك حسب شروط شركة الطيران",
+                        ChatbotQuestionId = bookingIssues.Id,
+                        type = "Sub"
+                    };
+
+                    var refund = new ChatbotQuestion
+                    {
+                        Question = "استرجاع الأموال",
+                        Answer = "الاسترجاع بيتم خلال 7-14 يوم عمل حسب البنك",
+                        ChatbotQuestionId = bookingIssues.Id,
+                        type = "Sub"
+                    };
+
+                    await _chatbotQuestionsRepository.AddAsync(cancelBooking);
+                    await _chatbotQuestionsRepository.AddAsync(refund);
+
+                    await _chatbotQuestionsRepository.CommitAsync();
+                }
                 // Seed countries, governorates and airports if not present
                 var existingCountries = (await _countryRepository.GetAsync()).ToList();
                 if (!existingCountries.Any())

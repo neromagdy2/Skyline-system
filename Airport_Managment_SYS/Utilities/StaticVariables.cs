@@ -5,5 +5,6 @@
         public const string SUPER_ADMIN = "SuperAdmin";
         public const string ADMIN = "Admin";
         public const string USER = "User";
+        public List<string> ChatbotTypes = new List<string> { "Parent", "Child" };
     }
 }

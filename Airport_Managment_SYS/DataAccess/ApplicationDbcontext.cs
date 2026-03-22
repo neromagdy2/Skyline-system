@@ -21,6 +21,7 @@ namespace Airport_Managment_SYS.DataAccess
         public DbSet<SeatClass> SeatClasses { get; set; }
         public DbSet<Seat > Seats { get; set; }
         public DbSet<TripSeat> TripSeats { get; set; }
+        public DbSet<ChatbotQuestion> ChatbotQuestions { get; set; }
         public DbSet <Nationalities> Nationalities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -80,8 +81,13 @@ namespace Airport_Managment_SYS.DataAccess
                 .WithMany()
                 .HasForeignKey(t => t.Airport_ToId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ChatbotQuestion>()
+              .HasOne(t => t.ChatbotQuestionNav)
+              .WithMany()
+              .HasForeignKey(t => t.ChatbotQuestionId)
+              .OnDelete(DeleteBehavior.NoAction);
 
-
+            //
             // If the error persists, do the same for AirplaneId or Airports
             modelBuilder.Entity<Trip>()
                 .HasOne(t => t.Airplane)

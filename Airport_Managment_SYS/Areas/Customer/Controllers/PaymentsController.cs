@@ -94,15 +94,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
                     return RedirectToAction("Details", "Home", new { area = "Customer", id = reservation.TripId });
                 }
             }
-
-            var payment = new Payment
-            {
-                Total = (float)reservation.TotalPrice,
-                ApplicationUserId = user.Id
-            };
-            await _paymentRepository.AddAsync(payment);
-            await _paymentRepository.CommitAsync();
-              
+           
             options.LineItems.Add(new SessionLineItemOptions
             {
                     PriceData = new SessionLineItemPriceDataOptions
@@ -212,8 +204,23 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             {
                 TempData["Warning"] = "Payment successful, but there was an issue sending your ticket email. Please contact support.";
             }
+                       _ReservationRepository.Update(reservation);
+                       _ReservationRepository.CommitAsync().Wait();
+                            var payment = new Payment
+                            {
+                               Total = (float)reservation.TotalPrice,
+                                ApplicationUserId = user.Id
+                            };
+                            await _paymentRepository.AddAsync(payment);
+                            await _paymentRepository.CommitAsync();
 
-            return View(reservation);   
+                       return View();   
+        }
+        public IActionResult cancel()
+        {
+         
+            TempData["Warning"] = "Payment was cancelled ";
+            return RedirectToAction("Index", "Home", new { area = "Customer" });
         }
     }
 }
