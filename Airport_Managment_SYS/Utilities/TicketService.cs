@@ -1,21 +1,39 @@
 ﻿using Airport_Managment_SYS.Models;
+using Microsoft.EntityFrameworkCore;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.Threading.Tasks;
 
 namespace Airport_Managment_SYS.Utilities
 {
     public interface ITicketService
     {
-        byte[] GenerateTicketPdf(Reservation reservation);
+        Task<byte[]>GenerateTicketPdf(Reservation reservation);
     }
 
     public class TicketService : ITicketService
     {
-        public byte[] GenerateTicketPdf(Reservation reservation)
+        private readonly IRepository<Reservation> resRepo;
+
+        public TicketService(IRepository<Reservation> resRepo)
+        {
+            this.resRepo = resRepo;
+        }
+
+        public async Task<byte[]> GenerateTicketPdf(Reservation reservation)
         {
             if (reservation == null)
                 throw new ArgumentNullException(nameof(reservation));
+
+            reservation = await resRepo.GetOneAsync(r => r.Id == reservation.Id, includeFunc: q => q.Include(a => a.Trip)
+                                                                                                        .ThenInclude(t => t.Airplane)
+                                                                                                        .ThenInclude(t => t.Seats)
+                                                                                                        .ThenInclude(t => t.SeatClass)
+                                                                                                     .Include(a=>a.Trip)
+                                                                                                        .ThenInclude(t => t.Airport_From)
+                                                                                                     .Include(a=>a.Trip)
+                                                                                                        .ThenInclude(t => t.Airport_To));
 
             var trip = reservation.Trip;
             Console.WriteLine($"Generating ticket for reservation {reservation.Id}, trip {trip?.Id}");

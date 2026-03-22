@@ -86,7 +86,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
 
             try
             {
-                var ticketPdf = _ticketService.GenerateTicketPdf(reservation);
+                var ticketPdf = await _ticketService.GenerateTicketPdf(reservation);
                 var ticketFileName = $"SKYSTREAM_Ticket_{reservation.Id:D6}.pdf";
                 
                 return File(ticketPdf, "application/pdf", ticketFileName);

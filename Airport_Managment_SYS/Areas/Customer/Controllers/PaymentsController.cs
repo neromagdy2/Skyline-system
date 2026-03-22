@@ -161,7 +161,7 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             // Generate PDF ticket and send email
             try
             {
-                var ticketPdf = _ticketService.GenerateTicketPdf(reservation);
+                var ticketPdf = await _ticketService.GenerateTicketPdf(reservation);
                 var ticketFileName = $"SKYSTREAM_Ticket_{reservation.Id:D6}.pdf";
                 
                 var emailBody = $@"
@@ -204,17 +204,18 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             {
                 TempData["Warning"] = "Payment successful, but there was an issue sending your ticket email. Please contact support.";
             }
-                       _ReservationRepository.Update(reservation);
-                       _ReservationRepository.CommitAsync().Wait();
-                            var payment = new Payment
-                            {
-                               Total = (float)reservation.TotalPrice,
-                                ApplicationUserId = user.Id
-                            };
-                            await _paymentRepository.AddAsync(payment);
-                            await _paymentRepository.CommitAsync();
 
-                       return View();   
+            _ReservationRepository.Update(reservation);
+            _ReservationRepository.CommitAsync().Wait();
+                var payment = new Payment
+                {
+                    Total = (float)reservation.TotalPrice,
+                    ApplicationUserId = user.Id
+                };
+                await _paymentRepository.AddAsync(payment);
+                await _paymentRepository.CommitAsync();
+
+            return View(reservation);   
         }
         public IActionResult cancel()
         {
