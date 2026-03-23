@@ -1,7 +1,7 @@
 ﻿
 
 
-@model Airport_Managment_SYS.Areas.Customer.ViewModels.SearchTripsVM
+@model Airport_Managment_SYS.Areas.Customer.ViewModels.HomeVM
 
 @{
     Layout = "_customer_layout";
@@ -90,12 +90,12 @@
                                 flight_takeoff
                             </span>
 
-                            <select asp-for="DepartureCity"
+                            <select asp-for="SearchTripsVM.DepartureCity"
                                     class="w-full bg-transparent border-none focus:ring-0 font-semibold text-white">
 
                                 <option class="text-black" value="">Select Departure</option>
 
-                                @foreach (var state in Model.States!)
+                                @foreach (var state in Model.SearchTripsVM.States!)
                                 {
                                     <option class="text-black" value="@state.Id">
                                         @state.Name
@@ -105,7 +105,7 @@
                             </select>
                         </div>
 
-                        <span asp-validation-for="DepartureCity"
+                        <span asp-validation-for="SearchTripsVM.DepartureCity"
                               class="text-red-400 text-sm"></span>
                     </div>
 
@@ -121,16 +121,16 @@
                                 flight_land
                             </span>
 
-                            <select asp-for="ArrivalCity"
+                            <select asp-for="SearchTripsVM.ArrivalCity"
                                     class="w-full bg-transparent border-none focus:ring-0 font-semibold text-white">
 
                                 <option class="text-black" value="">Select Destination</option>
 
-                                @foreach (var state in Model.States!)
+                                @foreach (var state in Model.SearchTripsVM.States!)
                                 {
                                     <option class="text-black"
                                             value="@state.Id"
-                                            selected="@(Model.ArrivalCity == state.Id)">
+                                            selected="@(Model.SearchTripsVM.ArrivalCity == state.Id)">
                                         @state.Name
                                     </option>
                                 }
@@ -138,7 +138,7 @@
                             </select>
                         </div>
 
-                        <span asp-validation-for="ArrivalCity"
+                        <span asp-validation-for="SearchTripsVM.ArrivalCity"
                               class="text-red-400 text-sm"></span>
                     </div>
 
@@ -154,15 +154,14 @@
                                 calendar_today
                             </span>
 
-                            <input asp-for="DepartureTime"
+                            <input asp-for="SearchTripsVM.DepartureTime"
                                    type="date"
                                    min="@DateTime.UtcNow"
                                    value="@DateTime.UtcNow.Date"
                                    class="w-full border-none bg-transparent p-0 font-semibold focus:ring-0 text-white" />
-
                         </div>
 
-                        <span asp-validation-for="DepartureTime"
+                        <span asp-validation-for="SearchTripsVM.DepartureTime"
                               class="text-red-400 text-sm"></span>
                     </div>
 

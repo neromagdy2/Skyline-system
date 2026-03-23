@@ -35,50 +35,60 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var trips = await _tripRepository.GetAsync();
+            var random = new Random();
+            List<int> tripsNo= new List<int>();
+            for (int i = 0; i < 3; i++)
+            {
+                tripsNo.Add(random.Next(trips.Count()));
+
+            }
+
+            trips=trips.Where((t, index) => tripsNo.Contains(index)).ToList();
+
             var seatClasses = await _seatClassesRepository.GetAsync();
             var governerateStates = await _governerateStateRepository.GetAsync();
-            return View(new SearchTripsVM() { States = governerateStates ,seatClasses=seatClasses});
+            return View(new HomeVM() { SearchTripsVM = new SearchTripsVM() {
+                States = governerateStates, 
+                seatClasses = seatClasses }, 
+                trips = trips.ToList() });
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchTrips(SearchTripsVM searchTripsVM, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> SearchTrips(HomeVM homeVM, int page = 1, int pageSize = 10)
         {
             if (!ModelState.IsValid)
             {
-                searchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
-                searchTripsVM.States = await _governerateStateRepository.GetAsync();
-                return View("Index", searchTripsVM);
+              homeVM.SearchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
+                homeVM.SearchTripsVM.States = await _governerateStateRepository.GetAsync();
+                return View("Index", homeVM);
             }
-            searchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
-           searchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
-
-            var startDate = searchTripsVM.DepartureTime.Date;
-            var endDate = startDate.AddDays(1);
+            homeVM.SearchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
+           homeVM.SearchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
 
             var trips = await _tripRepository.GetAsync(
-                t => t.Airport_FromId == searchTripsVM.DepartureCity &&
-                     t.Airport_ToId == searchTripsVM.ArrivalCity &&
-                     t.DateTime >= startDate &&
-                     t.DateTime < endDate,
+                t => t.Airport_FromId == homeVM.SearchTripsVM.DepartureCity &&
+                     t.Airport_ToId == homeVM.SearchTripsVM.ArrivalCity &&
+                     t.DateTime.Year == homeVM.SearchTripsVM.DepartureTime.Year&&t.DateTime.Month==homeVM.SearchTripsVM.DepartureTime.Month&& t.DateTime.Day == homeVM.SearchTripsVM.DepartureTime.Day,
                 includeFunc: q => q
                     .Include(t => t.Airport_From)
                     .Include(t => t.Airport_To)
                     .Include(t => t.TripSeats)
                         .ThenInclude(ts => ts.Seat)
             );
-            if (searchTripsVM.MaxPrice >0)
+            if (homeVM.SearchTripsVM.MaxPrice >0)
             {
-                trips = trips.Where(t => t.Price < searchTripsVM.MaxPrice);
+                trips = trips.Where(t => t.Price < homeVM.SearchTripsVM.MaxPrice);
 
             }
-            if (searchTripsVM.SeatClassIds != null && searchTripsVM.SeatClassIds.Any())
+            if (homeVM.SearchTripsVM.SeatClassIds != null && homeVM.SearchTripsVM.SeatClassIds.Any())
             {
                 trips = trips.Where(t =>
                     t.TripSeats != null &&
                     t.TripSeats.Any(ts =>
                       
                         ts.Seat != null &&
-                        searchTripsVM.SeatClassIds.Contains(ts.Seat.seatClassId)
+                        homeVM.SearchTripsVM.SeatClassIds.Contains(ts.Seat.seatClassId)
                     ));
             }
             
@@ -88,13 +98,13 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             
             trips = trips.Skip((page - 1) * pageSize).Take(pageSize);
             
-            searchTripsVM.trips = trips;
-            searchTripsVM.CurrentPage = page;
-            searchTripsVM.PageSize = pageSize;
-            searchTripsVM.TotalItems = totalItems;
-            searchTripsVM.TotalPages = totalPages;
+            homeVM.SearchTripsVM.trips = trips;
+            homeVM.SearchTripsVM.CurrentPage = page;
+            homeVM.SearchTripsVM.PageSize = pageSize;
+            homeVM.SearchTripsVM.TotalItems = totalItems;
+            homeVM.SearchTripsVM.TotalPages = totalPages;
 
-            return View(searchTripsVM);
+            return View(homeVM);
         }
 
 
