@@ -22,6 +22,7 @@ namespace Airport_Managment_SYS.DataAccess
         public DbSet<Seat > Seats { get; set; }
         public DbSet<TripSeat> TripSeats { get; set; }
         public DbSet<ChatbotQuestion> ChatbotQuestions { get; set; }
+        public DbSet<PassengerTicketData> PassengerTicketData { get; set; }
         public DbSet <Nationalities> Nationalities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

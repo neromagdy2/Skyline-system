@@ -4,5 +4,6 @@
     {
         public SearchTripsVM SearchTripsVM { get; set; }
         public List<Trip> ?trips { get; set; }
+        public List <Reservation>?reservations { get; set; }
     }
 }
