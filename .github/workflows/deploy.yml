@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest   # Required for IIS WebDeploy executable
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
