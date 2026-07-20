@@ -1,0 +1,32 @@
+name: Deploy ASP.NET App to MonsterASP
+
+on:
+  push:
+    branches:
+      - main   # Change to 'master' if your main branch is named master
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest   # Required for IIS WebDeploy executable
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+          cache: true
+
+      - name: Publish project
+        run: dotnet publish --configuration Release --output ./publish
+
+      - name: Deploy via WebDeploy
+        uses: jahbenjah/SmarterASP.NET-web-deploy@1.0.0
+        with:
+          website-name: ${{ secrets.WEBSITE_NAME }}
+          server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
+          server-username: ${{ secrets.SERVER_USERNAME }}
+          server-password: ${{ secrets.SERVER_PASSWORD }}
+          source-path: './publish'
