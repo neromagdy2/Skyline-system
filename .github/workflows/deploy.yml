@@ -3,7 +3,7 @@ name: Deploy ASP.NET App to MonsterASP
 on:
   push:
     branches:
-      - main   # Change to 'master' if your main branch is named master
+      - master
 
 jobs:
   build-and-deploy:
@@ -20,7 +20,7 @@ jobs:
           cache: true
 
       - name: Publish project
-        run: dotnet publish --configuration Release --output ./publish
+        run: dotnet publish --configuration Release --runtime win-x64 --self-contained true --output ./publish
 
       - name: Deploy via WebDeploy
         uses: jahbenjah/SmarterASP.NET-web-deploy@1.0.0
