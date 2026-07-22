@@ -1,16 +1,15 @@
 ﻿
 
 
-@model Airport_Managment_SYS.Areas.Customer.ViewModels.SearchTripsVM
+@model Airport_Managment_SYS.Areas.Customer.ViewModels.HomeVM
 
 @{
     Layout = "_customer_layout";
-    ViewData["Title"] = "Home";
 }
 
 
         <main class="flex-1">
-            @if (TempData["Warning"] != null)
+            @* @if (TempData["Warning"] != null)
             {
                 <div id ="autoCloseAlert" class="alert alert-warning alert-dismissible fade show mb-4" role="alert" style="postion: relative;z-index : 30;">
                     @TempData["Warning"]
@@ -26,7 +25,7 @@
                                alert.remove();
 				              }  }, 150);} }, 5000);
 		          </script>
-            }
+            } *@
     <section class="relative w-screen min-h-[750px] flex flex-col items-center justify-center pt-12 pb-32 overflow-hidden -mx-[50vw] left-[50%] right-[50%]">
 
         <!-- Background -->
@@ -90,12 +89,12 @@
                                 flight_takeoff
                             </span>
 
-                            <select asp-for="DepartureCity"
+                            <select asp-for="SearchTripsVM.DepartureCity"
                                     class="w-full bg-transparent border-none focus:ring-0 font-semibold text-white">
 
                                 <option class="text-black" value="">Select Departure</option>
 
-                                @foreach (var state in Model.States!)
+                                @foreach (var state in Model.SearchTripsVM.States!)
                                 {
                                     <option class="text-black" value="@state.Id">
                                         @state.Name
@@ -105,7 +104,7 @@
                             </select>
                         </div>
 
-                        <span asp-validation-for="DepartureCity"
+                        <span asp-validation-for="SearchTripsVM.DepartureCity"
                               class="text-red-400 text-sm"></span>
                     </div>
 
@@ -121,16 +120,16 @@
                                 flight_land
                             </span>
 
-                            <select asp-for="ArrivalCity"
+                            <select asp-for="SearchTripsVM.ArrivalCity"
                                     class="w-full bg-transparent border-none focus:ring-0 font-semibold text-white">
 
                                 <option class="text-black" value="">Select Destination</option>
 
-                                @foreach (var state in Model.States!)
+                                @foreach (var state in Model.SearchTripsVM.States!)
                                 {
                                     <option class="text-black"
                                             value="@state.Id"
-                                            selected="@(Model.ArrivalCity == state.Id)">
+                                            selected="@(Model.SearchTripsVM.ArrivalCity == state.Id)">
                                         @state.Name
                                     </option>
                                 }
@@ -138,7 +137,7 @@
                             </select>
                         </div>
 
-                        <span asp-validation-for="ArrivalCity"
+                        <span asp-validation-for="SearchTripsVM.ArrivalCity"
                               class="text-red-400 text-sm"></span>
                     </div>
 
@@ -154,15 +153,14 @@
                                 calendar_today
                             </span>
 
-                            <input asp-for="DepartureTime"
+                            <input asp-for="SearchTripsVM.DepartureTime"
                                    type="date"
                                    min="@DateTime.UtcNow"
                                    value="@DateTime.UtcNow.Date"
                                    class="w-full border-none bg-transparent p-0 font-semibold focus:ring-0 text-white" />
-
                         </div>
 
-                        <span asp-validation-for="DepartureTime"
+                        <span asp-validation-for="SearchTripsVM.DepartureTime"
                               class="text-red-400 text-sm"></span>
                     </div>
 
@@ -184,66 +182,103 @@
             </div>
         </div>
 
-    </section>            <section class="max-w-7xl mx-auto px-6 py-24">
-                <div class="mb-32">
-                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-                        <div class="space-y-2">
-                            <p class="text-primary font-bold tracking-[0.3em] uppercase text-[10px]">Your Itinerary</p>
-                            <h3 class="text-4xl font-800 text-white tracking-tight">Active Reservations</h3>
-                        </div>
-                        <a class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors" href="#">
-                            <span class="text-xs font-bold tracking-widest uppercase">View all voyages</span>
-                            <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
-                        </a>
-                    </div>
-                    <div class="max-w-4xl mx-auto">
-                        <div class="glass-card rounded-2xl p-1 group hover:border-primary/30 transition-all duration-500">
-                            <div class="bg-background-dark/40 rounded-[calc(1.5rem-4px)] overflow-hidden">
-                                <div class="flex flex-col md:flex-row">
-                                    <div class="w-full md:w-1/3 relative h-64 md:h-auto overflow-hidden">
-                                        <div class="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-[2s]" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC9hnlQu4ud6hAa6rQQAu2Q5qCHjlNWJN72yQ8BXcQy1OoOuK-qmWtEp_QB1HPNJpdtpaOLJJNmpy_w3AcurGaIYpVOwRMlPSjdv4Fivai6vNcMfNvJe_cwVvhlYvq8mhNV1EtHr9SXPAux5_-Cv2tJJZaRHl1sp3OaDNCmYUvINYGs995tnDLuDZ2k2WmDyqUOVVjYkaKJlle78E76lkoWtMoiblUcTTfnHeOV6_pt_1_Pnub2x-yD5IQWFpsZ-hFfJOX4EJQQK4I");'></div>
-                                        <div class="absolute inset-0 bg-gradient-to-r from-background-dark/40 to-transparent"></div>
-                                        <div class="absolute top-6 left-6 bg-primary/20 backdrop-blur-md px-4 py-2 rounded-lg border border-primary/40">
-                                            <span class="text-[10px] font-extrabold text-white uppercase tracking-widest">Active</span>
+    </section>       
+    <section class="max-w-7xl mx-auto px-6 py-24">
+
+        <div class="mb-32">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div class="space-y-2">
+                    <p class="text-primary font-bold tracking-[0.3em] uppercase text-[10px]">Your Itinerary</p>
+                    <h3 class="text-4xl font-800 text-white tracking-tight">Active Reservations</h3>
+                </div>
+                <a href="#" class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
+                    <span class="text-xs font-bold tracking-widest uppercase">View all voyages</span>
+                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+                </a>
+            </div>
+
+            @if (Model.reservations == null || !Model.reservations.Any())
+            {
+                <div class="text-center py-20 text-slate-400">
+                    <p class="text-xl">You don't have any active reservations yet.</p>
+                </div>
+            }
+            else
+            {
+                <!-- Horizontal Scrollable Carousel -->
+                <div class="max-w-6xl mx-auto">
+                    <div id="reservations-slider"
+                         class="flex gap-6 overflow-x-auto pb-10 snap-x snap-mandatory scroll-smooth scrollbar-hide
+                            touch-pan-x -webkit-overflow-scrolling-touch">
+
+                        @foreach (var reservation in Model.reservations)
+                        {
+                            var trip = reservation.Trip;
+
+                            <div class="min-w-[90%] md:min-w-[420px] lg:min-w-[450px] flex-shrink-0 snap-center">
+                                <div class="glass-card rounded-3xl overflow-hidden border border-white/10 hover:border-primary/40 transition-all duration-300 shadow-xl">
+                                    <div class="flex flex-col md:flex-row">
+
+                                        <!-- Image -->
+                                        <div class="md:w-5/12 relative h-72 md:h-auto overflow-hidden">
+                                            <img src="https://picsum.photos/id/1015/800/600"
+                                                 class=" h-100 w-100 object-cover transition-transform duration-700 hover:scale-110"
+                                                 alt="Destination Image">
+                                            <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+
+                                            <div class="absolute top-6 left-6">
+                                                <span class="px-6 py-2 bg-emerald-600 text-white text-xs font-bold rounded-2xl tracking-wider">
+                                                    ACTIVE
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex-1 p-10 flex flex-col justify-between">
-                                        <div>
-                                            <div class="flex justify-between items-start mb-8">
-                                                <div class="space-y-1">
-                                                    <h4 class="text-3xl font-800 text-white tracking-tight">Paris, France</h4>
-                                                    <p class="text-slate-400 font-medium">Flight ST-204 • Departing October 24</p>
+
+                                        <!-- Content -->
+                                        <div class="md:w-7/12 p-8 md:p-10 bg-[#0a1428] flex flex-col justify-between">
+                                            <div>
+                                                <div class="flex justify-between">
+                                                    <div>
+                                                        <h4 class="text-3xl font-bold text-white">
+                                                            @trip?.Airport_To?.GovernerateState?.Name 
+                                                        </h4>
+                                                        <p class="text-slate-400 mt-1">
+                                                            Flight @(trip?.Id.ToString() ?? "1") • Departing @(trip?.DateTime.ToString("MMMM dd") ?? "March 22")
+                                                        </p>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <span class="block text-[10px] uppercase tracking-[1px] text-blue-400 font-semibold">BOARDING GATE</span>
+                                                        <span class="text-4xl font-bold text-white">@(trip?.Airport_From.Name ?? "Borg El Arab")</span>
+                                                    </div>
                                                 </div>
-                                                <div class="text-right flex flex-col items-end">
-                                                    <span class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Boarding Gate</span>
-                                                    <span class="text-4xl font-800 text-white">B12</span>
+
+                                                <!-- Progress -->
+                                                <div class="mt-12">
+                                                    <div class="flex justify-between text-xs uppercase tracking-widest text-slate-400 mb-3">
+                                                        <span>Preparation Status</span>
+                                                        <span>65% Complete</span>
+                                                    </div>
+                                                    <div class="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-400 w-[65%] rounded-full"></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="space-y-4 mb-10">
-                                                <div class="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                                                    <span>Preparation Status</span>
-                                                    <span>65% Complete</span>
-                                                </div>
-                                                <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                                    <div class="bg-gradient-to-r from-primary to-accent h-full w-2/3 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
-                                                </div>
+
+                                            <div class="flex gap-6 mt-10">
+                                                <a href="#" class="font-bold text-white flex items-center gap-2 hover:text-blue-400 transition-colors">
+                                                    INITIATE CHECK-IN
+                                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                                </a>
+                                                <a href="#" class="text-slate-400 hover:text-white transition-colors">Manage Trip</a>
                                             </div>
-                                        </div>
-                                        <div class="flex flex-wrap items-center gap-10">
-                                            <a class="group/link flex items-center gap-2 text-white font-bold text-sm tracking-widest uppercase border-b-2 border-primary/50 pb-1 hover:border-primary transition-all" href="#">
-                                                Initiate Check-in
-                                                <span class="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform">east</span>
-                                            </a>
-                                            <a class="text-slate-500 hover:text-slate-300 font-bold text-sm tracking-widest uppercase transition-colors" href="#">
-                                                Manage Trip
-                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
+            }
+        </div>
                 <div class="mb-32">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-16 text-center md:text-left">
                         <div class="space-y-2">
@@ -252,75 +287,69 @@
                         </div>
                         <p class="text-slate-400 max-w-sm">Exclusive access to the world's most desired locales with signature SkyStream service.</p>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+                @if (Model.trips != null && Model.trips.Any())
+                {
+                    foreach (var trip in Model.trips)
+                    {
                         <div class="group relative aspect-[3/4] overflow-hidden rounded-3xl cursor-pointer bg-slate-900 border border-white/5 hover:border-primary/40 transition-all duration-500">
-                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[3s] group-hover:scale-110 opacity-70" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDemsvn13MhAz6QxDf_-IZq_g9XIp5h3Sql1NmYrOZjmYinKN8-Uh7yLgB-dRXruAoD-F7P1viY_u11Ho1wFsKjBwb9D3JC28UGxzjyvGywcApxw1bIfWGU2uTvq8OihRMhEWNoYaxWTwiPfFV_IbrHaRDOW8S8KmhENLVc2vHSJSNb_HXpkInUEwr4RuqwbGSms5ZszkevJ7YSSUYYJcgHE-ZYk5DtLSN9LBJCA1ST0fzFMOjrZyvLB6w1u0nh2JQP_zhER1I503s')"></div>
+
+                            <!-- Background -->
+                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[3s] group-hover:scale-110 opacity-70"
+                                 style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDemsvn13MhAz6QxDf_-IZq_g9XIp5h3Sql1NmYrOZjmYinKN8-Uh7yLgB-dRXruAoD-F7P1viY_u11Ho1wFsKjBwb9D3JC28UGxzjyvGywcApxw1bIfWGU2uTvq8OihRMhEWNoYaxWTwiPfFV_IbrHaRDOW8S8KmhENLVc2vHSJSNb_HXpkInUEwr4RuqwbGSms5ZszkevJ7YSSUYYJcgHE-ZYk5DtLSN9LBJCA1ST0fzFMOjrZyvLB6w1u0nh2JQP_zhER1I503s')">
+                            </div>
+
                             <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/20 to-transparent"></div>
+
+                            <!-- Content -->
                             <div class="absolute bottom-0 p-8 w-full">
                                 <div class="flex flex-col gap-4">
-                                    <span class="w-fit bg-primary/20 backdrop-blur-md text-primary text-[9px] font-bold px-3 py-1.5 rounded-full border border-primary/30 uppercase tracking-widest">Cultural Hub</span>
+
+                                    <!-- Tag -->
+                                    <span class="w-fit bg-primary/20 backdrop-blur-md text-primary text-[9px] font-bold px-3 py-1.5 rounded-full border border-primary/30 uppercase tracking-widest">
+                                        Destination
+                                    </span>
+
+                                    <!-- Title -->
                                     <div>
-                                        <h4 class="text-3xl font-800 text-white mb-2">Tokyo</h4>
-                                        <p class="text-slate-400 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 line-clamp-2">Tradition meets the peak of technological advancement in the heart of Japan.</p>
+                                        <h4 class="text-3xl font-800 text-white mb-2">
+                                            @trip?.Airport_To?.GovernerateState?.Name 
+                                        </h4>
+
+                                        <p class="text-slate-400 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 line-clamp-2">
+                                            Explore amazing السفر experience with premium comfort.
+                                        </p>
                                     </div>
+
+                                    <!-- Price -->
                                     <div class="flex items-center justify-between pt-4 border-t border-white/10">
                                         <div class="flex flex-col">
-                                            <span class="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">Starting At</span>
-                                            <span class="text-white font-800 text-xl tracking-tight">$890</span>
+                                            <span class="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">
+                                                Starting At
+                                            </span>
+
+                                            <span class="text-white font-800 text-xl tracking-tight">
+                                                $@trip.Price 
+                                            </span>
                                         </div>
+
                                         <div class="size-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-background-dark transition-all duration-300">
                                             <span class="material-symbols-outlined text-lg">arrow_outward</span>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
-                        <div class="group relative aspect-[3/4] overflow-hidden rounded-3xl cursor-pointer bg-slate-900 border border-white/5 hover:border-primary/40 transition-all duration-500">
-                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[3s] group-hover:scale-110 opacity-70" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD99CW0oMgfxIqcDH35o-PuiTDfrOY-c2W0hELwtmRoN4636W9BOjvcZe2KYnrSXgZduZoJ4AelWDC2Bk7s3FkyfbGm8QXbdWkqrPpHKjUfoJkIaCKbWsSAlqGXgvhmAeOSCvRBQ8ntjs7jgoKkVCM-MARSXroKAf9lAstSL9jazcieYgL7LQqUemkvfyYIVXU308gRDkIQ4jXNuiVoYK94N6VSJjXL99ofZyIRS9yOnEkAOk19sJAmsip3Oe28G__URVAhQhHmhI4')"></div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/20 to-transparent"></div>
-                            <div class="absolute bottom-0 p-8 w-full">
-                                <div class="flex flex-col gap-4">
-                                    <span class="w-fit bg-accent/20 backdrop-blur-md text-accent text-[9px] font-bold px-3 py-1.5 rounded-full border border-accent/30 uppercase tracking-widest">New Skyline</span>
-                                    <div>
-                                        <h4 class="text-3xl font-800 text-white mb-2">Dubai</h4>
-                                        <p class="text-slate-400 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 line-clamp-2">Architectural marvels and desert serenity redefined for the modern traveler.</p>
-                                    </div>
-                                    <div class="flex items-center justify-between pt-4 border-t border-white/10">
-                                        <div class="flex flex-col">
-                                            <span class="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">Starting At</span>
-                                            <span class="text-white font-800 text-xl tracking-tight">$1,250</span>
-                                        </div>
-                                        <div class="size-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-background-dark transition-all duration-300">
-                                            <span class="material-symbols-outlined text-lg">arrow_outward</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="group relative aspect-[3/4] overflow-hidden rounded-3xl cursor-pointer bg-slate-900 border border-white/5 hover:border-primary/40 transition-all duration-500">
-                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[3s] group-hover:scale-110 opacity-70" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAZJAyN9szoU1QhgznM0-LsY077PdHEA8QSmE2ue2vR3a9Z4EoO7S6TQzDpSBBHw0rBmB_7x7uAe83659dd1e1DxIqfFcs57iN-5Ffg6Fzc1lbJOVVPQlD2wmGATU-5U6CLBv28pXuisoksZVBF4nD1ZxPNaAUNUxhxYppammrDIa4CQpOP3M8v8Y4TniszsdY9MDHl0SO9wWlzbBeH92Pq3OU9ZA7KnjEMx1A40mWWo-3CNJv2SRA-BBkJiBO2g5OSEhPu-vhRUro')"></div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/20 to-transparent"></div>
-                            <div class="absolute bottom-0 p-8 w-full">
-                                <div class="flex flex-col gap-4">
-                                    <span class="w-fit bg-white/10 backdrop-blur-md text-white text-[9px] font-bold px-3 py-1.5 rounded-full border border-white/20 uppercase tracking-widest">Vibrant Rhythm</span>
-                                    <div>
-                                        <h4 class="text-3xl font-800 text-white mb-2">Rio</h4>
-                                        <p class="text-slate-400 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 line-clamp-2">The energy of South America's most iconic coast awaits your arrival.</p>
-                                    </div>
-                                    <div class="flex items-center justify-between pt-4 border-t border-white/10">
-                                        <div class="flex flex-col">
-                                            <span class="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">Starting At</span>
-                                            <span class="text-white font-800 text-xl tracking-tight">$980</span>
-                                        </div>
-                                        <div class="size-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-background-dark transition-all duration-300">
-                                            <span class="material-symbols-outlined text-lg">arrow_outward</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-white text-center col-span-3">No Trips Available</p>
+                }
+
+            </div></div>
                 <div class="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-slate-900 to-slate-950 border border-white/5">
                     <div class="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[120px] rounded-full"></div>
                     <div class="relative flex flex-col lg:flex-row gap-16 p-12 lg:p-24 items-center">

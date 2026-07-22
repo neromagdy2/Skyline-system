@@ -1,0 +1,65 @@
+﻿@model Airport_Managment_SYS.Areas.Customer.ViewModels.ReserveVM
+
+<form asp-action="ConfirmReservation" method="post" enctype="multipart/form-data">
+
+    <!-- Hidden reservation data -->
+    <input type="hidden" asp-for="TripId" />
+    <input type="hidden" asp-for="SeatClassId" />
+    <input type="hidden" asp-for="TotalPrice" />
+
+    @foreach (var seat in Model.SeatIds)
+    {
+        <input type="hidden" name="SeatIds" value="@seat" />
+    }
+
+   @*  <!-- Passenger Data -->
+    <input asp-for="PassengerName" placeholder="Name" />
+    <input asp-for="PassengerNationality" placeholder="Nationality" />
+    <input asp-for="PassengerPassportNumber" placeholder="Passport No" />
+    <input asp-for="PassportExpireDate" type="date" /> *@
+
+    <div>
+        <label class="text-sm text-white">Passport Image (PNG / JPG)</label>
+
+        <input type="file"
+               name="PassengerImgUrl"
+               accept=".png,.jpg,.jpeg"
+               onchange="previewImage(event)"
+               class="w-full p-3 rounded-lg bg-white/10 text-white border border-white/20" />
+
+        <!-- Preview -->
+        <img id="preview"
+             class="hidden w-40 mt-4 rounded-lg border border-white/20 shadow-lg" />
+
+        <!-- Error -->
+        <p id="fileError" class="text-red-400 text-sm mt-2 hidden"></p>
+    </div>
+    <button type="submit">Continue</button>
+</form>
+
+<script>
+    function previewImage(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('preview');
+        const error = document.getElementById('fileError');
+
+        if (!file) return;
+
+        // ✅ Validation (نوع الصورة)
+        const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+        if (!allowedTypes.includes(file.type)) {
+            error.innerText = "Only PNG or JPG allowed";
+            error.classList.remove("hidden");
+            preview.classList.add("hidden");
+            e.target.value = "";
+            return;
+        }
+
+        error.classList.add("hidden");
+
+        // ✅ Preview
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove("hidden");
+    }
+</script>
