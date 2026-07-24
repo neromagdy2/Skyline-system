@@ -59,13 +59,13 @@
 
                                     <!-- To -->
                                     <div class="col-12 col-md-6 col-lg-3">
-                                        <label class="form-label text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">To</label>
+                                        <label class="form-label text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">To (Optional)</label>
                                         <div class="glass-input rounded-3 d-flex align-items-center px-3" style="height: 56px;">
                                             <i class="bi bi-airplane-engines-fill text-white-50 me-2"></i>
                                             <select asp-for="SearchTripsVM.ArrivalCity"
                                                     class="form-select bg-transparent border-0 shadow-none text-white fw-semibold p-0"
                                                     style="background-image: none; padding-right: 0;">
-                                                <option class="bg-dark" value="">Select Destination</option>
+                                                <option class="bg-dark" value="">All Destinations</option>
                                                 @foreach (var state in Model.SearchTripsVM.States!)
                                                 {
                                                     <option class="bg-dark"
@@ -76,21 +76,18 @@
                                                 }
                                             </select>
                                         </div>
-                                        <span asp-validation-for="SearchTripsVM.ArrivalCity" class="text-danger small"></span>
                                     </div>
 
                                     <!-- Date -->
                                     <div class="col-12 col-md-6 col-lg-3">
-                                        <label class="form-label text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Departure Date</label>
+                                        <label class="form-label text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Departure Date (Optional)</label>
                                         <div class="glass-input rounded-3 d-flex align-items-center px-3" style="height: 56px;">
                                             <i class="bi bi-calendar3 text-white-50 me-2"></i>
                                             <input asp-for="SearchTripsVM.DepartureTime"
                                                    type="date"
                                                    min="@DateTime.UtcNow.ToString("yyyy-MM-dd")"
-                                                   value="@DateTime.UtcNow.ToString("yyyy-MM-dd")"
                                                    class="form-control bg-transparent border-0 shadow-none text-white fw-semibold p-0" />
                                         </div>
-                                        <span asp-validation-for="SearchTripsVM.DepartureTime" class="text-danger small"></span>
                                     </div>
 
                                     <!-- Search Button -->

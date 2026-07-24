@@ -27,10 +27,10 @@
 
                 <!-- To -->
                 <div class="d-flex flex-column w-100" style="max-width: 220px;">
-                    <span class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">To</span>
+                    <span class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">To (Optional)</span>
                     <select asp-for="SearchTripsVM.ArrivalCity"
                             class="form-select-dark w-100 fw-bold">
-                        <option value="">Select Arrival</option>
+                        <option value="">All Destinations</option>
                         @for (int i = 0; i < Model.SearchTripsVM.States.Count(); i++)
                         {
                             var state = Model.SearchTripsVM.States.ElementAt(i);
@@ -44,7 +44,7 @@
 
                 <!-- Date -->
                 <div class="d-flex flex-column w-100" style="max-width: 220px;">
-                    <span class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Date</span>
+                    <span class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Date (Optional)</span>
                     <input asp-for="SearchTripsVM.DepartureTime"
                            type="date"
                            class="form-select-dark w-100 fw-bold" />
@@ -196,19 +196,28 @@
 
                 <!-- Pagination -->
                 @{
-                    var departureDateStr = Model.SearchTripsVM.DepartureTime != default ? Model.SearchTripsVM.DepartureTime.ToString("yyyy-MM-dd") : "";
+                    var departureDateStr = Model.SearchTripsVM.DepartureTime != default ? Model.SearchTripsVM.DepartureTime.Value.ToString("yyyy-MM-dd") : "";
+                    var queryParams = new List<string>();
+                    if (Model.SearchTripsVM.DepartureCity > 0) queryParams.Add($"SearchTripsVM.DepartureCity={Model.SearchTripsVM.DepartureCity}");
+                    if (Model.SearchTripsVM.ArrivalCity > 0) queryParams.Add($"SearchTripsVM.ArrivalCity={Model.SearchTripsVM.ArrivalCity}");
+                    if (!string.IsNullOrEmpty(departureDateStr)) queryParams.Add($"SearchTripsVM.DepartureTime={departureDateStr}");
+                    if (Model.SearchTripsVM.MaxPrice > 0) queryParams.Add($"SearchTripsVM.MaxPrice={Model.SearchTripsVM.MaxPrice}");
+                    if (Model.SearchTripsVM.SeatClassIds != null)
+                    {
+                        foreach(var id in Model.SearchTripsVM.SeatClassIds)
+                        {
+                            queryParams.Add($"SearchTripsVM.SeatClassIds={id}");
+                        }
+                    }
+                    var queryString = string.Join("&", queryParams);
+                    var qsPrefix = string.IsNullOrEmpty(queryString) ? "" : "&" + queryString;
                 }
                 @if (Model.SearchTripsVM.TotalPages > 1)
                 {
                     <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
                         @if (Model.SearchTripsVM.CurrentPage > 1)
                         {
-                            <a asp-action="SearchTrips"
-                               asp-route-page="@(Model.SearchTripsVM.CurrentPage - 1)"
-                               asp-route-DepartureCity="@Model.SearchTripsVM.DepartureCity"
-                               asp-route-ArrivalCity="@Model.SearchTripsVM.ArrivalCity"
-                               asp-route-DepartureTime="@departureDateStr"
-                               asp-route-MaxPrice="@Model.SearchTripsVM.MaxPrice"
+                            <a href="?page=@(Model.SearchTripsVM.CurrentPage - 1)@qsPrefix"
                                class="pagination-btn">
                                 Previous
                             </a>
@@ -217,12 +226,7 @@
                         @for (int i = Math.Max(1, Model.SearchTripsVM.CurrentPage - 2); i <= Math.Min(Model.SearchTripsVM.TotalPages, Model.SearchTripsVM.CurrentPage + 2); i++)
                         {
                             var isActive = i == Model.SearchTripsVM.CurrentPage;
-                            <a asp-action="SearchTrips"
-                               asp-route-page="@i"
-                               asp-route-DepartureCity="@Model.SearchTripsVM.DepartureCity"
-                               asp-route-ArrivalCity="@Model.SearchTripsVM.ArrivalCity"
-                               asp-route-DepartureTime="@departureDateStr"
-                               asp-route-MaxPrice="@Model.SearchTripsVM.MaxPrice"
+                            <a href="?page=@i@qsPrefix"
                                class="pagination-btn @(isActive ? "active" : "")">
                                 @i
                             </a>
@@ -230,12 +234,7 @@
 
                         @if (Model.SearchTripsVM.CurrentPage < Model.SearchTripsVM.TotalPages)
                         {
-                            <a asp-action="SearchTrips"
-                               asp-route-page="@(Model.SearchTripsVM.CurrentPage + 1)"
-                               asp-route-DepartureCity="@Model.SearchTripsVM.DepartureCity"
-                               asp-route-ArrivalCity="@Model.SearchTripsVM.ArrivalCity"
-                               asp-route-DepartureTime="@departureDateStr"
-                               asp-route-MaxPrice="@Model.SearchTripsVM.MaxPrice"
+                            <a href="?page=@(Model.SearchTripsVM.CurrentPage + 1)@qsPrefix"
                                class="pagination-btn">
                                 Next
                             </a>

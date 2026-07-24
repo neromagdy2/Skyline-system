@@ -516,8 +516,8 @@ namespace Airport_Managment_SYS.Utilities
                 }
 
                 // ensure test trips exist
-                var existingTrips = (await _tripRepository.GetAsync(t => t.Price == 199.99f || t.Price == 299.99f)).ToList();
-                if (existingTrips.Count < 2)
+                var existingTrips = (await _tripRepository.GetAsync()).ToList();
+                if (existingTrips.Count < 10)
                 {
                     var airports = (await _airportRepository.GetAsync()).ToList();
                     if (airports.Count >= 2)
@@ -526,35 +526,47 @@ namespace Airport_Managment_SYS.Utilities
                         planeA = (await _airplaneRepository.GetAsync(p => p.Name == "TestPlaneA")).First();
                         planeB = (await _airplaneRepository.GetAsync(p => p.Name == "TestPlaneB")).First();
 
-                        var trip1 = new Trip
-                        {
-                            Price = 199.99f,
-                            DateTime = new DateTime(2026, 3, 1, 9, 0, 0),
-                            ArrivalDateTime = new DateTime(2026, 3, 1, 12, 0, 0),
-                            AirplaneId = planeA.Id,
-                            Airport_FromId = airports[1].Id,
-                            Airport_ToId = airports[0].Id,
-                            IsDeleted = false,
-                            TripSeats = new List<TripSeat>()
-                        };
-                        var trip2 = new Trip
-                        {
-                            Price = 299.99f,
-                            DateTime = new DateTime(2026, 3, 2, 15, 30, 0),
-                            ArrivalDateTime = new DateTime(2026, 3, 2, 18, 30, 0),
-                            AirplaneId = planeB.Id,
-                            Airport_FromId = airports[0].Id,
-                            Airport_ToId = airports[1].Id,
-                            IsDeleted = false,
-                            TripSeats = new List<TripSeat>()
-                        };
-                        var seatsPlaneA = (await _seatRepository.GetAsync(s => s.AirplaneId == planeA.Id)).ToList();
-                        foreach (var s in seatsPlaneA) trip1.TripSeats.Add(new TripSeat { SeatId = s.Id, IsBooked = false });
-                        var seatsPlaneB = (await _seatRepository.GetAsync(s => s.AirplaneId == planeB.Id)).ToList();
-                        foreach (var s in seatsPlaneB) trip2.TripSeats.Add(new TripSeat { SeatId = s.Id, IsBooked = false });
+                        // Create trips from each airport to every other airport
+                        var startDate = DateTime.Now;
+                        var tripCounter = 0;
 
-                        await _tripRepository.AddAsync(trip1);
-                        await _tripRepository.AddAsync(trip2);
+                        for (int i = 0; i < airports.Count; i++)
+                        {
+                            for (int j = 0; j < airports.Count; j++)
+                            {
+                                if (i == j) continue; // Skip same airport
+
+                                tripCounter++;
+                                var daysOffset = tripCounter % 90;
+                                var hour = tripCounter % 24;
+                                var minute = (tripCounter * 7) % 60;
+                                var departureTime = startDate.AddDays(daysOffset).AddHours(hour).AddMinutes(minute);
+                                var arrivalTime = departureTime.AddHours(3);
+                                var planeId = tripCounter % 2 == 0 ? planeA.Id : planeB.Id;
+                                var price = 150.0f + (Math.Abs(i - j) * 10.0f) + ((tripCounter % 5) * 25.0f);
+
+                                var trip = new Trip
+                                {
+                                    Price = price,
+                                    DateTime = departureTime,
+                                    ArrivalDateTime = arrivalTime,
+                                    AirplaneId = planeId,
+                                    Airport_FromId = airports[i].Id,
+                                    Airport_ToId = airports[j].Id,
+                                    IsDeleted = false,
+                                    TripSeats = new List<TripSeat>()
+                                };
+
+                                // Add seats from the assigned airplane
+                                var seats = (await _seatRepository.GetAsync(s => s.AirplaneId == planeId)).ToList();
+                                foreach (var s in seats)
+                                {
+                                    trip.TripSeats.Add(new TripSeat { SeatId = s.Id, IsBooked = false });
+                                }
+
+                                await _tripRepository.AddAsync(trip);
+                            }
+                        }
                         await _tripRepository.CommitAsync();
                     }
                 }

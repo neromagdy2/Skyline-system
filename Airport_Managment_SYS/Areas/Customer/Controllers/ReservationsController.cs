@@ -23,38 +23,16 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
             _ticketService = ticketService;
         }
 
-        // GET: /Customer/Reservations
-        public async Task<IActionResult> Index(CancellationToken cancellationToken = default)
+        // GET: /Customer/Reservations - Redirected to Bookings
+        public IActionResult Index()
         {
-            var userId = _userManager.GetUserId(User);
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Challenge();
-            }
-
-            var includes = new System.Linq.Expressions.Expression<System.Func<Reservation, object>>[] { r => r.Trip };
-            var reservations = (await _reservationRepo.GetAsync(r => r.ApplicationUserId == userId, includes: includes, cancellationToken: cancellationToken)).ToList();
-
-            decimal total = reservations.Sum(r => r.Trip != null ? (decimal)r.Trip.Price :0m);
-            ViewBag.TotalPrice = total;
-
-            return View(reservations);
+            return RedirectToAction("Bookings", "Home", new { area = "Customer" });
         }
 
-        // GET: /Customer/Reservations/Details?tripId=1
-        public async Task<IActionResult> Details(int tripId, CancellationToken cancellationToken = default)
+        // GET: /Customer/Reservations/Details - Redirected to Bookings
+        public IActionResult Details(int tripId)
         {
-            var userId = _userManager.GetUserId(User);
-            if (string.IsNullOrEmpty(userId)) return Challenge();
-
-            var reservation = await _reservationRepo.GetOneAsync(r => r.TripId == tripId && r.ApplicationUserId == userId,
-                includes: new System.Linq.Expressions.Expression<System.Func<Reservation, object>>[] { r => r.Trip },
-                cancellationToken: cancellationToken);
-
-            if (reservation == null) return NotFound();
-
-            ViewBag.TotalPrice = reservation.Trip != null ? (decimal)reservation.Trip.Price :0m;
-            return View(reservation);
+            return RedirectToAction("Bookings", "Home", new { area = "Customer" });
         }
 
         // GET: /Customer/Reservations/DownloadTicket/{id}

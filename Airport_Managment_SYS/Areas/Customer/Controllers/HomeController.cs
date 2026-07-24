@@ -1,4 +1,4 @@
-﻿using Airport_Managment_SYS.Areas.Customer.ViewModels;
+using Airport_Managment_SYS.Areas.Customer.ViewModels;
 using Airport_Managment_SYS.Repositories;
 using Airport_Managment_SYS.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -72,19 +72,22 @@ namespace Airport_Managment_SYS.Areas.Customer.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchTrips(HomeVM homeVM, int page = 1, int pageSize = 10)
         {
-            if (!ModelState.IsValid)
+            if (homeVM.SearchTripsVM == null)
             {
-              homeVM.SearchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
-                homeVM.SearchTripsVM.States = await _governerateStateRepository.GetAsync();
-                return View("Index", homeVM);
+                homeVM.SearchTripsVM = new SearchTripsVM();
             }
+
             homeVM.SearchTripsVM.States = (await _governerateStateRepository.GetAsync()).ToList();
            homeVM.SearchTripsVM.seatClasses = await _seatClassesRepository.GetAsync();
 
+            // Use today if no departure time specified
+            var searchDate = homeVM.SearchTripsVM.DepartureTime ?? DateTime.Today;
+
+            // Build query - departure city is required, arrival city is optional
             var trips = await _tripRepository.GetAsync(
-                t => t.Airport_FromId == homeVM.SearchTripsVM.DepartureCity &&
-                     t.Airport_ToId == homeVM.SearchTripsVM.ArrivalCity &&
-                     t.DateTime.Year == homeVM.SearchTripsVM.DepartureTime.Year&&t.DateTime.Month==homeVM.SearchTripsVM.DepartureTime.Month&& t.DateTime.Day == homeVM.SearchTripsVM.DepartureTime.Day,
+                t => (homeVM.SearchTripsVM.DepartureCity == 0 || t.Airport_FromId == homeVM.SearchTripsVM.DepartureCity) &&
+                     (homeVM.SearchTripsVM.ArrivalCity == null || homeVM.SearchTripsVM.ArrivalCity == 0 || t.Airport_ToId == homeVM.SearchTripsVM.ArrivalCity) &&
+                     t.DateTime.Date >= searchDate.Date,
                 includeFunc: q => q
                     .Include(t => t.Airport_From)
                     .Include(t => t.Airport_To)
