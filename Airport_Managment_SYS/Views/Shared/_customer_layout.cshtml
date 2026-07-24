@@ -1,277 +1,261 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
-   
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyStream</title>
+
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
-    <script id="tailwind-config">
-        tailwind.config = {
-          darkMode: "class",
-          theme: {
-            extend: {
-              colors: {
-                "primary": "#3b82f6",
-                "accent": "#0ea5e9",
-                "background-dark": "#020617",
-                "card-dark": "rgba(15, 23, 42, 0.6)",
-              },
-              fontFamily: {
-                "display": ["Plus Jakarta Sans", "sans-serif"]
-              },
-              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2.5rem", "full": "9999px"},
-            },
-          },
-        }
-    </script>
-    <style>
-        .glass {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .glow-primary {
-            box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.3);
-        }
-
-        .glow-text {
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-        }
-
-        .mesh-bg {
-            background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.1) 0px, transparent 50%), radial-gradient(at 50% 100%, rgba(30, 64, 175, 0.1) 0px, transparent 50%);
-        }
-    </style>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- SkyStream Custom Styles -->
+    <link rel="stylesheet" href="~/css/_customer_layout_style.css" />
 </head>
-<body class="font-display antialiased mesh-bg bg-background-dark text-slate-200 selection:bg-primary/30 font-display antialiased mesh-bg">
-    <div class="relative flex min-h-screen w-full flex-col">
-        <header class="sticky top-0 z-50 flex items-center justify-between border-b border-white/5 bg-background-dark/60 backdrop-blur-xl px-6 py-4 lg:px-20">
-            <div class="flex items-center gap-2 group cursor-pointer">
-                <div class="relative flex items-center justify-center size-10 bg-primary/20 rounded-xl overflow-hidden group-hover:bg-primary/30 transition-all">
-                    <span class="material-symbols-outlined text-primary text-2xl group-hover:scale-110 transition-transform">flight_takeoff</span>
-                </div>
-                <h2 class="text-xl font-800 leading-tight tracking-tighter text-white">SKYSTREAM</h2>
-            </div>
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-white" href="/Customer/Home/Index">Home</a>
-                <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors text-white" href="/Customer/Home/Bookings">Bookings</a>
-            </nav>
-            <div class="flex items-center gap-6">
-                @if(User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
-                {
-
-                    <a class="rounded-full px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90" style="background-color:sandybrown;"href="/Admin/Home/Index">
-
-                            AdminMode
-
+<body class="mesh-bg">
+    <div class="d-flex flex-column min-vh-100">
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container-fluid px-4 px-lg-5" style="max-width: 1400px; margin: 0 auto;">
+                <div class="d-flex align-items-center justify-content-between py-3">
+                    <!-- Logo -->
+                    <a href="/Customer/Home/Index" class="d-flex align-items-center gap-2 text-decoration-none">
+                        <div class="logo-icon">
+                            <i class="bi bi-airplane-fill"></i>
+                        </div>
+                        <span class="logo-text">SKYSTREAM</span>
                     </a>
-                        
-                }
-                <a href="/Identity/Authentication/Logout">
-                        <button class="rounded-full bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:opacity-90">Logout</button>
-                </a>
-                <a href="/Customer/Profile/Index">
-                    <div class="bg-slate-800 aspect-square bg-cover rounded-full size-10 border border-white/10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjNZ4wG5KCPYB1K3AaZdxZJuUNnNgFfpdUYNd_rq1JId-Lvs3UF-Kqb61ShVGFLfB3uLYHNOn0ti5BQMekCbjY7uDxpC6oZHjMOPjeEjHI9dJOrb8RmpI7iR_Bjvwc5xp3M624fdSPtEO34yQy1ck-po98QuUNpR5PUfj9xihpZc874yDHDkOJmHGgCPVERQie71v7JEvkKIP178RocKwM6APBANUnRDRfkvHsq0UuLef_vVl4Nrbir8KWmVmLNxqQLiH9GvkIEuU");'></div>
-                </a>
+
+                    <!-- Desktop Navigation -->
+                    <nav class="d-none d-md-flex align-items-center gap-4">
+                        <a class="nav-link-custom" href="/Customer/Home/Index">Home</a>
+                        <a class="nav-link-custom" href="/Customer/Home/Bookings">Bookings</a>
+                    </nav>
+
+                    <!-- Right Side Actions -->
+                    <div class="d-flex align-items-center gap-3">
+                        @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                        {
+                            <a class="btn-admin d-none d-sm-inline-block" href="/Admin/Home/Index">AdminMode</a>
+                        }
+                        <a href="/Identity/Authentication/Logout" class="btn-logout">Logout</a>
+                        <a href="/Customer/Profile/Index">
+                            <div class="avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjNZ4wG5KCPYB1K3AaZdxZJuUNnNgFfpdUYNd_rq1JId-Lvs3UF-Kqb61ShVGFLfB3uLYHNOn0ti5BQMekCbjY7uDxpC6oZHjMOPjeEjHI9dJOrb8RmpI7iR_Bjvwc5xp3M624fdSPtEO34yQy1ck-po98QuUNpR5PUfj9xihpZc874yDHDkOJmHGgCPVERQie71v7JEvkKIP178RocKwM6APBANUnRDRfkvHsq0UuLef_vVl4Nrbir8KWmVmLNxqQLiH9GvkIEuU");'></div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </header>
-        <!-- RenderBody Container -->
-        <div class="max-w-7xl mx-auto px-6  lg:px-20">
-            @RenderBody()
-        </div>
-        <!-- 💬 Floating Button -->
-        <button id="chatToggle"
-            style="background-color:black"
-                class="fixed bottom-6 right-6 z-50  text-white rounded-full p-3 shadow-lg hover:scale-110 transition border border-white">
-            <img class="d-inline-block" style="width:50px" src="~/assets/logos/chatot.png" />
-            ask chat
+
+        <!-- Main Content -->
+        <main class="flex-grow-1">
+            <div class="container-fluid px-4 px-lg-5" style="max-width: 1400px; margin: 0 auto;">
+                @RenderBody()
+            </div>
+        </main>
+
+        <!-- Chat Toggle Button -->
+        <button id="chatToggle" class="chat-toggle">
+            <img src="~/assets/logos/chatot.png" alt="Chat" />
+            <span class="d-none d-sm-inline">ask chat</span>
         </button>
-        <!-- 🤖 Chatbot Container -->
-        <div id="chatbot"
-             class="fixed bottom-24 right-6 w-80 glass-card rounded-2xl shadow-xl hidden z-50 flex flex-col">
 
+        <!-- Chatbot Container -->
+        <div id="chatbot" class="chatbot-container glass-card rounded-4 shadow-xl">
             <!-- Header -->
-            <div class="p-3 border-b border-white/10 flex justify-between items-center">
-                <div>
-                    <img class="d-inline-block" style="width:50px" src="~/assets/logos/chatot.png" />
-
+            <div class="chat-header">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="~/assets/logos/chatot.png" alt="Chat" style="width: 40px; height: 40px;" />
                     <span class="fw-bold">Chatbot</span>
                 </div>
-              
-                <button id="closeChat" class="text-white">✖</button>
+                <button id="closeChat" class="btn btn-link text-white p-0 border-0">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
 
             <!-- Body -->
-            <div id="chatBody" class="p-3 space-y-2 max-h-96 overflow-y-auto">
-                <!-- Questions هنا -->
+            <div id="chatBody" class="chat-body">
+                <!-- Questions will be loaded here -->
             </div>
-
         </div>
-        <footer class="bg-background-dark border-t border-white/5 px-6 py-20 lg:px-20 relative overflow-hidden">
-            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between gap-20 relative z-10">
-                <div class="max-w-sm space-y-8">
-                    <div class="flex items-center gap-2 group cursor-pointer">
-                        <div class="size-8 bg-primary/20 rounded-lg flex items-center justify-center">
-                            <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-glow"></div>
+            <div class="container-fluid px-4 px-lg-5" style="max-width: 1400px; margin: 0 auto;">
+                <div class="row g-5">
+                    <!-- Brand Column -->
+                    <div class="col-12 col-lg-4">
+                        <div class="mb-4">
+                            <a href="/Customer/Home/Index" class="d-flex align-items-center gap-2 text-decoration-none mb-4">
+                                <div class="logo-icon" style="width: 32px; height: 32px;">
+                                    <i class="bi bi-airplane-fill" style="font-size: 1rem;"></i>
+                                </div>
+                                <span class="logo-text" style="font-size: 1.125rem;">SKYSTREAM</span>
+                            </a>
+                            <p class="text-secondary" style="line-height: 1.7; max-width: 320px;">
+                                Pioneering the next era of global transportation. We merge architectural aesthetics with aviation precision to redefine every mile.
+                            </p>
                         </div>
-                        <h2 class="text-lg font-800 text-white tracking-tighter uppercase">SKYSTREAM</h2>
+                        <div class="d-flex gap-3">
+                            <a class="social-icon" href="#">
+                                <i class="bi bi-globe"></i>
+                            </a>
+                            <a class="social-icon" href="#">
+                                <i class="bi bi-at"></i>
+                            </a>
+                            <a class="social-icon" href="#">
+                                <i class="bi bi-chat-dots"></i>
+                            </a>
+                        </div>
                     </div>
-                    <p class="text-slate-500 leading-relaxed">
-                        Pioneering the next era of global transportation. We merge architectural aesthetics with aviation precision to redefine every mile.
-                    </p>
-                    <div class="flex gap-6">
-                        <a class="size-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-primary/50 transition-all" href="#">
-                            <span class="material-symbols-outlined text-xl">public</span>
-                        </a>
-                        <a class="size-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-primary/50 transition-all" href="#">
-                            <span class="material-symbols-outlined text-xl">alternate_email</span>
-                        </a>
-                        <a class="size-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-primary/50 transition-all" href="#">
-                            <span class="material-symbols-outlined text-xl">forum</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-16 flex-1">
-                    <div class="space-y-6">
-                        <h5 class="text-xs font-bold uppercase tracking-[0.3em] text-white">Orbit</h5>
-                        <ul class="space-y-4 text-sm text-slate-500">
-                            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">Fleet Portal</a></li>
-                            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">Destinations</a></li>
-                            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">Experience</a></li>
-                        </ul>
-                    </div>
-                    <div class="space-y-6">
-                        <h5 class="text-xs font-bold uppercase tracking-[0.3em] text-white">Support</h5>
-                        <ul class="space-y-4 text-sm text-slate-500">
-                            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">Help Systems</a></li>
-                            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">Terms of Flight</a></li>
-                            <li><a class="hover:text-primary transition-colors flex items-center gap-2" href="#">Protocols</a></li>
-                        </ul>
-                    </div>
-                    <div class="space-y-6 col-span-2 md:col-span-1">
-                        <h5 class="text-xs font-bold uppercase tracking-[0.3em] text-white">Dispatch</h5>
-                        <div class="flex flex-col gap-4">
-                            <p class="text-xs text-slate-600">Receive priority flight updates and route alerts.</p>
-                            <div class="relative">
-                                <input class="w-full h-12 rounded-xl border border-white/10 bg-white/5 px-4 text-xs focus:ring-primary focus:border-primary placeholder:text-slate-600 text-white" placeholder="Enter your terminal email" type="email" />
-                                <button class="absolute right-1 top-1 h-10 w-10 bg-white text-background-dark rounded-lg flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-lg">
-                                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
-                                </button>
+
+                    <!-- Links Columns -->
+                    <div class="col-12 col-lg-8">
+                        <div class="row g-4">
+                            <div class="col-6 col-md-4">
+                                <h5 class="footer-heading">Orbit</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-3">
+                                        <a class="footer-link" href="#">Fleet Portal</a>
+                                    </li>
+                                    <li class="mb-3">
+                                        <a class="footer-link" href="#">Destinations</a>
+                                    </li>
+                                    <li class="mb-3">
+                                        <a class="footer-link" href="#">Experience</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <h5 class="footer-heading">Support</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-3">
+                                        <a class="footer-link" href="#">Help Systems</a>
+                                    </li>
+                                    <li class="mb-3">
+                                        <a class="footer-link" href="#">Terms of Flight</a>
+                                    </li>
+                                    <li class="mb-3">
+                                        <a class="footer-link" href="#">Protocols</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <h5 class="footer-heading">Dispatch</h5>
+                                <div class="d-flex flex-column gap-3">
+                                    <p class="text-secondary mb-0" style="font-size: 0.75rem;">Receive priority flight updates and route alerts.</p>
+                                    <div class="position-relative">
+                                        <input class="newsletter-input" placeholder="Enter your terminal email" type="email" />
+                                        <button class="newsletter-btn">
+                                            <i class="bi bi-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="max-w-7xl mx-auto mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">
-                <p>© 2024 SkyStream Aerospace Industries.</p>
-                <div class="flex gap-10">
-                    <a class="hover:text-white transition-colors" href="#">Data Security</a>
-                    <a class="hover:text-white transition-colors" href="#">Global Policy</a>
-                    <a class="hover:text-white transition-colors" href="#">Terminal Access</a>
+
+                <!-- Footer Bottom -->
+                <div class="footer-bottom">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <p class="footer-bottom-link mb-0">&copy; 2024 SkyStream Aerospace Industries.</p>
+                        <div class="d-flex gap-4 gap-md-5">
+                            <a class="footer-bottom-link" href="#">Data Security</a>
+                            <a class="footer-bottom-link" href="#">Global Policy</a>
+                            <a class="footer-bottom-link" href="#">Terminal Access</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>
-    </div>    <!-- REQUIRED FOR SCRIPTS TO WORK -->
-    @* <script src="~/js/faq-bubble.js"></script> *@
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
     <script>
+        // Chat Toggle
         const chatToggle = document.getElementById("chatToggle");
         const chatbot = document.getElementById("chatbot");
         const closeChat = document.getElementById("closeChat");
 
         chatToggle.onclick = () => {
-            chatbot.classList.toggle("hidden");
-            loadQuestions(null); // أول مرة
+        chatbot.classList.toggle("show");
+        loadQuestions(null);
         };
 
         closeChat.onclick = () => {
-            chatbot.classList.add("hidden");
+        chatbot.classList.remove("show");
         };
-    </script>
-    <script>
+
+        // Load Questions
         async function loadQuestions(parentId) {
+        const res = await fetch(`/Customer/Home/GetQuestions?parentId=${parentId ?? ''}`);
+        const data = await res.json();
 
-            const res = await fetch(`/Customer/Home/GetQuestions?parentId=${parentId ?? ''}`);
-            const data = await res.json();
+        const chatBody = document.getElementById("chatBody");
+        chatBody.innerHTML = "";
 
-            const chatBody = document.getElementById("chatBody");
-            chatBody.innerHTML = "";
-
-            data.forEach(q => {
-                const btn = document.createElement("button");
-
-                btn.className = "w-full text-start p-2 rounded bg-white/5 hover:bg-primary/30 border   border-primary";
-                btn.innerText = q.question;
-
-                btn.onclick = () => handleQuestionClick(q.id);
-
-                chatBody.appendChild(btn);
-            });
+        data.forEach(q => {
+        const btn = document.createElement("button");
+        btn.className = "chat-question-btn";
+        btn.innerText = q.question;
+        btn.onclick = () => handleQuestionClick(q.id);
+        chatBody.appendChild(btn);
+        });
         }
-    </script>
-    <script>
+
+        // Handle Question Click
         async function handleQuestionClick(id) {
+        const res = await fetch(`/Customer/Home/GetQuestionWithChildren?id=${id}`);
+        const data = await res.json();
 
-            const res = await fetch(`/Customer/Home/GetQuestionWithChildren?id=${id}`);
-            const data = await res.json();
+        const chatBody = document.getElementById("chatBody");
 
-            const chatBody = document.getElementById("chatBody");
+        // Display Answer
+        if (data.answer) {
+        const aDiv = document.createElement("div");
+        aDiv.className = "chat-answer";
 
-       
-            // 🟩 عرض الإجابة
-            if (data.answer) {
-                const aDiv = document.createElement("div");
-                aDiv.className = "p-2 bg-white rounded text-black";
-                                const aDivSpan = document.createElement("span");
-        aDivSpan.className = "text-sm text-slate-500 block mt-1";
-        aDivSpan.innerText = "Answer is" ;
+        const aDivSpan = document.createElement("span");
+        aDivSpan.className = "chat-answer-label";
+        aDivSpan.innerText = "Answer is";
         aDiv.appendChild(aDivSpan);
+
         const aDivAnswer = document.createElement("p");
-        aDivAnswer.className = "text-base text-slate-800 mt-1";
+        aDivAnswer.className = "chat-answer-text";
         aDivAnswer.innerText = data.answer;
         aDiv.appendChild(aDivAnswer);
-                chatBody.appendChild(aDiv);
-            }
 
-            // 🟨 عرض الأطفال
-            data.children.forEach(child => {
-                const btn = document.createElement("button");
-
-                btn.className = "w-full text-start p-2 rounded bg-white/5 hover:bg-primary/30 mt-1 border  border-success";
-                btn.innerText = child.question;
-
-                btn.onclick = () => handleQuestionClick(child.id);
-
-                chatBody.appendChild(btn);
-            });
-
-            // scroll لآخر الشات
-            chatBody.scrollTop = chatBody.scrollHeight;
+        chatBody.appendChild(aDiv);
         }
-    </script>
-    <script>
+
+        // Display Children
+        data.children.forEach(child => {
+        const btn = document.createElement("button");
+        btn.className = "chat-child-btn";
+        btn.innerText = child.question;
+        btn.onclick = () => handleQuestionClick(child.id);
+        chatBody.appendChild(btn);
+        });
+
+        // Scroll to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
         function showAnswer(answer) {
-            const chatBody = document.getElementById("chatBody");
-
-            const div = document.createElement("div");
-            div.className = "p-2 bg-primary/20 rounded";
-
-            div.innerText = answer;
-
-            chatBody.appendChild(div);
+        const chatBody = document.getElementById("chatBody");
+        const div = document.createElement("div");
+        div.className = "p-2 rounded";
+        div.style.background = "rgba(59, 130, 246, 0.2)";
+        div.innerText = answer;
+        chatBody.appendChild(div);
         }
     </script>
 </body>
 </html>
-

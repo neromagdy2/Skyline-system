@@ -1,405 +1,346 @@
-﻿
-
-
-@model Airport_Managment_SYS.Areas.Customer.ViewModels.HomeVM
+﻿@model Airport_Managment_SYS.Areas.Customer.ViewModels.HomeVM
 
 @{
     Layout = "_customer_layout";
 }
 
+<main class="flex-grow-1">
+    <!-- Hero Section -->
+    <section class="hero-section hero-fullwidth">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
 
-        <main class="flex-1">
-            @* @if (TempData["Warning"] != null)
-            {
-                <div id ="autoCloseAlert" class="alert alert-warning alert-dismissible fade show mb-4" role="alert" style="postion: relative;z-index : 30;">
-                    @TempData["Warning"]
-                </div>
-                 <script>
-                          setTimeout(function() {
-                          var alert = document.getElementById('autoCloseAlert');
-                          if (alert) {
-                             alert.style.transition = 'opacity 0.15s linear';
-			                  alert.style.opacity = '0';
-                              setTimeout(function() {
-                                  if (alert.parentNode) {
-                               alert.remove();
-				              }  }, 150);} }, 5000);
-		          </script>
-            } *@
-    <section class="relative w-screen min-h-[750px] flex flex-col items-center justify-center pt-12 pb-32 overflow-hidden -mx-[50vw] left-[50%] right-[50%]">
+        <div class="container-fluid position-relative px-0" style="z-index: 2;">
+            <div class="container" style="max-width: 1400px; margin: 0 auto;">
 
-        <!-- Background -->
-        <div class="absolute inset-0 z-0">
-            <div class="absolute inset-0 bg-gradient-to-b from-background-dark/80 via-transparent to-background-dark z-10"></div>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-10 col-xl-8">
+                        <!-- Title -->
+                        <div class="text-center mb-5">
+                            <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill border border-primary border-opacity-25 bg-primary bg-opacity-10 mb-4">
+                                <span class="pulse-dot"></span>
+                                <span class="text-primary text-uppercase fw-bold" style="font-size: 0.625rem; letter-spacing: 0.2em;">Redefining Modern Travel</span>
+                            </div>
 
-            <div class="absolute inset-0 bg-cover bg-center scale-110 blur-[2px] opacity-40"
-                 style='background-image: url("https://islamonline.net/wp-content/uploads/2022/06/Madinah-Mosque.jpg");'>            </div>
-        </div>
+                            <h1 class="hero-title glow-text mb-4">
+                                The Distance is No Longer<br />
+                                <span class="gradient-text">The Limit</span>
+                            </h1>
 
-        <!-- Content -->
-        <div class="relative z-20 w-full max-w-7xl mx-auto px-6 flex flex-col items-center gap-12">
-
-            <!-- Title -->
-            <div class="text-center space-y-6">
-
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-[10px] font-bold tracking-[0.2em] uppercase">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                    </span>
-                    Redefining Modern Travel
-                </div>
-
-                <h1 class="text-white text-5xl md:text-8xl font-800 leading-tight tracking-tighter glow-text">
-                    The Distance is No Longer<br /><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">The Limit</span>
-                </h1>
-
-                <p class="text-slate-400 text-lg dark__text-white md:text-xl max-w-3xl mx-auto">
-                    Experience the pinnacle of aviation with SkyStream. Seamless booking meets futuristic comfort.
-                </p>
-
-            </div>
-
-            <!-- Search Card -->
-            <div  class="w-full
-            bg-white/10
-            backdrop-blur-xl
-            p-6 md:p-8
-            rounded-2xl
-            shadow-2xl
-            border border-white/20
-            hover:bg-white/15
-            transition">
-
-                <form asp-area="Customer"
-                      asp-controller="Home"
-                      asp-action="SearchTrips"
-                      method="get"
-                      class="grid grid-cols-1 md:grid-cols-4 gap-4">
-
-                    <!-- From -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
-                            From
-                        </label>
-
-                        <div class="border border-white/20 rounded-lg bg-white/10 backdrop-blur-md h-14 px-4 flex items-center text-white focus-within:border-primary transition">
-
-                            <span class="material-symbols-outlined text-slate-300 mr-2">
-                                flight_takeoff
-                            </span>
-
-                            <select asp-for="SearchTripsVM.DepartureCity"
-                                    class="w-full bg-transparent border-none focus:ring-0 font-semibold text-white">
-
-                                <option class="text-black" value="">Select Departure</option>
-
-                                @foreach (var state in Model.SearchTripsVM.States!)
-                                {
-                                    <option class="text-black" value="@state.Id">
-                                        @state.Name
-                                    </option>
-                                }
-
-                            </select>
+                            <p class="text-white-50 fs-5 mb-0 mx-auto" style="max-width: 700px;">
+                                Experience the pinnacle of aviation with SkyStream. Seamless booking meets futuristic comfort.
+                            </p>
                         </div>
 
-                        <span asp-validation-for="SearchTripsVM.DepartureCity"
-                              class="text-red-400 text-sm"></span>
-                    </div>
+                        <!-- Search Card -->
+                        <div class="glass-card rounded-4 p-4 p-md-5 shadow-lg">
+                            <form asp-area="Customer"
+                                  asp-controller="Home"
+                                  asp-action="SearchTrips"
+                                  method="get">
+                                <div class="row g-3">
+                                    <!-- From -->
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label class="form-label text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">From</label>
+                                        <div class="glass-input rounded-3 d-flex align-items-center px-3" style="height: 56px;">
+                                            <i class="bi bi-airplane-fill text-white-50 me-2"></i>
+                                            <select asp-for="SearchTripsVM.DepartureCity"
+                                                    class="form-select bg-transparent border-0 shadow-none text-white fw-semibold p-0"
+                                                    style="background-image: none; padding-right: 0;">
+                                                <option class="bg-dark" value="">Select Departure</option>
+                                                @foreach (var state in Model.SearchTripsVM.States!)
+                                                {
+                                                    <option class="bg-dark" value="@state.Id">@state.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <span asp-validation-for="SearchTripsVM.DepartureCity" class="text-danger small"></span>
+                                    </div>
 
-                    <!-- To -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
-                            To
-                        </label>
+                                    <!-- To -->
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label class="form-label text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">To</label>
+                                        <div class="glass-input rounded-3 d-flex align-items-center px-3" style="height: 56px;">
+                                            <i class="bi bi-airplane-engines-fill text-white-50 me-2"></i>
+                                            <select asp-for="SearchTripsVM.ArrivalCity"
+                                                    class="form-select bg-transparent border-0 shadow-none text-white fw-semibold p-0"
+                                                    style="background-image: none; padding-right: 0;">
+                                                <option class="bg-dark" value="">Select Destination</option>
+                                                @foreach (var state in Model.SearchTripsVM.States!)
+                                                {
+                                                    <option class="bg-dark"
+                                                            value="@state.Id"
+                                                            selected="@(Model.SearchTripsVM.ArrivalCity == state.Id)">
+                                                        @state.Name
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <span asp-validation-for="SearchTripsVM.ArrivalCity" class="text-danger small"></span>
+                                    </div>
 
-                        <div class="border border-white/20 rounded-lg bg-white/10 backdrop-blur-md h-14 px-4 flex items-center text-white focus-within:border-primary transition">
+                                    <!-- Date -->
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <label class="form-label text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Departure Date</label>
+                                        <div class="glass-input rounded-3 d-flex align-items-center px-3" style="height: 56px;">
+                                            <i class="bi bi-calendar3 text-white-50 me-2"></i>
+                                            <input asp-for="SearchTripsVM.DepartureTime"
+                                                   type="date"
+                                                   min="@DateTime.UtcNow.ToString("yyyy-MM-dd")"
+                                                   value="@DateTime.UtcNow.ToString("yyyy-MM-dd")"
+                                                   class="form-control bg-transparent border-0 shadow-none text-white fw-semibold p-0" />
+                                        </div>
+                                        <span asp-validation-for="SearchTripsVM.DepartureTime" class="text-danger small"></span>
+                                    </div>
 
-                            <span class="material-symbols-outlined text-slate-300 mr-2">
-                                flight_land
-                            </span>
-
-                            <select asp-for="SearchTripsVM.ArrivalCity"
-                                    class="w-full bg-transparent border-none focus:ring-0 font-semibold text-white">
-
-                                <option class="text-black" value="">Select Destination</option>
-
-                                @foreach (var state in Model.SearchTripsVM.States!)
-                                {
-                                    <option class="text-black"
-                                            value="@state.Id"
-                                            selected="@(Model.SearchTripsVM.ArrivalCity == state.Id)">
-                                        @state.Name
-                                    </option>
-                                }
-
-                            </select>
+                                    <!-- Search Button -->
+                                    <div class="col-12 col-md-6 col-lg-3 d-flex align-items-end">
+                                        <button type="submit"
+                                                class="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+                                                style="height: 56px;">
+                                            <i class="bi bi-search"></i>
+                                            Search Flights
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
-                        <span asp-validation-for="SearchTripsVM.ArrivalCity"
-                              class="text-red-400 text-sm"></span>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <!-- Date -->
+        <!-- Active Reservations Section -->
+        <section class="container py-5 my-5">
+            <div class="mb-5">
+                <div class="d-flex flex-column flex-md-row align-items-start align-items-md-end justify-content-between gap-3 mb-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase mb-1">
-                            Departure Date
-                        </label>
-
-                        <div class="flex items-center border border-white/20 rounded-lg bg-white/10 backdrop-blur-md h-14 px-4 text-white focus-within:border-primary transition">
-
-                            <span class="material-symbols-outlined text-slate-300 mr-2">
-                                calendar_today
-                            </span>
-
-                            <input asp-for="SearchTripsVM.DepartureTime"
-                                   type="date"
-                                   min="@DateTime.UtcNow"
-                                   value="@DateTime.UtcNow.Date"
-                                   class="w-full border-none bg-transparent p-0 font-semibold focus:ring-0 text-white" />
-                        </div>
-
-                        <span asp-validation-for="SearchTripsVM.DepartureTime"
-                              class="text-red-400 text-sm"></span>
+                        <p class="text-primary fw-bold text-uppercase mb-1" style="font-size: 0.625rem; letter-spacing: 0.3em;">Your Itinerary</p>
+                        <h3 class="display-6 fw-bold text-white mb-0" style="letter-spacing: -0.02em;">Active Reservations</h3>
                     </div>
+                    <a href="#" class="text-white-50 text-decoration-none d-flex align-items-center gap-2 hover-white transition-all">
+                        <span class="text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 0.1em;">View all voyages</span>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
 
-                    <!-- Search Button -->
-                    <div class="flex items-end">
-                        <button type="submit"
-                                class="w-full h-14 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 shadow-lg hover:opacity-90 transition">
-
-                            <span class="material-symbols-outlined">
-                                search
-                            </span>
-
-                            Search Flights
-
-                        </button>
+                @if (Model.reservations == null || !Model.reservations.Any())
+                {
+                    <div class="text-center py-5 text-white-50">
+                        <p class="fs-4 mb-0">You don't have any active reservations yet.</p>
                     </div>
+                }
+                else
+                {
+                    <!-- Horizontal Scrollable Carousel -->
+                    <div class="overflow-hidden">
+                        <div id="reservations-slider"
+                             class="d-flex gap-4 overflow-auto pb-4 snap-scroll scrollbar-hide"
+                             style="scroll-behavior: smooth;">
 
-                </form>
-            </div>
-        </div>
+                            @foreach (var reservation in Model.reservations)
+                            {
+                                var trip = reservation.Trip;
 
-    </section>       
-    <section class="max-w-7xl mx-auto px-6 py-24">
+                                <div class="flex-shrink-0 snap-item" style="min-width: 85%; max-width: 450px;">
+                                    <div class="glass-card rounded-4 overflow-hidden shadow-lg">
+                                        <div class="row g-0">
+                                            <!-- Image -->
+                                            <div class="col-12 col-md-5 position-relative" style="min-height: 280px;">
+                                                <img src="https://picsum.photos/id/1015/800/600"
+                                                     class="w-100 h-100 object-fit-cover position-absolute"
+                                                     style="top: 0; left: 0;"
+                                                     alt="Destination Image">
+                                                <div class="position-absolute" style="inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.7), transparent);"></div>
 
-        <div class="mb-32">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-                <div class="space-y-2">
-                    <p class="text-primary font-bold tracking-[0.3em] uppercase text-[10px]">Your Itinerary</p>
-                    <h3 class="text-4xl font-800 text-white tracking-tight">Active Reservations</h3>
-                </div>
-                <a href="#" class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
-                    <span class="text-xs font-bold tracking-widest uppercase">View all voyages</span>
-                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
-                </a>
-            </div>
+                                                <div class="position-absolute top-0 start-0 p-3">
+                                                    <span class="badge bg-success rounded-pill px-3 py-2 text-uppercase fw-bold" style="font-size: 0.625rem; letter-spacing: 0.1em;">
+                                                        ACTIVE
+                                                    </span>
+                                                </div>
+                                            </div>
 
-            @if (Model.reservations == null || !Model.reservations.Any())
-            {
-                <div class="text-center py-20 text-slate-400">
-                    <p class="text-xl">You don't have any active reservations yet.</p>
-                </div>
-            }
-            else
-            {
-                <!-- Horizontal Scrollable Carousel -->
-                <div class="max-w-6xl mx-auto">
-                    <div id="reservations-slider"
-                         class="flex gap-6 overflow-x-auto pb-10 snap-x snap-mandatory scroll-smooth scrollbar-hide
-                            touch-pan-x -webkit-overflow-scrolling-touch">
+                                            <!-- Content -->
+                                            <div class="col-12 col-md-7 p-4 p-md-5 d-flex flex-column justify-content-between" style="background-color: #0a1428;">
+                                                <div>
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <h4 class="fw-bold text-white h3 mb-1">
+                                                                @trip?.Airport_To?.GovernerateState?.Name
+                                                            </h4>
+                                                            <p class="text-white-50 small mb-0">
+                                                                Flight @(trip?.Id.ToString() ?? "1") &bull; Departing @(trip?.DateTime.ToString("MMMM dd") ?? "March 22")
+                                                            </p>
+                                                        </div>
+                                                        <div class="text-end">
+                                                            <span class="d-block text-uppercase fw-semibold text-info" style="font-size: 0.625rem; letter-spacing: 1px;">BOARDING GATE</span>
+                                                            <span class="display-6 fw-bold text-white">@(trip?.Airport_From.Name ?? "Borg El Arab")</span>
+                                                        </div>
+                                                    </div>
 
-                        @foreach (var reservation in Model.reservations)
-                        {
-                            var trip = reservation.Trip;
+                                                    <!-- Progress -->
+                                                    <div class="mt-4">
+                                                        <div class="d-flex justify-content-between text-uppercase text-white-50 mb-2" style="font-size: 0.625rem; letter-spacing: 0.1em;">
+                                                            <span>Preparation Status</span>
+                                                            <span>65% Complete</span>
+                                                        </div>
+                                                        <div class="progress" style="height: 8px; background-color: #1f2937;">
+                                                            <div class="progress-bar progress-gradient rounded-pill" role="progressbar" style="width: 65%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                            <div class="min-w-[90%] md:min-w-[420px] lg:min-w-[450px] flex-shrink-0 snap-center">
-                                <div class="glass-card rounded-3xl overflow-hidden border border-white/10 hover:border-primary/40 transition-all duration-300 shadow-xl">
-                                    <div class="flex flex-col md:flex-row">
-
-                                        <!-- Image -->
-                                        <div class="md:w-5/12 relative h-72 md:h-auto overflow-hidden">
-                                            <img src="https://picsum.photos/id/1015/800/600"
-                                                 class=" h-100 w-100 object-cover transition-transform duration-700 hover:scale-110"
-                                                 alt="Destination Image">
-                                            <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
-
-                                            <div class="absolute top-6 left-6">
-                                                <span class="px-6 py-2 bg-emerald-600 text-white text-xs font-bold rounded-2xl tracking-wider">
-                                                    ACTIVE
-                                                </span>
+                                                <div class="d-flex gap-4 mt-4 pt-3">
+                                                
+                                                    <a asp-area="Customer" asp-action="Index" asp-controller="Reservations"  class="text-white-50 text-decoration-none hover-white transition-all">Manage Trip</a>
+                                                </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
 
-                                        <!-- Content -->
-                                        <div class="md:w-7/12 p-8 md:p-10 bg-[#0a1428] flex flex-col justify-between">
+            <!-- New Destinations Section -->
+            <div class="mb-5">
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 mb-5 text-center text-md-start">
+                    <div>
+                        <p class="text-primary fw-bold text-uppercase mb-1" style="font-size: 0.625rem; letter-spacing: 0.3em;">Curated Experiences</p>
+                        <h3 class="display-6 fw-bold text-white mb-0" style="letter-spacing: -0.02em;">New Destinations</h3>
+                    </div>
+                    <p class="text-white-50 mb-0" style="max-width: 350px;">Exclusive access to the world's most desired locales with signature SkyStream service.</p>
+                </div>
+
+                <div class="row g-4">
+                    @if (Model.trips != null && Model.trips.Any())
+                    {
+                        foreach (var trip in Model.trips)
+                        {
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="destination-card" style="aspect-ratio: 3/4;">
+                                    <div class="card-bg"
+                                         style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDemsvn13MhAz6QxDf_-IZq_g9XIp5h3Sql1NmYrOZjmYinKN8-Uh7yLgB-dRXruAoD-F7P1viY_u11Ho1wFsKjBwb9D3JC28UGxzjyvGywcApxw1bIfWGU2uTvq8OihRMhEWNoYaxWTwiPfFV_IbrHaRDOW8S8KmhENLVc2vHSJSNb_HXpkInUEwr4RuqwbGSms5ZszkevJ7YSSUYYJcgHE-ZYk5DtLSN9LBJCA1ST0fzFMOjrZyvLB6w1u0nh2JQP_zhER1I503s');">
+                                    </div>
+                                    <div class="card-overlay"></div>
+
+                                    <div class="card-content">
+                                        <div class="d-flex flex-column gap-3">
+                                            <span class="badge bg-primary bg-opacity-20 text-primary border border-primary border-opacity-25 text-uppercase fw-bold w-fit" style="font-size: 0.5625rem; letter-spacing: 0.15em; backdrop-filter: blur(10px);">
+                                                Destination
+                                            </span>
+
                                             <div>
-                                                <div class="flex justify-between">
-                                                    <div>
-                                                        <h4 class="text-3xl font-bold text-white">
-                                                            @trip?.Airport_To?.GovernerateState?.Name 
-                                                        </h4>
-                                                        <p class="text-slate-400 mt-1">
-                                                            Flight @(trip?.Id.ToString() ?? "1") • Departing @(trip?.DateTime.ToString("MMMM dd") ?? "March 22")
-                                                        </p>
-                                                    </div>
-                                                    <div class="text-right">
-                                                        <span class="block text-[10px] uppercase tracking-[1px] text-blue-400 font-semibold">BOARDING GATE</span>
-                                                        <span class="text-4xl font-bold text-white">@(trip?.Airport_From.Name ?? "Borg El Arab")</span>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Progress -->
-                                                <div class="mt-12">
-                                                    <div class="flex justify-between text-xs uppercase tracking-widest text-slate-400 mb-3">
-                                                        <span>Preparation Status</span>
-                                                        <span>65% Complete</span>
-                                                    </div>
-                                                    <div class="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                                                        <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-400 w-[65%] rounded-full"></div>
-                                                    </div>
-                                                </div>
+                                                <h4 class="fw-bold text-white mb-2" style="font-size: 1.75rem;">
+                                                    @trip?.Airport_To?.GovernerateState?.Name
+                                                </h4>
+                                                <p class="text-white-50 small mb-0 hover-reveal" style="line-height: 1.6;">
+                                                    Explore amazing السفر experience with premium comfort.
+                                                </p>
                                             </div>
 
-                                            <div class="flex gap-6 mt-10">
-                                                <a href="#" class="font-bold text-white flex items-center gap-2 hover:text-blue-400 transition-colors">
-                                                    INITIATE CHECK-IN
-                                                    <span class="material-symbols-outlined">arrow_forward</span>
-                                                </a>
-                                                <a href="#" class="text-slate-400 hover:text-white transition-colors">Manage Trip</a>
+                                            <div class="d-flex align-items-center justify-content-between pt-3 border-top border-white border-opacity-10">
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-uppercase fw-bold text-white-50" style="font-size: 0.5625rem; letter-spacing: 0.05em;">Starting At</span>
+                                                    <span class="text-white fw-bold fs-4">$@trip.Price</span>
+                                                </div>
+
+                                                <div class="d-flex align-items-center justify-content-center rounded-circle border border-white border-opacity-20"
+                                                     style="width: 40px; height: 40px; transition: all 0.3s ease;"
+                                                     onmouseover="this.style.backgroundColor='white'; this.style.color='#0a1428';"
+                                                     onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';">
+                                                    <i class="bi bi-arrow-up-right"></i>
+                                                </div>
+                                                <div class="d-flex gap-4 mt-4 pt-3">
+
+                                                    <a asp-area="Customer" asp-action="Details" asp-controller="Home" asp-route-id="@trip.Id" class="text-white-50 text-decoration-none hover-white transition-all">View Trip</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         }
-                    </div>
-                </div>
-            }
-        </div>
-                <div class="mb-32">
-                    <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-16 text-center md:text-left">
-                        <div class="space-y-2">
-                            <p class="text-primary font-bold tracking-[0.3em] uppercase text-[10px]">Curated Experiences</p>
-                            <h3 class="text-4xl font-800 text-white tracking-tight">New Destinations</h3>
-                        </div>
-                        <p class="text-slate-400 max-w-sm">Exclusive access to the world's most desired locales with signature SkyStream service.</p>
-                    </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-
-                @if (Model.trips != null && Model.trips.Any())
-                {
-                    foreach (var trip in Model.trips)
+                    }
+                    else
                     {
-                        <div class="group relative aspect-[3/4] overflow-hidden rounded-3xl cursor-pointer bg-slate-900 border border-white/5 hover:border-primary/40 transition-all duration-500">
-
-                            <!-- Background -->
-                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[3s] group-hover:scale-110 opacity-70"
-                                 style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDemsvn13MhAz6QxDf_-IZq_g9XIp5h3Sql1NmYrOZjmYinKN8-Uh7yLgB-dRXruAoD-F7P1viY_u11Ho1wFsKjBwb9D3JC28UGxzjyvGywcApxw1bIfWGU2uTvq8OihRMhEWNoYaxWTwiPfFV_IbrHaRDOW8S8KmhENLVc2vHSJSNb_HXpkInUEwr4RuqwbGSms5ZszkevJ7YSSUYYJcgHE-ZYk5DtLSN9LBJCA1ST0fzFMOjrZyvLB6w1u0nh2JQP_zhER1I503s')">
-                            </div>
-
-                            <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/20 to-transparent"></div>
-
-                            <!-- Content -->
-                            <div class="absolute bottom-0 p-8 w-full">
-                                <div class="flex flex-col gap-4">
-
-                                    <!-- Tag -->
-                                    <span class="w-fit bg-primary/20 backdrop-blur-md text-primary text-[9px] font-bold px-3 py-1.5 rounded-full border border-primary/30 uppercase tracking-widest">
-                                        Destination
-                                    </span>
-
-                                    <!-- Title -->
-                                    <div>
-                                        <h4 class="text-3xl font-800 text-white mb-2">
-                                            @trip?.Airport_To?.GovernerateState?.Name 
-                                        </h4>
-
-                                        <p class="text-slate-400 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 line-clamp-2">
-                                            Explore amazing السفر experience with premium comfort.
-                                        </p>
-                                    </div>
-
-                                    <!-- Price -->
-                                    <div class="flex items-center justify-between pt-4 border-t border-white/10">
-                                        <div class="flex flex-col">
-                                            <span class="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">
-                                                Starting At
-                                            </span>
-
-                                            <span class="text-white font-800 text-xl tracking-tight">
-                                                $@trip.Price 
-                                            </span>
-                                        </div>
-
-                                        <div class="size-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-background-dark transition-all duration-300">
-                                            <span class="material-symbols-outlined text-lg">arrow_outward</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
+                        <div class="col-12 text-center">
+                            <p class="text-white fs-5">No Trips Available</p>
                         </div>
                     }
-                }
-                else
-                {
-                    <p class="text-white text-center col-span-3">No Trips Available</p>
-                }
+                </div>
+            </div>
 
-            </div></div>
-                <div class="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-slate-900 to-slate-950 border border-white/5">
-                    <div class="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[120px] rounded-full"></div>
-                    <div class="relative flex flex-col lg:flex-row gap-16 p-12 lg:p-24 items-center">
-                        <div class="w-full lg:w-1/2 space-y-10">
-                            <div class="space-y-4">
-                                <p class="text-primary font-bold tracking-[0.4em] uppercase text-[10px]">Technical Superiority</p>
-                                <h3 class="text-5xl font-800 text-white leading-tight tracking-tighter">A New Paradigm <br />in In-Flight Service</h3>
-                                <p class="text-slate-400 text-lg leading-relaxed">We combine aerospace engineering with bespoke luxury to create a travel environment that anticipates your every need.</p>
+            <!-- Technical Superiority Section -->
+            <div class="position-relative overflow-hidden rounded-5" style="background: linear-gradient(to bottom right, #0f172a, #020617); border: 1px solid rgba(255, 255, 255, 0.05);">
+                <div class="feature-glow"></div>
+                <div class="position-relative">
+                    <div class="row g-5 align-items-center p-4 p-lg-5">
+                        <div class="col-12 col-lg-6">
+                            <div class="mb-4">
+                                <p class="text-primary fw-bold text-uppercase mb-2" style="font-size: 0.625rem; letter-spacing: 0.4em;">Technical Superiority</p>
+                                <h3 class="display-5 fw-bold text-white mb-3" style="letter-spacing: -0.02em; line-height: 1.2;">A New Paradigm <br />in In-Flight Service</h3>
+                                <p class="text-white-50 fs-5 mb-0" style="line-height: 1.6;">We combine aerospace engineering with bespoke luxury to create a travel environment that anticipates your every need.</p>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-12">
-                                <div class="group space-y-4">
-                                    <div class="size-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-primary/50 transition-all">
-                                        <span class="material-symbols-outlined text-primary text-3xl">language</span>
-                                    </div>
-                                    <div class="space-y-1">
-                                        <h5 class="font-bold text-white text-lg">Global Neural Link</h5>
-                                        <p class="text-sm text-slate-500 leading-relaxed">Quantum-speed connectivity across all altitudes and continents.</p>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-12 col-sm-6">
+                                    <div class="d-flex flex-column gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-3 border border-white border-opacity-10"
+                                             style="width: 56px; height: 56px; background: rgba(255,255,255,0.05); transition: all 0.3s ease;"
+                                             onmouseover="this.style.borderColor='rgba(13, 110, 253, 0.5)'"
+                                             onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+                                            <i class="bi bi-globe text-primary fs-3"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold text-white h5 mb-1">Global Neural Link</h5>
+                                            <p class="text-white-50 small mb-0" style="line-height: 1.6;">Quantum-speed connectivity across all altitudes and continents.</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="group space-y-4">
-                                    <div class="size-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-primary/50 transition-all">
-                                        <span class="material-symbols-outlined text-primary text-3xl">auto_awesome</span>
-                                    </div>
-                                    <div class="space-y-1">
-                                        <h5 class="font-bold text-white text-lg">Smart Cabin AI</h5>
-                                        <p class="text-sm text-slate-500 leading-relaxed">Dynamic environment control tailored to your biological clock.</p>
+                                <div class="col-12 col-sm-6">
+                                    <div class="d-flex flex-column gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-3 border border-white border-opacity-10"
+                                             style="width: 56px; height: 56px; background: rgba(255,255,255,0.05); transition: all 0.3s ease;"
+                                             onmouseover="this.style.borderColor='rgba(13, 110, 253, 0.5)'"
+                                             onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+                                            <i class="bi bi-stars text-primary fs-3"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold text-white h5 mb-1">Smart Cabin AI</h5>
+                                            <p class="text-white-50 small mb-0" style="line-height: 1.6;">Dynamic environment control tailored to your biological clock.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="pt-6">
-                                <a class="inline-flex items-center gap-4 bg-white text-background-dark px-10 py-5 rounded-2xl font-800 tracking-widest text-xs uppercase hover:bg-primary hover:text-white transition-all glow-primary" href="#">
-                                    Explore Technology
-                                    <span class="material-symbols-outlined">arrow_forward</span>
-                                </a>
-                            </div>
+
+                            <a href="#" class="btn btn-light text-dark fw-bold text-uppercase d-inline-flex align-items-center gap-3 rounded-3 btn-glow px-4 py-3" style="font-size: 0.75rem; letter-spacing: 0.1em;">
+                                Explore Technology
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
                         </div>
-                        <div class="w-full lg:w-1/2">
-                            <div class="relative group">
-                                <div class="absolute -inset-1 bg-gradient-to-r from-primary/50 to-accent/50 rounded-3xl blur opacity-25 group-hover:opacity-50 transition-all"></div>
-                                <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                                    <img alt="Airline Service Experience" class="w-full h-auto object-cover opacity-90 group-hover:scale-105 transition-transform duration-[3s]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxiDukFdaxk2jsNSsZQc1HChDyfGT88DeaDcbrGv3_CsEOL8INLRUpJGDGNC2TCEMWta7IsTNtJ3gWHCyClso940dl1dTH-_N7tAYO_CUEHlv68j0E9ATalcoH-S27_swk0aSiQy1DH7Y0SF3hUs9J-Cc1ejLDgnXgBgIkUJoUkddD2ci12yoOVnYG7Ln_mxOrsiadan4U5vuIYnXPnPVvys59fYrpS4O8GIiPyj_IxY-Q7cOw63AJ1o0KPmgPjgppKtZRynhBeoY" />
-                                    <div class="absolute inset-0 bg-gradient-to-tr from-background-dark/80 to-transparent"></div>
-                                    <div class="absolute bottom-8 left-8">
-                                        <div class="bg-white/10 backdrop-blur-xl p-4 rounded-xl border border-white/10 flex items-center gap-4">
-                                            <div class="size-10 bg-primary rounded-lg flex items-center justify-center">
-                                                <span class="material-symbols-outlined text-white">verified</span>
+
+                        <div class="col-12 col-lg-6">
+                            <div class="position-relative">
+                                <div class="position-absolute" style="inset: -4px; background: linear-gradient(to right, rgba(13, 110, 253, 0.3), rgba(13, 202, 240, 0.3)); border-radius: 1.5rem; filter: blur(8px); opacity: 0.3; transition: opacity 0.3s ease;"
+                                     onmouseover="this.style.opacity='0.5'"
+                                     onmouseout="this.style.opacity='0.3'"></div>
+                                <div class="position-relative rounded-4 overflow-hidden border border-white border-opacity-10 shadow-lg">
+                                    <img alt="Airline Service Experience"
+                                         class="w-100 img-hover-scale"
+                                         style="opacity: 0.9;"
+                                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxiDukFdaxk2jsNSsZQc1HChDyfGT88DeaDcbrGv3_CsEOL8INLRUpJGDGNC2TCEMWta7IsTNtJ3gWHCyClso940dl1dTH-_N7tAYO_CUEHlv68j0E9ATalcoH-S27_swk0aSiQy1DH7Y0SF3hUs9J-Cc1ejLDgnXgBgIkUJoUkddD2ci12yoOVnYG7Ln_mxOrsiadan4U5vuIYnXPnPVvys59fYrpS4O8GIiPyj_IxY-Q7cOw63AJ1o0KPmgPjgppKtZRynhBeoY" />
+                                    <div class="position-absolute" style="inset: 0; background: linear-gradient(to top right, rgba(10, 20, 40, 0.8), transparent);"></div>
+                                    <div class="position-absolute bottom-0 start-0 p-3 p-md-4">
+                                        <div class="glass-card rounded-3 p-3 d-flex align-items-center gap-3">
+                                            <div class="d-flex align-items-center justify-content-center rounded-2 bg-primary" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-patch-check-fill text-white"></i>
                                             </div>
-                                            <div class="text-left">
-                                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Award Winning</p>
-                                                <p class="text-white font-800 text-sm">Best Digital Airline 2024</p>
+                                            <div>
+                                                <p class="text-uppercase fw-bold text-white-50 mb-0" style="font-size: 0.625rem; letter-spacing: 0.1em;">Award Winning</p>
+                                                <p class="text-white fw-bold mb-0" style="font-size: 0.875rem;">Best Digital Airline 2024</p>
                                             </div>
                                         </div>
                                     </div>
@@ -408,20 +349,20 @@
                         </div>
                     </div>
                 </div>
-            </section>
-        </main>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+            </div>
+        </section>
+    </main>
 
-    <script type="text/javascript">
-        $(function () {
-            // Check if TempData has the info key
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+        <script type="text/javascript">
+            $(function () {
             if ('@TempData["info"]' != '') {
-                toastr.info('@TempData["info"]');
+            toastr.info('@TempData["info"]');
             }
-        });
-    </script>
-}
- 
+            });
+        </script>
+    }

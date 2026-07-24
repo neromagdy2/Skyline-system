@@ -1,163 +1,180 @@
 @model Airport_Managment_SYS.Areas.Customer.ViewModels.DetailsTripVM
 
-<section class="max-w-5xl mx-auto mt-8 bg-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl shadow-xl border border-white/20">
-    <h2 class="text-3xl font-extrabold mb-6 text-center text-white tracking-tight">Trip Details</h2>
+<section class="glass-card rounded-4 shadow-xl p-4 p-sm-5 my-5" style="max-width: 1024px; margin-left: auto; margin-right: auto;">
+    <h2 class="display-6 fw-bold mb-5 text-center text-white" style="letter-spacing: -0.02em;">Trip Details</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-sm text-slate-100">
-        <div class="space-y-2">
-            <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">Route</p>
-            <p>
-                <span class="font-semibold text-amber-400">@Model.Trip?.Airport_From?.Name</span>
-                <span class="mx-2 text-slate-400">→</span>
-                <span class="font-semibold text-amber-400">@Model.Trip?.Airport_To?.Name</span>
-            </p>
+    <!-- Route & Schedule -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-md-6">
+            <div class="d-flex flex-column gap-2">
+                <p class="text-uppercase fw-bold text-white-50 mb-0" style="font-size: 0.625rem; letter-spacing: 0.2em;">Route</p>
+                <p class="text-white mb-0">
+                    <span class="fw-semibold text-amber">@Model.Trip?.Airport_From?.Name</span>
+                    <span class="mx-2 text-white-50">→</span>
+                    <span class="fw-semibold text-amber">@Model.Trip?.Airport_To?.Name</span>
+                </p>
+            </div>
         </div>
-        <div class="space-y-2">
-            <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">Schedule & price</p>
-            <p><span class="font-semibold text-slate-300">Departure:</span> @((Model.Trip?.DateTime.ToString("f")) ?? "N/A")</p>
-            <p><span class="font-semibold text-slate-300">Arrival:</span> @((Model.Trip?.ArrivalDateTime.ToString("f")) ?? "N/A")</p>
-            <p><span class="font-semibold text-slate-300">Base price:</span> <span class="text-xl font-bold text-emerald-400">$@Model.Trip?.Price</span></p>
+        <div class="col-12 col-md-6">
+            <div class="d-flex flex-column gap-2">
+                <p class="text-uppercase fw-bold text-white-50 mb-0" style="font-size: 0.625rem; letter-spacing: 0.2em;">Schedule & Price</p>
+                <p class="text-white mb-1"><span class="fw-semibold text-white-50">Departure:</span> @((Model.Trip?.DateTime.ToString("f")) ?? "N/A")</p>
+                <p class="text-white mb-1"><span class="fw-semibold text-white-50">Arrival:</span> @((Model.Trip?.ArrivalDateTime.ToString("f")) ?? "N/A")</p>
+                <p class="text-white mb-0"><span class="fw-semibold text-white-50">Base price:</span> <span class="fs-4 fw-bold text-emerald">$@Model.Trip?.Price</span></p>
+            </div>
         </div>
     </div>
 
-    <div class="mb-4 text-slate-100">
-        <p class="text-sm"><span class="font-semibold">Total available seats:</span> <span id="availableCount" class="font-semibold">@Model.AvailableSeats</span></p>
+    <!-- Available Seats Count -->
+    <div class="mb-4">
+        <p class="text-white mb-0"><span class="fw-semibold">Total available seats:</span> <span id="availableCount" class="fw-semibold">@Model.AvailableSeats</span></p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-1 space-y-4">
-            <div>
-                <label for="seatClassSelect" class="block text-sm font-medium text-slate-100 mb-1">Select seat class</label>
-                <select id="seatClassSelect" name="SelectedSeatClassId" class="border border-slate-600 bg-slate-900/60 text-slate-100 text-sm rounded-xl px-3 py-2 w-full">
-                    <option value="0" data-mult="0" data-avail="0">-- Choose class --</option>
-                    @if (Model.SeatClasses != null)
-                    {
-                        foreach (var sc in Model.SeatClasses)
+    <div class="row g-4">
+        <!-- Left Column: Controls -->
+        <div class="col-12 col-lg-4">
+            <div class="d-flex flex-column gap-4">
+                <!-- Seat Class Select -->
+                <div>
+                    <label for="seatClassSelect" class="form-label fw-medium text-white mb-1" style="font-size: 0.875rem;">Select seat class</label>
+                    <select id="seatClassSelect" name="SelectedSeatClassId" class="form-select-dark w-100">
+                        <option value="0" data-mult="0" data-avail="0">-- Choose class --</option>
+                        @if (Model.SeatClasses != null)
                         {
-                            var avail = Model.AvailableByClass?.ContainsKey(sc.Id) == true ? Model.AvailableByClass[sc.Id] : 0;
-                            <option value="@sc.Id" data-mult="@sc.PriceMult" data-avail="@avail">
-                                @sc.Name (@avail available)
-                            </option>
+                            foreach (var sc in Model.SeatClasses)
+                            {
+                                var avail = Model.AvailableByClass?.ContainsKey(sc.Id) == true ? Model.AvailableByClass[sc.Id] : 0;
+                                <option value="@sc.Id" data-mult="@sc.PriceMult" data-avail="@avail">
+                                    @sc.Name (@avail available)
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <!-- Per Seat Price -->
+                <div>
+                    <p class="text-white mb-0"><span class="fw-semibold">Per-seat price:</span> <span id="perSeatPrice" class="fs-4 fw-bold text-emerald">-</span></p>
+                </div>
+
+                <!-- Legend -->
+                <div class="d-flex flex-column gap-2">
+                    <p class="text-uppercase fw-bold text-white-50 mb-0" style="font-size: 0.625rem; letter-spacing: 0.2em;">Legend</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="d-inline-block rounded" style="width: 20px; height: 20px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.2);"></span>
+                        <span class="text-white small">Available seat</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="d-inline-block rounded" style="width: 20px; height: 20px; background: rgba(71, 85, 105, 0.6); border: 1px solid rgba(255,255,255,0.2); opacity: 0.6;"></span>
+                        <span class="text-white small">Booked seat</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="d-inline-block rounded" style="width: 20px; height: 20px; background: var(--bs-primary); border: 1px solid var(--bs-primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);"></span>
+                        <span class="text-white small">Selected seat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Seat Map & Form -->
+        <div class="col-12 col-lg-8">
+            <div class="d-flex flex-column gap-4">
+                <!-- Seat Map Header -->
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="fw-semibold text-white" style="font-size: 0.875rem;">Seat map</span>
+                </div>
+
+                <!-- Seat Grid -->
+                <div id="seatGrid">
+                    @{
+                        var tripSeats = Model.Trip?.TripSeats?
+                            .Where(ts => ts.Seat != null)
+                            .OrderBy(ts => ts.Seat.SeatNumber)
+                            .ToList() ?? new List<Airport_Managment_SYS.Models.TripSeat>();
+                        int perRow = 6;
+                        var groupedByClass = tripSeats
+                            .GroupBy(ts => new
+                            {
+                                ClassId = ts.Seat?.seatClassId ?? 0,
+                                ClassName = ts.Seat?.SeatClass?.Name ?? "Uncategorized"
+                            })
+                            .OrderBy(g => g.Key.ClassId)
+                            .ToList();
+                    }
+                    @if (groupedByClass.Any())
+                    {
+                        foreach (var group in groupedByClass)
+                        {
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="fw-semibold text-white-50 text-uppercase" style="font-size: 0.625rem; letter-spacing: 0.1em;">@group.Key.ClassName</span>
+                                    <span class="text-white-50 small">@group.Count(ts => !ts.IsBooked) available</span>
+                                </div>
+                                @for (int i = 0; i < group.Count(); i += perRow)
+                                {
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        @foreach (var ts in group.Skip(i).Take(perRow))
+                                        {
+                                            var seat = ts.Seat;
+                                            var seatClassId = seat?.seatClassId ?? 0;
+                                            var isBooked = ts.IsBooked;
+                                            var btnClass = isBooked ? "seat-booked" : "seat-available";
+                                            <button type="button"
+                                                    class="seat-button @btnClass"
+                                                    data-seat-id="@seat?.Id"
+                                                    data-seat-class-id="@seatClassId"
+                                                    data-booked="@(isBooked.ToString().ToLower())">
+                                                @seat?.SeatNumber
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         }
                     }
-                </select>
-            </div>
-
-            <div class="text-sm text-slate-100">
-                <p><span class="font-semibold">Per-seat price:</span> <span id="perSeatPrice" class="text-xl font-bold text-emerald-400">-</span></p>
-            </div>
-
-            <div class="space-y-2 text-xs text-slate-300">
-                <p class="font-semibold uppercase tracking-widest text-slate-400">Legend</p>
-                <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-md bg-slate-900/60 border border-slate-500"></span>
-                    <span>Available seat</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-md bg-slate-600/60 border border-slate-500 opacity-60"></span>
-                    <span>Booked seat</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-md bg-primary border border-primary shadow ring-2 ring-primary/60"></span>
-                    <span>Selected seat</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="lg:col-span-2 space-y-4">
-            <div class="text-sm font-semibold text-slate-200 flex items-center justify-between">
-                <span>Seat map</span>
-            </div>
-
-            <div id="seatGrid" class="space-y-4">
-                @{
-                    var tripSeats = Model.Trip?.TripSeats?
-                        .Where(ts => ts.Seat != null)
-                        .OrderBy(ts => ts.Seat.SeatNumber)
-                        .ToList() ?? new List<Airport_Managment_SYS.Models.TripSeat>();
-                    int perRow = 6;
-                    var groupedByClass = tripSeats
-                        .GroupBy(ts => new {
-                            ClassId = ts.Seat?.seatClassId ?? 0,
-                            ClassName = ts.Seat?.SeatClass?.Name ?? "Uncategorized"
-                        })
-                        .OrderBy(g => g.Key.ClassId)
-                        .ToList();
-                }
-                @if (groupedByClass.Any())
-                {
-                    foreach (var group in groupedByClass)
+                    else
                     {
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between text-xs text-slate-300">
-                                <span class="font-semibold uppercase tracking-widest">@group.Key.ClassName</span>
-                                <span>@group.Count(ts => !ts.IsBooked) available</span>
-                            </div>
-                            @for (int i = 0; i < group.Count(); i += perRow)
-                            {
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach (var ts in group.Skip(i).Take(perRow))
-                                    {
-                                        var seat = ts.Seat;
-                                        var seatClassId = seat?.seatClassId ?? 0;
-                                        var isBooked = ts.IsBooked;
-                                        var stateClasses = isBooked
-                                            ? "bg-slate-600/60 border-slate-500 text-slate-400 cursor-not-allowed opacity-60"
-                                            : "bg-slate-900/60 border-slate-500 text-slate-100 hover:border-primary hover:bg-primary/30 cursor-pointer";
-                                        <button type="button"
-                                                class="seat-button w-10 h-10 rounded-lg flex items-center justify-center text-xs font-semibold border transition @stateClasses"
-                                                data-seat-id="@seat?.Id"
-                                                data-seat-class-id="@seatClassId"
-                                                data-booked="@(isBooked.ToString().ToLower())">
-                                            @seat?.SeatNumber
-                                        </button>
-                                    }
-                                </div>
-                            }
-                        </div>
+                        <p class="text-white-50 small">Seat map not available for this trip.</p>
                     }
-                }
-                else
+                </div>
+
+                <!-- Notifications -->
+                @if (TempData["Success"] != null)
                 {
-                    <p class="text-xs text-slate-400">Seat map not available for this trip.</p>
+                    <div class="bg-emerald-soft rounded-3 p-3 small">@TempData["Success"]</div>
                 }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="bg-red-soft rounded-3 p-3 small">@TempData["Error"]</div>
+                }
+                @if (TempData["Warning"] != null)
+                {
+                    <div class="bg-amber-soft rounded-3 p-3 small">@TempData["Warning"]</div>
+                }
+
+                <!-- Reservation Form -->
+                <form asp-controller="Home" asp-action="Reserve" method="post" id="reserveForm" class="d-flex flex-column gap-3">
+                    <input type="hidden" name="TripId" value="@Model.Trip?.Id" />
+                    <input type="hidden" id="seatClassHidden" name="SeatClassId" value="0" />
+                    <input type="hidden" id="totalPriceHidden" name="TotalPrice" value="0" />
+                    <div id="seatIdsContainer"></div>
+
+                    <div id="seatCountContainer" class="d-none">
+                        <p class="text-white mb-0">
+                            <span class="fw-semibold">Seats selected:</span>
+                            <span id="seatCountDisplay" class="fw-semibold"></span>
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-white mb-0"><span class="fw-semibold">Total price:</span> <span id="totalPrice" class="fs-2 fw-bold text-emerald">$0.00</span></p>
+                    </div>
+
+                    <button type="submit" id="reserveBtn" disabled class="btn btn-primary w-100 fw-bold py-3 rounded-3 glow-primary" style="font-size: 0.875rem;">
+                        Reserve seats
+                    </button>
+                </form>
             </div>
-
-            @* Notifications *@
-            @if (TempData["Success"] != null)
-            {
-                <div class="mb-2 p-3 bg-emerald-500/10 text-emerald-200 rounded-xl border border-emerald-500/40 text-sm">@TempData["Success"]</div>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <div class="mb-2 p-3 bg-red-500/10 text-red-200 rounded-xl border border-red-500/40 text-sm">@TempData["Error"]</div>
-            }
-            @if (TempData["Warning"] != null)
-            {
-                <div class="mb-2 p-3 bg-amber-500/10 text-amber-200 rounded-xl border border-amber-500/40 text-sm">@TempData["Warning"]</div>
-            }
-
-            <form asp-controller="Home" asp-action="Reserve" method="post" id="reserveForm" class="space-y-4">
-                <input type="hidden" name="TripId" value="@Model.Trip?.Id" />
-                <input type="hidden" id="seatClassHidden" name="SeatClassId" value="0" />
-                <input type="hidden" id="totalPriceHidden" name="TotalPrice" value="0" />
-                <div id="seatIdsContainer"></div>
-
-                <div id="seatCountContainer" class="hidden">
-                    <p class="text-sm text-slate-100">
-                        <span class="font-semibold">Seats selected:</span>
-                        <span id="seatCountDisplay" class="font-semibold"></span>
-                    </p>
-                </div>
-
-                <div>
-                    <p class="text-sm text-slate-100"><span class="font-semibold">Total price:</span> <span id="totalPrice" class="text-2xl font-bold text-emerald-400">$0.00</span></p>
-                </div>
-
-                <button type="submit" id="reserveBtn" disabled class="w-full px-4 py-3 bg-primary text-white rounded-2xl text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition">
-                    Reserve seats
-                </button>
-            </form>
         </div>
     </div>
 </section>
@@ -172,18 +189,16 @@
             const totalPriceHidden = document.getElementById('totalPriceHidden');
             const reserveBtn = document.getElementById('reserveBtn');
             const seatButtons = Array.from(document.querySelectorAll('.seat-button'));
-            const seatIdsHidden = document.getElementById('seatIdsHidden');
             const seatCountContainer = document.getElementById('seatCountContainer');
             const seatCountDisplay = document.getElementById('seatCountDisplay');
 
-            // Safe injection of C# decimals to JS numbers
             const basePrice = parseFloat("@(Model.Trip?.Price ?? 0)");
 
             function clearSeatSelection() {
                 seatButtons.forEach(btn => {
                     btn.removeAttribute('data-selected');
                     if (btn.dataset.booked === 'true') return;
-                    btn.classList.remove('ring-2', 'ring-primary', 'bg-primary');
+                    btn.classList.remove('seat-selected');
                 });
             }
 
@@ -191,12 +206,10 @@
                 const selected = seatButtons.filter(b => b.dataset.selected === 'true');
                 const seatIds = selected.map(b => b.dataset.seatId);
                 const count = selected.length;
-                
-                // Clear existing seat ID inputs
+
                 const container = document.getElementById('seatIdsContainer');
                 container.innerHTML = '';
-                
-                // Create individual hidden inputs for each seat ID
+
                 seatIds.forEach(seatId => {
                     const input = document.createElement('input');
                     input.type = 'hidden';
@@ -207,10 +220,10 @@
 
                 if (count > 0) {
                     seatCountDisplay.textContent = count.toString();
-                    seatCountContainer.classList.remove('hidden');
+                    seatCountContainer.classList.remove('d-none');
                 } else {
                     seatCountDisplay.textContent = '';
-                    seatCountContainer.classList.add('hidden');
+                    seatCountContainer.classList.add('d-none');
                 }
 
                 return count;
@@ -220,8 +233,7 @@
                 const opt = select.options[select.selectedIndex] || select.options[0];
                 const mult = parseFloat(opt.dataset.mult || '0') || 1;
                 let per = basePrice * mult;
-                
-                // Count selected seats from the container inputs
+
                 const container = document.getElementById('seatIdsContainer');
                 const count = container.querySelectorAll('input[name="SeatIds"]').length;
 
@@ -243,14 +255,12 @@
                 totalPriceHidden.value = total.toFixed(2);
             }
 
-            // Seat grid interaction: clicking seats sets selection and seat count
             seatButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     if (btn.dataset.booked === 'true') return;
 
                     const seatClassId = btn.dataset.seatClassId || '0';
 
-                    // If no class selected yet, set it from this seat
                     if (!select.value || select.value === '0') {
                         const optionToSelect = Array.from(select.options).find(o => o.value === seatClassId);
                         if (optionToSelect) {
@@ -258,9 +268,7 @@
                         }
                     }
 
-                    // Only allow selecting seats from currently selected class
                     if (select.value !== seatClassId) {
-                        // Switch class: clear selection and change class
                         clearSeatSelection();
                         const optionToSelect = Array.from(select.options).find(o => o.value === seatClassId);
                         if (optionToSelect) {
@@ -271,10 +279,10 @@
                     const currentlySelected = btn.dataset.selected === 'true';
                     if (currentlySelected) {
                         btn.removeAttribute('data-selected');
-                        btn.classList.remove('ring-2', 'ring-primary', 'bg-primary');
+                        btn.classList.remove('seat-selected');
                     } else {
                         btn.dataset.selected = 'true';
-                        btn.classList.add('ring-2', 'ring-primary', 'bg-primary');
+                        btn.classList.add('seat-selected');
                     }
 
                     syncSeatIdsFromSelection();
