@@ -870,3 +870,334 @@ input[type="date"].glass-input::-webkit-calendar-picker-indicator {
 .search-bar-section {
     background: #0f172a;
 }
+
+/* ─── BOOKINGS PAGE ─── */
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.status-badge-paid {
+    background: rgba(52, 211, 153, 0.2);
+    color: #6ee7b7;
+}
+
+.status-badge-pending {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fcd34d;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot-paid {
+    background: #34d399;
+}
+
+.status-dot-pending {
+    background: #fbbf24;
+    animation: pulse-dot-anim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-dot-anim {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Empty State */
+.empty-state-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+    .empty-state-icon i {
+        font-size: 1.875rem;
+        color: #64748b;
+    }
+
+/* Booking Card */
+.booking-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Action Buttons */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    background: transparent;
+}
+
+    .btn-action:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+.btn-pay {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: var(--bs-primary);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
+    border: none;
+}
+
+    .btn-pay:hover {
+        background: rgba(59, 130, 246, 0.9);
+        color: white;
+    }
+
+/* ─── PROFILE PAGES ─── */
+
+/* Profile Card */
+.profile-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+    .profile-card:hover {
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+/* Profile Avatar */
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+    .profile-avatar i {
+        font-size: 2.5rem;
+        color: var(--bs-primary);
+    }
+
+/* Profile Detail Item */
+.profile-detail-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+    .profile-detail-item:last-child {
+        border-bottom: none;
+    }
+
+.profile-detail-label {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.profile-detail-value {
+    color: white;
+    font-weight: 600;
+}
+
+/* Form Card (Edit/Change Password) */
+.form-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Form Controls */
+.form-control-dark {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    transition: all 0.3s ease;
+}
+
+    .form-control-dark:focus {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--bs-primary);
+        color: white;
+        box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+    }
+
+    .form-control-dark::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .form-control-dark:read-only {
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+.form-label-dark {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Select Dark */
+.form-select-dark-profile {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.625rem 2rem 0.625rem 0.875rem;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+}
+
+    .form-select-dark-profile:focus {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--bs-primary);
+        color: white;
+        box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+        outline: none;
+    }
+
+    .form-select-dark-profile option {
+        background: #0f172a;
+        color: white;
+    }
+
+/* Button Styles */
+.btn-profile-primary {
+    background: var(--bs-primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+    .btn-profile-primary:hover {
+        background: rgba(59, 130, 246, 0.9);
+        color: white;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+
+.btn-profile-outline {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+    .btn-profile-outline:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+.btn-profile-warning {
+    background: #f59e0b;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+    .btn-profile-warning:hover {
+        background: #d97706;
+        color: white;
+    }
+
+.btn-profile-danger {
+    background: transparent;
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 9999px;
+    padding: 0.375rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+    .btn-profile-danger:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+
+/* Card Header */
+.profile-card-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.25rem 1.5rem;
+}
+
+    .profile-card-header h6 {
+        color: var(--bs-primary);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin: 0;
+    }

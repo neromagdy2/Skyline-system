@@ -6,51 +6,63 @@
     var nationalities = context.Nationalities.OrderBy(n => n.Name).ToList();
 }
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
-    <div class="card shadow-lg p-4" style="max-width:650px; width:100%;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="form-card p-4 p-md-5" style="max-width: 650px; width: 100%;">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h3 class="mb-0">Update Profile</h3>
-                <p class="text-muted mb-0">Edit your account details</p>
+                <h3 class="fw-bold text-white mb-1">Update Profile</h3>
+                <p class="text-white-50 mb-0" style="font-size: 0.875rem;">Edit your account details</p>
             </div>
-            <a asp-area="Customer" asp-controller="Profile" asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            <a asp-area="Customer" asp-controller="Profile" asp-action="Index" class="btn-profile-outline">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
         </div>
 
         <form asp-area="Customer" asp-controller="Profile" asp-action="Edit" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+            <!-- Username -->
             <div class="mb-3">
-                <label asp-for="UserName" class="form-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+                <label asp-for="UserName" class="form-label-dark"></label>
+                <input asp-for="UserName" class="form-control-dark w-100" />
+                <span asp-validation-for="UserName" class="text-danger small"></span>
             </div>
 
+            <!-- Email (Readonly) -->
             <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" readonly />
+                <label asp-for="Email" class="form-label-dark"></label>
+                <input asp-for="Email" class="form-control-dark w-100" readonly />
             </div>
 
+            <!-- Phone -->
             <div class="mb-3">
-                <label asp-for="PhoneNumber" class="form-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                <label asp-for="PhoneNumber" class="form-label-dark"></label>
+                <input asp-for="PhoneNumber" class="form-control-dark w-100" />
+                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="NationalitiesId" class="form-label"></label>
-                <select asp-for="NationalitiesId" class="form-control">
+            <!-- Nationality -->
+            <div class="mb-4">
+                <label asp-for="NationalitiesId" class="form-label-dark"></label>
+                <select asp-for="NationalitiesId" class="form-select-dark-profile w-100">
                     <option value="">-- Select Nationality --</option>
                     @foreach (var nationality in nationalities)
                     {
                         <option value="@nationality.Id">@nationality.Name</option>
                     }
                 </select>
-                <span asp-validation-for="NationalitiesId" class="text-danger"></span>
+                <span asp-validation-for="NationalitiesId" class="text-danger small"></span>
             </div>
 
+            <!-- Actions -->
             <div class="d-flex justify-content-end gap-2">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-                <a asp-area="Customer" asp-controller="Profile" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <button type="submit" class="btn-profile-primary">
+                    <i class="bi bi-check-lg me-1"></i>Save Changes
+                </button>
+                <a asp-area="Customer" asp-controller="Profile" asp-action="Index" class="btn-profile-outline">
+                    Cancel
+                </a>
             </div>
         </form>
     </div>
@@ -62,4 +74,3 @@
         <partial name="_NotificationPartial" />
     }
 }
-

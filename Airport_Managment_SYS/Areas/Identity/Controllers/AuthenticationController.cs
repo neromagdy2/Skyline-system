@@ -279,7 +279,6 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
         }
 
    [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Authentication", new { returnUrl });
