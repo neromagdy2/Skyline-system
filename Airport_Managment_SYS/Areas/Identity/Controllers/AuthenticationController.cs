@@ -58,7 +58,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
 
             if (!ModelState.IsValid)
             {
-                registerVM.Nationalities = await _NationalitiesRepository.GetAsync(trackd: false);
+                registerVM.Nationalities = await _NationalitiesRepository.GetAsync();
                 return View(registerVM);
               
             }
@@ -78,6 +78,7 @@ namespace Airport_Managment_SYS.Areas.Identity.Controllers
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                registerVM.Nationalities = await _NationalitiesRepository.GetAsync();
                 return View(registerVM);
             }
 

@@ -6,16 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Controllers\**" />
-    <Compile Remove="Views\Home\**" />
-    <Content Remove="Controllers\**" />
-    <Content Remove="Views\Home\**" />
-    <EmbeddedResource Remove="Controllers\**" />
-    <EmbeddedResource Remove="Views\Home\**" />
-    <None Remove="Controllers\**" />
-    <None Remove="Views\Home\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.1" />

@@ -23,7 +23,7 @@ namespace Airport_Managment_SYS.Controllers
 
             ViewBag.NoOfPlanes = await _context.Airplanes.CountAsync();
 
-            ViewBag.TotalPaymentMoney = await _context.Payments.SumAsync(p => (double?)p.Amount) ?? 0;
+            ViewBag.TotalPaymentMoney = await _context.Payments.SumAsync(p => (double?)p.Total) ?? 0;
 
             return View();
         }
