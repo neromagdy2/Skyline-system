@@ -1,6 +1,6 @@
 @model IEnumerable<Airport_Managment_SYS.Models.Reservation>
 
-<section style="max-width: 1024px; margin: 0 auto;">
+<section style="max-width: 1024px; margin-bottom:40px; margin-top:40px; auto;">
     <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-4 mb-5">
         <h1 class="display-5 fw-bold text-white" style="letter-spacing: -0.02em;">
             My Bookings
@@ -10,7 +10,7 @@
     @if (!Model?.Any() ?? true)
     {
         <!-- Empty State -->
-        <div class="glass-card rounded-4 p-5 p-md-5 text-center">
+        <div class="glass-card rounded-4 p-5 text-center">
             <div class="empty-state-icon">
                 <i class="bi bi-ticket-perforated"></i>
             </div>
@@ -30,47 +30,53 @@
             @foreach (var r in Model)
             {
                 var trip = r.Trip;
-                <article class="booking-card">
-                    <div class="p-4 p-sm-5">
-                        <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-4 gap-lg-5">
+                <article class="glass-card rounded-4 p-3 p-md-4">
+                    <div class="row align-items-center g-3">
 
-                            <!-- Route & Times -->
-                            <div class="flex-grow-1 w-100" style="min-width: 0;">
-                                <div class="d-flex align-items-center gap-3 mb-4">
-                                    <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0" style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2);">
-                                        <i class="bi bi-airplane text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h2 class="fw-bold text-white h5 mb-0">
-                                            @(trip != null ? $"{trip.Airport_From?.Name ?? "—"} → {trip.Airport_To?.Name ?? "—"}" : "Trip")
-                                        </h2>
-                                        <p class="text-white-50 mb-0" style="font-size: 0.75rem;">
-                                            Booking #@r.Id
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="row g-3" style="font-size: 0.875rem;">
-                                    <div class="col-6 col-sm-3">
-                                        <p class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Departure</p>
-                                        <p class="fw-medium text-white mb-0">@(trip?.DateTime.ToString("MMM d, h:mm tt") ?? "—")</p>
-                                    </div>
-                                    <div class="col-6 col-sm-3">
-                                        <p class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Arrival</p>
-                                        <p class="fw-medium text-white mb-0">@(trip?.ArrivalDateTime.ToString("MMM d, h:mm tt") ?? "—")</p>
-                                    </div>
-                                    <div class="col-6 col-sm-3">
-                                        <p class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Seats</p>
-                                        <p class="fw-medium text-white mb-0">@r.NumSeats × Class #@r.SeatClassId</p>
-                                    </div>
-                                    <div class="col-6 col-sm-3">
-                                        <p class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Total</p>
-                                        <p class="fs-5 fw-bold text-primary mb-0">@r.TotalPrice.ToString("C")</p>
-                                    </div>
-                                </div>
+                        <!-- Flight Icon -->
+                        <div class="col-auto">
+                            <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 48px; height: 48px; background: rgba(59, 130, 246, 0.2);">
+                                <i class="bi bi-airplane text-primary fs-4"></i>
                             </div>
+                        </div>
 
-                            <!-- Status & Actions -->
-                            <div class="d-flex flex-row flex-lg-column align-items-center gap-3 flex-shrink-0 pt-3 pt-lg-0 border-top border-lg-top-0 border-lg-start border-white border-opacity-10 ps-lg-4 w-100 w-lg-auto">
+                        <!-- Route Info -->
+                        <div class="col-auto">
+                            <div class="d-flex flex-column text-white">
+                                <span class="fw-bold" style="font-size: 0.875rem;">
+                                    @(trip != null ? $"{trip.Airport_From?.Name ?? "—"} → {trip.Airport_To?.Name ?? "—"}" : "Trip")
+                                </span>
+                                <span class="text-white-50" style="font-size: 0.75rem;">Booking #@r.Id</span>
+                            </div>
+                        </div>
+
+                        <!-- Departure -->
+                        <div class="col text-center text-md-start">
+                            <span class="d-block text-uppercase fw-bold text-white-50" style="font-size: 0.625rem; letter-spacing: 0.1em;">Departure</span>
+                            <span class="d-block fw-medium text-white">@(trip?.DateTime.ToString("MMM d, h:mm tt") ?? "—")</span>
+                        </div>
+
+                        <!-- Arrival -->
+                        <div class="col text-center text-md-start">
+                            <span class="d-block text-uppercase fw-bold text-white-50" style="font-size: 0.625rem; letter-spacing: 0.1em;">Arrival</span>
+                            <span class="d-block fw-medium text-white">@(trip?.ArrivalDateTime.ToString("MMM d, h:mm tt") ?? "—")</span>
+                        </div>
+
+                        <!-- Seats -->
+                        <div class="col text-center text-md-start">
+                            <span class="d-block text-uppercase fw-bold text-white-50" style="font-size: 0.625rem; letter-spacing: 0.1em;">Seats</span>
+                            <span class="d-block fw-medium text-white">@r.NumSeats × Class #@r.SeatClassId</span>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="col text-center text-md-end">
+                            <span class="d-block text-uppercase fw-bold text-white-50" style="font-size: 0.625rem; letter-spacing: 0.1em;">Total</span>
+                            <span class="d-block fs-5 fw-bold text-primary">@r.TotalPrice.ToString("C")</span>
+                        </div>
+
+                        <!-- Status & Actions -->
+                        <div class="col-12 col-md-auto">
+                            <div class="d-flex flex-row flex-md-column align-items-center align-items-md-end justify-content-between gap-2 gap-md-2 border-top border-md-top-0 border-md-start border-white border-opacity-10 pt-2 pt-md-0 ps-md-3">
                                 @if (r.IsPaid)
                                 {
                                     <span class="status-badge status-badge-paid">
@@ -82,26 +88,24 @@
                                 {
                                     <span class="status-badge status-badge-pending">
                                         <span class="status-dot status-dot-pending"></span>
-                                        Pending payment
+                                        Pending
                                     </span>
                                 }
                                 <div class="d-flex flex-wrap gap-2">
-                                    <div class="d-flex flex-wrap gap-2 flex-column">
-                                        @if (r.IsPaid)
-                                        {
-                                            <a href="@Url.Action("Index", "Reservations", new { area = "Customer" })"
-                                               class="btn-action">
-                                                <i class="bi bi-card-list"></i>
-                                                Manage
-                                            </a>
-                                            <a href="@Url.Action("DownloadTicket", "Reservations", new { area = "Customer", id = r.Id })"
-                                               class="btn-action">
-                                                <i class="bi bi-download"></i>
-                                                Download Ticket
-                                            </a>
-                                        }
-                                    </div>
-                                    @if (!r.IsPaid)
+                                    @if (r.IsPaid)
+                                    {
+                                        <a href="@Url.Action("Index", "Reservations", new { area = "Customer" })"
+                                           class="btn-action">
+                                            <i class="bi bi-card-list"></i>
+                                            Manage
+                                        </a>
+                                        <a href="@Url.Action("DownloadTicket", "Reservations", new { area = "Customer", id = r.Id })"
+                                           class="btn-action">
+                                            <i class="bi bi-download"></i>
+                                            Ticket
+                                        </a>
+                                    }
+                                    else
                                     {
                                         <a href="@Url.Action("pay", "Payments", new { area = "Customer", id = r.Id })"
                                            class="btn-pay">
@@ -112,6 +116,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </article>
             }

@@ -1201,3 +1201,55 @@ input[type="date"].glass-input::-webkit-calendar-picker-indicator {
         letter-spacing: 0.1em;
         margin: 0;
     }
+
+/* ─── FLIGHT CARD FIXES ─── */
+.flight-card-hover .row {
+    align-items: center;
+}
+
+@media (max-width: 767.98px) {
+    .flight-card-hover .col-12.col-md-auto {
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-left: none !important;
+        padding-top: 0.75rem !important;
+        padding-left: 0 !important;
+        margin-top: 0.5rem;
+    }
+
+    .flight-card-hover .fs-3 {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .flight-card-hover .col-12.col-md-auto {
+        border-top: none !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding-top: 0 !important;
+        padding-left: 1rem !important;
+    }
+}
+
+/* ─── BOOKINGS CARD FIXES ─── */
+.glass-card .row {
+    align-items: center;
+}
+
+@media (max-width: 767.98px) {
+    .glass-card .col-12.col-md-auto {
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-left: none !important;
+        padding-top: 0.75rem !important;
+        padding-left: 0 !important;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .glass-card .col-12.col-md-auto {
+        border-top: none !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding-top: 0 !important;
+        padding-left: 1rem !important;
+    }
+}

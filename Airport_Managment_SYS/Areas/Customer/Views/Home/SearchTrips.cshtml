@@ -27,10 +27,10 @@
 
                 <!-- To -->
                 <div class="d-flex flex-column w-100" style="max-width: 220px;">
-                    <span class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">To (Optional)</span>
+                    <span class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">To</span>
                     <select asp-for="SearchTripsVM.ArrivalCity"
                             class="form-select-dark w-100 fw-bold">
-                        <option value="">All Destinations</option>
+                        <option value="">Select Arrival</option>
                         @for (int i = 0; i < Model.SearchTripsVM.States.Count(); i++)
                         {
                             var state = Model.SearchTripsVM.States.ElementAt(i);
@@ -44,7 +44,7 @@
 
                 <!-- Date -->
                 <div class="d-flex flex-column w-100" style="max-width: 220px;">
-                    <span class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Date (Optional)</span>
+                    <span class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.625rem; letter-spacing: 0.1em;">Date</span>
                     <input asp-for="SearchTripsVM.DepartureTime"
                            type="date"
                            class="form-select-dark w-100 fw-bold" />
@@ -125,32 +125,33 @@
                 {
                     foreach (var trip in Model.SearchTripsVM.trips)
                     {
-                        <div class="glass-card rounded-4 p-4 shadow-xl border border-white border-opacity-10 flight-card-hover">
+                        <div class="glass-card rounded-4 p-3 p-md-4 shadow-xl border border-white border-opacity-10 flight-card-hover">
+                            <div class="row align-items-center g-3">
 
-                            <div class="d-flex flex-column flex-md-row align-items-center gap-4">
-
-                                <!-- Airline -->
-                                <div class="d-flex align-items-center gap-3 flex-shrink-0">
+                                <!-- Airline Icon -->
+                                <div class="col-auto">
                                     <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 48px; height: 48px; background: rgba(59, 130, 246, 0.2);">
                                         <i class="bi bi-rocket-takeoff text-primary fs-4"></i>
                                     </div>
+                                </div>
+
+                                <!-- Airline Info -->
+                                <div class="col-auto">
                                     <div class="d-flex flex-column text-white">
                                         <span class="fw-bold" style="font-size: 0.875rem;">@trip.Airplane?.Name</span>
                                         <span class="text-white-50" style="font-size: 0.75rem;">@trip.Id</span>
                                     </div>
                                 </div>
 
-                                <!-- Flight Data -->
-                                <div class="flex-grow-1 d-flex align-items-center justify-content-between w-100">
+                                <!-- Departure -->
+                                <div class="col text-center text-md-start">
+                                    <span class="d-block fs-3 fw-bold text-white">@($"{trip.DateTime:hh:mm tt}")</span>
+                                    <span class="text-uppercase fw-bold text-white-50" style="font-size: 0.625rem; letter-spacing: 0.1em;">@trip.Airport_From.GovernerateState.Name</span>
+                                </div>
 
-                                    <!-- Departure -->
-                                    <div class="text-center text-md-start text-white">
-                                        <span class="d-block fs-4 fw-bold">@trip.DateTime.ToString("hh:mm tt")</span>
-                                        <span class="text-uppercase fw-bold text-white-50" style="font-size: 0.625rem; letter-spacing: 0.1em;">@trip.Airport_From.GovernerateState.Name</span>
-                                    </div>
-
-                                    <!-- Flight Path -->
-                                    <div class="flex-grow-1 px-3 px-md-4 d-flex flex-column align-items-center">
+                                <!-- Flight Path -->
+                                <div class="col-auto">
+                                    <div class="d-flex flex-column align-items-center" style="min-width: 80px;">
                                         <span class="text-white-50" style="font-size: 0.625rem; font-weight: 700;">3 hours</span>
                                         <div class="flight-path-line my-1">
                                             <span class="flight-path-icon">
@@ -159,31 +160,28 @@
                                         </div>
                                         <span class="text-primary" style="font-size: 0.625rem; font-weight: 700;">Non-stop</span>
                                     </div>
-
-                                    <!-- Arrival -->
-                                    <div class="text-center text-md-end text-white">
-                                        <span class="d-block fs-4 fw-bold">@trip.ArrivalDateTime.ToString("hh:mm tt")</span>
-                                        <span class="text-uppercase fw-bold text-white-50" style="font-size: 0.625rem; letter-spacing: 0.1em;">@trip.Airport_To.GovernerateState.Name</span>
-                                    </div>
-
                                 </div>
 
-                                <!-- Price -->
-                                <div class="d-flex flex-column align-items-center align-items-md-end gap-2 flex-shrink-0 border-top border-md-top-0 border-md-start border-white border-opacity-10 pt-3 pt-md-0 ps-md-4 w-100 w-md-auto">
+                                <!-- Arrival -->
+                                <div class="col text-center text-md-end">
+                                    <span class="d-block fs-3 fw-bold text-white">@($"{trip.ArrivalDateTime:hh:mm tt}")</span>
+                                    <span class="text-uppercase fw-bold text-white-50" style="font-size: 0.625rem; letter-spacing: 0.1em;">@trip.Airport_To.GovernerateState.Name</span>
+                                </div>
 
-                                    <span class="fs-2 fw-bold text-primary">$@trip.Price</span>
-
-                                    <a asp-action="Details"
-                                       asp-route-id="@trip.Id"
-                                       class="btn btn-primary fw-bold px-4 py-2 rounded-3 text-center w-100 glow-primary"
-                                       style="font-size: 0.875rem;">
-                                        Select Flight
-                                    </a>
-
+                                <!-- Price & Button -->
+                                <div class="col-12 col-md-auto">
+                                    <div class="d-flex flex-row flex-md-column align-items-center align-items-md-end justify-content-between gap-2 gap-md-2 border-top border-md-top-0 border-md-start border-white border-opacity-10 pt-2 pt-md-0 ps-md-3">
+                                        <span class="fs-4 fw-bold text-primary">$@trip.Price</span>
+                                        <a asp-action="Details"
+                                           asp-route-id="@trip.Id"
+                                           class="btn btn-primary fw-bold px-4 py-2 rounded-3 text-nowrap glow-primary"
+                                           style="font-size: 0.875rem;">
+                                            Select Flight
+                                        </a>
+                                    </div>
                                 </div>
 
                             </div>
-
                         </div>
                     }
                 }
@@ -197,27 +195,18 @@
                 <!-- Pagination -->
                 @{
                     var departureDateStr = Model.SearchTripsVM.DepartureTime != default ? Model.SearchTripsVM.DepartureTime.Value.ToString("yyyy-MM-dd") : "";
-                    var queryParams = new List<string>();
-                    if (Model.SearchTripsVM.DepartureCity > 0) queryParams.Add($"SearchTripsVM.DepartureCity={Model.SearchTripsVM.DepartureCity}");
-                    if (Model.SearchTripsVM.ArrivalCity > 0) queryParams.Add($"SearchTripsVM.ArrivalCity={Model.SearchTripsVM.ArrivalCity}");
-                    if (!string.IsNullOrEmpty(departureDateStr)) queryParams.Add($"SearchTripsVM.DepartureTime={departureDateStr}");
-                    if (Model.SearchTripsVM.MaxPrice > 0) queryParams.Add($"SearchTripsVM.MaxPrice={Model.SearchTripsVM.MaxPrice}");
-                    if (Model.SearchTripsVM.SeatClassIds != null)
-                    {
-                        foreach(var id in Model.SearchTripsVM.SeatClassIds)
-                        {
-                            queryParams.Add($"SearchTripsVM.SeatClassIds={id}");
-                        }
-                    }
-                    var queryString = string.Join("&", queryParams);
-                    var qsPrefix = string.IsNullOrEmpty(queryString) ? "" : "&" + queryString;
                 }
                 @if (Model.SearchTripsVM.TotalPages > 1)
                 {
                     <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
                         @if (Model.SearchTripsVM.CurrentPage > 1)
                         {
-                            <a href="?page=@(Model.SearchTripsVM.CurrentPage - 1)@qsPrefix"
+                            <a asp-action="SearchTrips"
+                               asp-route-page="@(Model.SearchTripsVM.CurrentPage - 1)"
+                               asp-route-DepartureCity="@Model.SearchTripsVM.DepartureCity"
+                               asp-route-ArrivalCity="@Model.SearchTripsVM.ArrivalCity"
+                               asp-route-DepartureTime="@departureDateStr"
+                               asp-route-MaxPrice="@Model.SearchTripsVM.MaxPrice"
                                class="pagination-btn">
                                 Previous
                             </a>
@@ -226,7 +215,12 @@
                         @for (int i = Math.Max(1, Model.SearchTripsVM.CurrentPage - 2); i <= Math.Min(Model.SearchTripsVM.TotalPages, Model.SearchTripsVM.CurrentPage + 2); i++)
                         {
                             var isActive = i == Model.SearchTripsVM.CurrentPage;
-                            <a href="?page=@i@qsPrefix"
+                            <a asp-action="SearchTrips"
+                               asp-route-page="@i"
+                               asp-route-DepartureCity="@Model.SearchTripsVM.DepartureCity"
+                               asp-route-ArrivalCity="@Model.SearchTripsVM.ArrivalCity"
+                               asp-route-DepartureTime="@departureDateStr"
+                               asp-route-MaxPrice="@Model.SearchTripsVM.MaxPrice"
                                class="pagination-btn @(isActive ? "active" : "")">
                                 @i
                             </a>
@@ -234,7 +228,12 @@
 
                         @if (Model.SearchTripsVM.CurrentPage < Model.SearchTripsVM.TotalPages)
                         {
-                            <a href="?page=@(Model.SearchTripsVM.CurrentPage + 1)@qsPrefix"
+                            <a asp-action="SearchTrips"
+                               asp-route-page="@(Model.SearchTripsVM.CurrentPage + 1)"
+                               asp-route-DepartureCity="@Model.SearchTripsVM.DepartureCity"
+                               asp-route-ArrivalCity="@Model.SearchTripsVM.ArrivalCity"
+                               asp-route-DepartureTime="@departureDateStr"
+                               asp-route-MaxPrice="@Model.SearchTripsVM.MaxPrice"
                                class="pagination-btn">
                                 Next
                             </a>
